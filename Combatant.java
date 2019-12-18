@@ -1,6 +1,6 @@
 /* Name: Frank Kong
  * Date: December 17, 2019
- * Description: Combatant class (parent class) for all the troops
+ * Description: Combatant class (parent class) for all the combatants: Includes buildings and troops
  */
 import java.util.*;
 
@@ -12,7 +12,6 @@ public class Combatant{
   private double range;
   private boolean team;
   private double speed;
-  private boolean building;
   private int[] coords = new int[2];
   private int moveDistance;
   //Constructor
