@@ -7,8 +7,8 @@ public class Archer extends Combatant {
   private double projectileSpeed;
   
   //Constructor
-  public Archer (boolean team) {
-    super(300, 45, 40, team, 30);
+  public Archer (boolean team, double projectileSpeed) {
+    super("Archer", 300, 45, 40, team, 25, 5);
     this.projectileSpeed = 100;
   }
   

@@ -7,8 +7,8 @@ public class Knight extends Combatant {
   private double armour;
   
   //Constructor
-  public Knight(boolean team) {
-    super(500, 90, 1, team, 10); //Presets stats for Knight
+  public Knight(boolean team, double armour) {
+    super(500, 90, 1, team, 10, 3); //Presets stats for Knight
     this.armour = 35;
   }
   

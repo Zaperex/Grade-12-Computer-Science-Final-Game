@@ -9,8 +9,8 @@ public class Calvary extends Combantant {
   private double armour;
   
   //Constructor
-  public Calvary (double health, double attack, double range, boolean team, double speed, boolean charge, double armour) {
-    super(600, 100, 5, team, 50);
+  public Calvary (boolean team, boolean charge, double armour) {
+    super(600, 100, 5, team, 50, 6);
     this.charge = true;
     this.armour = 50;
   }
