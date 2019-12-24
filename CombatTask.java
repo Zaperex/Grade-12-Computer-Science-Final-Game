@@ -9,7 +9,7 @@ public class CombatTask extends TimerTask{
   Combatant combatant;
   Combatant opponent;
   Terrain terrain;
-  
+  int attackCounter = 10; 
   //Constructor
   public CombatTask(Combatant combatant, Combatant opponent){
     this.combatant = combatant;
@@ -22,15 +22,25 @@ public class CombatTask extends TimerTask{
     //If combatant is not within attack range yet, it'll move forward
     if (Combat.getDistance() > combatant.getRange()){
       Combat.setDistance(Combat.getDistance() - combatant.getSpeed()/10); //Combatant will move every 0.1 seconds
+      System.out.println("Distance = " + Combat.getDistance());
     }
     //If combatant is in range and it is not dead (HP is not 0 or less) and it's opponent is also not dead
     else if (Combat.getDistance() <= combatant.getRange() && combatant.getHealth() > 0 && opponent.getHealth() > 0){
+      //Attack counter to make sure troop only attacks 1 time per second 
+      //(since actions occur ever 0.1 seconds, then it'll require 10 actions to attack once)
+      if (attackCounter == 10){
       //Damage dealt is attack*(1-defense of opponent) + penetration damage (unblockable damage)
-      double damage = (1-opponent.getDefense())*combatant.getAttack() + combatant.getPenetration();
+      double damage = ((100-opponent.getDefense())/100)*combatant.getAttack() + combatant.getPenetration();
       opponent.setHealth(opponent.getHealth()-damage); //Opponent takes that damage
+      attackCounter = 0; //Sets attack counter back to 0
+      System.out.println(combatant.getName() + " dealt " + damage + " damage to " + opponent.getName());
+      System.out.println(opponent.getName() + "HP: " + opponent.getHealth());
+      }
+      attackCounter++; //Adds 1 to attack counter
     }
     //If one of or both sides dies (Health reaches 0 or goes below)
     else if (opponent.getHealth() <= 0 || combatant.getHealth() <= 0){
+      System.out.println("Battle is over");
       cancel(); //Cancels Timer Task
     }
   }
