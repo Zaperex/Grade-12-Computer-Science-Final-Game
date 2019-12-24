@@ -6,25 +6,14 @@ import java.util.*; //Imports all Java util packages including Timer and TimerTa
 
 public class Combat{
   //Fields (Fields are static as only one combat phase can happen at a time so we'll just change the variables each time)
-  static Combatant attacker;
-  static Combatant defender;
-  static Terrain terrain;
   static double distance = 100; //Distance between 2 forces start at 100 units
-  
+  static Terrain terrain;
   //Constructor
-  public Combat(Combatant attacker, Combatant defender, Terrain terrain){
-    this.attacker = attacker;
-    this.defender = defender;
+  public Combat(Terrain terrain){
     this.terrain = terrain;
   }
   
   //Getters
-  public static Combatant getAttacker(){
-    return attacker;
-  }
-  public static Combatant getDefender(){
-    return defender;
-  }
   public static Terrain getTerrain(){
     return terrain;
   }
@@ -33,12 +22,6 @@ public class Combat{
   }
   
   //Setters
-  public static void setAttacker(Combatant attack){
-   attacker = attack;
-  }
-  public static void setDefender(Combatant defend){
-    defender = defend;
-  }
   public static void setTerrain(Terrain landscape){
     terrain = landscape;
   }
@@ -70,6 +53,7 @@ public class Combat{
     else if (attacker.getHealth() <= 0){
       victor = defender; //Defender wins
     }
+    distance = 100; //Reset distance for next battle
     
     return victor;
   } 
