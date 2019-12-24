@@ -7,9 +7,9 @@ public class Terrain {
   private Building building;
   private Combatant troop;
   private String type;
-  private int distanceRequired;
+  private double distanceRequired;
   
-  public Terrain (Building building, Combatant troop, String type, int distanceRequired) {
+  public Terrain (Building building, Combatant troop, String type, double distanceRequired) {
     this.building = building;
     this.troop = troop;
     this.type = type;
@@ -25,11 +25,11 @@ public class Terrain {
   public String getType () {
     return this.type;
   }
-  public int getDistanceRequired () {
+  public double getDistanceRequired () {
     return this.distanceRequired;
   }
   
-  public void setBuidling (Building building) {
+  public void setBuilding (Building building) {
     this.building = building;
   }
   public void setTroop (Combatant troop) {
@@ -38,7 +38,7 @@ public class Terrain {
   public void setType (String type) {
     this.type = type;
   }
-  public void setDistanceRequired (int distanceRequired) {
+  public void setDistanceRequired (double distanceRequired) {
     this.distanceRequired = distanceRequired;
   }
 }
