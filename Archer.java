@@ -4,16 +4,10 @@
  */
 
 public class Archer extends Combatant {
-  private double projectileSpeed;
   
   //Constructor
-  public Archer (boolean team, double projectileSpeed) {
-    super("Archer", 300, 45, 40, team, 25, 5);
-    this.projectileSpeed = 100;
-  }
-  
-  //Get method
-  public double getProjectileSpeed(){
-    return projectileSpeed;
+  public Archer (boolean team) {
+    super("Archer", 300, 45, 40, 0, 0, team, 25, 5);
+    //Archers have 300 HP, 45 ATK, 40 RNG, 25 SPD, 5 TILE MVMT
   }
 }
