@@ -4,18 +4,20 @@
  * */
 
 public class Terrain {
+  //Fields
   private Building building;
   private Combatant troop;
   private String type;
   private double distanceRequired;
   
+  //Contructor
   public Terrain (Building building, Combatant troop, String type, double distanceRequired) {
     this.building = building;
     this.troop = troop;
     this.type = type;
     this.distanceRequired = distanceRequired;
   }
-  
+  //Getters
   public Building getBuilding () {
     return this.building;
   }
@@ -28,7 +30,7 @@ public class Terrain {
   public double getDistanceRequired () {
     return this.distanceRequired;
   }
-  
+  //Setters
   public void setBuilding (Building building) {
     this.building = building;
   }
