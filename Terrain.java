@@ -9,28 +9,35 @@ public class Terrain {
   private Combatant troop;
   private String type;
   private double distanceRequired;
-  
+  private int[] coords = new int[2];
   //Contructor
-  public Terrain (Building building, Combatant troop, String type, double distanceRequired) {
+  public Terrain (Building building, Combatant troop, String type, double distanceRequired, int[] coords) {
     this.building = building;
     this.troop = troop;
     this.type = type;
     this.distanceRequired = distanceRequired;
+    this.coords = coords;
   }
   //Getters
-  public Building getBuilding () {
-    return this.building;
+  public int[] getCoords(){
+    return coords;
+  }
+  public Building getBuilding(){
+    return building;
   }
   public Combatant getTroop () {
-    return this.troop;
+    return troop;
   }
   public String getType () {
-    return this.type;
+    return type;
   }
   public double getDistanceRequired () {
-    return this.distanceRequired;
+    return distanceRequired;
   }
   //Setters
+  public void setCoords(){
+    this.coords = coords;
+  }
   public void setBuilding (Building building) {
     this.building = building;
   }
@@ -43,4 +50,5 @@ public class Terrain {
   public void setDistanceRequired (double distanceRequired) {
     this.distanceRequired = distanceRequired;
   }
+  
 }
