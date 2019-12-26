@@ -18,7 +18,7 @@ public class CombatTask extends TimerTask{
     terrain = Combat.getTerrain();
   }
   
-  //Overide
+  @Override
   public void run(){
     //Halves movement speed in swamps
     if (terrain.getType().equals("Swamp")){
