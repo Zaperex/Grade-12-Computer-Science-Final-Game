@@ -9,7 +9,8 @@ public class CombatTask extends TimerTask{
   Combatant combatant;
   Combatant opponent;
   Terrain terrain;
-  int attackCounter = 10; 
+  int attackCounter = 10; //Takes 10 action phases to attack once
+  double speedMultiplier = 1; //Speed is initially at 100%
   //Constructor
   public CombatTask(Combatant combatant, Combatant opponent){
     this.combatant = combatant;
@@ -19,9 +20,13 @@ public class CombatTask extends TimerTask{
   
   //Overide
   public void run(){
+    //Halves movement speed in swamps
+    if (terrain.getType().equals("Swamp")){
+      speedMultiplier = 0.5; //Swamp terrain halves movement speed
+    }
     //If combatant is not within attack range yet, it'll move forward
     if (Combat.getDistance() > combatant.getRange()){
-      Combat.setDistance(Combat.getDistance() - combatant.getSpeed()/10); //Combatant will move every 0.1 seconds
+      Combat.setDistance(Combat.getDistance() - (combatant.getSpeed()*speedMultiplier)/10); //Combatant will move every 0.1 seconds
       System.out.println("Distance = " + Combat.getDistance());
     }
     //If combatant is in range and it is not dead (HP is not 0 or less) and it's opponent is also not dead
