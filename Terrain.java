@@ -11,11 +11,20 @@ public class Terrain {
   private double distanceRequired;
   private int[] coords = new int[2];
   //Contructor
-  public Terrain (Building building, Combatant troop, String type, double distanceRequired, int[] coords) {
-    this.building = building;
-    this.troop = troop;
+  public Terrain (String type, int[] coords) {
     this.type = type;
-    this.distanceRequired = distanceRequired;
+    //Preset Stats for Swamp
+    if (type.equals("Swamp")){
+      this.distanceRequired = 2;
+    }
+    //Preset Stats for Mountains
+    else if (type.equals("Mountains")){
+      this.distanceRequired = 1000000;
+    }
+    //Preset Stats for all other tiles
+    else{
+      this.distanceRequired = 1;
+    }
     this.coords = coords;
   }
   //Getters
