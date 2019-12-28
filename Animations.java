@@ -1,3 +1,5 @@
+//PLEASE BE MORE SPECIFIC ON YOUR COMMENTING
+
 import javafx.animation.TranslateTransition;
 import javafx.animation.FadeTransition;
 import javafx.animation.*;
