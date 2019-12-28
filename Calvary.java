@@ -5,9 +5,9 @@
 
 public class Calvary extends Combatant{
   //Constructor
-  public Calvary (boolean team) {
-    super("Calvary", 600, 100, 5, 50, 10, team, 50, 6);
-    //Calvary has 600HP, 100 ATK, 5 RNG, 50 DEF, 10 PENETRATE, 50 SPD, 6 TILE MVMT
+  public Calvary (boolean team, int[] coords) {
+    super("Calvary", 500, 80, 5, 50, 10, team, 50, 6, coords);
+    //Calvary has 500HP, 80 ATK, 5 RNG, 50 DEF, 10 PENETRATE, 50 SPD, 6 TILE MVMT
   }
 }
   

@@ -19,8 +19,9 @@ public class Combatant{
   private double penetration; //Penetration damage of combatant (Ignore defense)
   
   //Constructor
+  //REMEMBER TO ADD COORDINATES TO CONSTRUCTOR
   public Combatant(String name, double health, double attack, double range, double defense, double penetration,
-                   boolean team, double speed, int moveDistance){
+                   boolean team, double speed, int moveDistance, int[] coords){
     this.name = name;
     this.health = health;
     this.attack = attack;
@@ -30,6 +31,7 @@ public class Combatant{
     this.team = team;
     this.speed = speed;
     this.moveDistance = moveDistance;
+    this.coords = coords;
   }
   
   //Setters
@@ -47,6 +49,9 @@ public class Combatant{
   }
   public void setTeam(boolean team){
     this.team = team;
+  }
+  public void setCoords(int[] coords){
+    this.coords = coords;
   }
   
   //Getters
@@ -74,12 +79,15 @@ public class Combatant{
   public double getPenetration(){
     return penetration;
   }
+  public int[] getCoords(){
+    return coords;
+  }
   
   //Implement when board is added
   
   //Helper Methods
   //Move method that checks if move is valid
-  public boolean move(int x, int y){
+  public boolean move(int x, int y, Terrain terrain){
     //Calculates distance of travel
     int distance = Math.abs(x - coords[0]) + Math.abs(y - coords[1]);
     //Checks if coordinates goes out of bounds of the 7x7 board
@@ -89,6 +97,10 @@ public class Combatant{
     //If distance is within the move limit
     else if (distance <= moveDistance){
       return true;
+    }
+    //If tile already has a troop from your side
+    else if (terrain.getTroop().getTeam() == getTeam()){
+      return false;
     }
     //If not within move distance
     else{
@@ -100,6 +112,8 @@ public class Combatant{
     //Method is called after confirmation prompt returns true from GUI
     coords[0] = x;
     coords[1] = y;
+    //If tile already has an enemy troop on it, combat will be intiated in the main method
+    //then winner will be the one who gets placed in the combatant slot of the terrain tile
   }
   
   //Method is called when capturing an unclaimed building (Null Team)
@@ -107,7 +121,24 @@ public class Combatant{
     terrain.getBuilding().setTeam(team); //Sets the building team to that of the capturing troop
   }
   
-  
-  
+  //Method that stores coordinates of all possible moves in an arraylist and returns it
+  public ArrayList<int[]> findMoves(Terrain[][] boardState){
+    //Arraylist that stores all possible coordinates combatant can move to
+    ArrayList<int[]> possibleMoves = new ArrayList<int[]>();
+    Terrain terrain;
+    //Checks all tiles for possible moves
+    for (int i = 0; i < 7; i++){
+      for (int j = 0; j < 7; j++){
+        //Temporarily stores current tile in terrain
+        terrain = boardState[i][j];
+        //If move is within range and valid
+        if (move(i,j, terrain) == true){
+          //Stores coordinates of the terrain tile
+          possibleMoves.add(terrain.getCoords());
+        }
+      }
+    }
+    return possibleMoves;
+  }
 }
 
