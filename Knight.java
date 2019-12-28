@@ -4,11 +4,18 @@
  */
 
 public class Knight extends Combatant {
-  private double armour;
-  
+  private static int knightPrice = 200;
   //Constructor
   public Knight(boolean team, int[] coords) {
     super("Knight", 500, 90, 1, 35, 0, team, 10, 3, coords); //Presets stats for Knight
     //Knights have 500HP, 90ATK, 1 RNG, 35 DEF, 10 SPD, 3 TILE MVMT
+  }
+  //Setters
+  public static void setKnightPrice(int price){
+    knightPrice = price;
+  }
+  //Getters
+  public static int getKnightPrice(){
+    return knightPrice;
   }
 }
