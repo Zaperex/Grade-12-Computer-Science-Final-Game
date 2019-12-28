@@ -3,6 +3,7 @@
  * Description: CombatTask class that extends TimerTask class and provides a run method for the timer to use
  */
 import java.util.*;
+//I CAN DO THIS WITHOUT THREADING (CAUSE THEY ARE ESSENTIALLY DOING THE SAME THING)
 
 public class CombatTask extends TimerTask{
   //Fields
@@ -38,8 +39,8 @@ public class CombatTask extends TimerTask{
       double damage = ((100-opponent.getDefense())/100)*combatant.getAttack() + combatant.getPenetration();
       opponent.setHealth(opponent.getHealth()-damage); //Opponent takes that damage
       attackCounter = 0; //Sets attack counter back to 0
-      System.out.println(combatant.getName() + " dealt " + damage + " damage to " + opponent.getName());
-      System.out.println(opponent.getName() + "HP: " + opponent.getHealth());
+      System.out.println(combatant.getName() + " " + combatant.getTeam() + " dealt " + damage + " damage to " + opponent.getName() + " " + opponent.getTeam());
+      System.out.println(opponent.getName() + " " + opponent.getTeam() + " HP: " + opponent.getHealth());
       }
       attackCounter++; //Adds 1 to attack counter
     }
