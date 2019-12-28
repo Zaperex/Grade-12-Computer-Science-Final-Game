@@ -1,6 +1,7 @@
 /* Name: Frank Kong
  * Date: December 17, 2019
  * Description: Combatant class (parent class) for all the combatants: Includes buildings and troops
+ *              Includes many helper methods that allow combatant to perform actions such as move, capture, etc.
  */
 import java.util.*;
 
@@ -75,34 +76,38 @@ public class Combatant{
   }
   
   //Implement when board is added
-  /*
-   //Helper Methods
-   public boolean move(int x, int y){
-   int distance = Math.abs(x - coords[0]) + Math.abs(y - coords[1]);
-   if (distance <= moveDistance){
-   actualMove(x, y);
-   return true;
-   }
-   else{
-   return false;
-   }
-   }
-   
-   public void actualMove(int x, int y){
-   Scanner input = new Scanner(System.in);
-   System.out.println("Are you sure you want to move here? Y/N");
-   String response = input.nextLine();
-   while !(response.toIgnoreCase().equals("Y") || response.toIgnoreCase().equals("N")){
-   System.out.println("Are you sure you want to move here? Y/N");
-   response = input.nextLine();
-   }
-   //If confirmed then move to spot
-   if (response.toIgnoreCase().equals("Y")){
-   coords[0] = x;
-   coords[1] = y;
-   }
-   
-   }
-   */
+  
+  //Helper Methods
+  //Move method that checks if move is valid
+  public boolean move(int x, int y){
+    //Calculates distance of travel
+    int distance = Math.abs(x - coords[0]) + Math.abs(y - coords[1]);
+    //Checks if coordinates goes out of bounds of the 7x7 board
+    if (x < 0 || x >= 7 || y < 0 || y >= 7){
+      return false;
+    }
+    //If distance is within the move limit
+    else if (distance <= moveDistance){
+      return true;
+    }
+    //If not within move distance
+    else{
+      return false;
+    }
+  }
+  //Method that makes the actual move after user confirms they want to move there
+  public void actualMove(int x, int y){  
+    //Method is called after confirmation prompt returns true from GUI
+    coords[0] = x;
+    coords[1] = y;
+  }
+  
+  //Method is called when capturing an unclaimed building (Null Team)
+  public void captureBuilding(Terrain terrain){
+    terrain.getBuilding().setTeam(team); //Sets the building team to that of the capturing troop
+  }
+  
+  
+  
 }
 
