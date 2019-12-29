@@ -40,7 +40,7 @@ import javafx.scene.image.ImageView;
 //Make the rectangle a red square
 //test the fading with images
 
-public class Animations2 extends Application {
+public class Animations extends Application {
   
   
   public void start (Stage primaryStage) {
