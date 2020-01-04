@@ -2,9 +2,6 @@
  * Date: 2019/12/27
  * Description: The animations for the game
  **/
-
-import javafx.animation.TranslateTransition;
-import javafx.animation.FadeTransition;
 import javafx.animation.*;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -40,7 +37,7 @@ import javafx.scene.image.ImageView;
 //Make the rectangle a red square
 //test the fading with images
 
-public class Animations2 extends Application {
+public class Animations extends Application {
   
   
   public void start (Stage primaryStage) {
@@ -129,7 +126,7 @@ public class Animations2 extends Application {
     iv2.setFitWidth(100);
     iv2.setPreserveRatio(true);
     
-    iv2.setLayoutX(550);
+    iv2.setLayoutX(500);
     iv2.setLayoutY(250);
     
     //The troop's movement (it will move from left to right corner of the window)
@@ -171,7 +168,10 @@ public class Animations2 extends Application {
       System.out.println("circle2 x : " + (iv2.getLayoutX() - iv2.translateXProperty().doubleValue()));
       System.out.println("circle2 y : " + (iv2.getLayoutY() - iv2.translateYProperty().doubleValue()));
       System.out.println("distance : " + distance);
-      if ((distance <= 150.0)) {
+      //knightStopRange is used to determine when/how far away the knight will stop
+      double knightStopRange = 150;
+      //If another troop is in range with the knight
+      if (distance <= knightStopRange) {
         //Make rect1 visible
         ivHit1.setOpacity(1);
 //        Stop the first troop
@@ -203,7 +203,10 @@ public class Animations2 extends Application {
       System.out.println("circle2 x : " + (iv2.getLayoutX() - iv2.translateXProperty().doubleValue()));
       System.out.println("circle2 y : " + (iv2.getLayoutY() - iv2.translateYProperty().doubleValue()));
       System.out.println("distance : " + distance);
-      if ((distance <= 150.0)) {
+      //archerStopRange is used to determine when/how far away the archer will stop
+      double archerStopRange = 350;
+      //If the another troop is in range of the archer
+      if (distance <= archerStopRange) {
         //Make ivHit2 visible
         ivHit2.setOpacity(1);
         //Stop the first troop
