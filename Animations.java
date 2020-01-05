@@ -2,6 +2,7 @@
  * Date: 2019/12/27
  * Description: The animations for the game
  **/
+
 import javafx.animation.*;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -27,8 +28,12 @@ import javafx.beans.value.ObservableValue;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-//every 5 pixel is 1 meter
+//every 80 pixel is 1 meter
 //start 500 pixels away from each other
+//knight 10m/s
+//archer 25m/s
+//have variables for speed 
+     // attackerSpeed and defenderSpeed
 
 
 //figure out a way to get my fields into animations class
@@ -42,7 +47,17 @@ public class Animations extends Application {
   
   public void start (Stage primaryStage) {
     
-    //Rectangle that will show up when the shapes collide
+    int travelDistance = 800;
+      
+    //Speed of the first troop 
+    int speed1 = travelDistance/(5*8);
+    //Speed of the second troop (how long it takes for the troop to travel 500 pixels)
+    int speed2 = travelDistance/(4*8);
+    
+    double range1 = 15;
+    double range2 = 200;
+    
+    //show up when the shapes collide
     Image hitMarker1 = new Image("kapow.png");
     //Sets the colour of the rectangle
     ImageView ivHit1 = new ImageView();
@@ -55,11 +70,11 @@ public class Animations extends Application {
     //This is the transition for the shape (rectangle) that will show up when two shapes collide
     TranslateTransition attackTransition1 = new TranslateTransition();
     //Set how long one cycle will take
-    attackTransition1.setDuration(Duration.seconds(4));
+    attackTransition1.setDuration(Duration.seconds(speed1));
     //Set the node (what troop will have the transition)
     attackTransition1.setNode(ivHit1);
     //Set the end position of the troop
-    attackTransition1.setToX(500);
+    attackTransition1.setToX(travelDistance);
     attackTransition1.setToY(0);
     //Make the troop be able to go back to its previous position (goes in both directions)
     attackTransition1.setAutoReverse(true);
@@ -72,7 +87,7 @@ public class Animations extends Application {
     Image knight = new Image("knight.png");
     ImageView iv1 = new ImageView();
     iv1.setImage(knight);
-    iv1.setFitWidth(100);
+    iv1.setFitWidth(50);
     iv1.setPreserveRatio(true);
     iv1.setLayoutX(50);
     iv1.setLayoutY(250);
@@ -81,11 +96,11 @@ public class Animations extends Application {
     //The troop's movement (it will move from left to right corner of the window)
     TranslateTransition transition1 = new TranslateTransition();
     //Sets how long it will take to finish 1 cycle
-    transition1.setDuration(Duration.seconds(4));
+    transition1.setDuration(Duration.seconds(speed1));
     //Sets the node 
     transition1.setNode(iv1);
     //Sets the end position
-    transition1.setToX(500);
+    transition1.setToX(travelDistance);
     transition1.setToY(0);
     //Makes the troop go in both direction (forward and reverse)
     transition1.setAutoReverse(true);
@@ -105,11 +120,11 @@ public class Animations extends Application {
     //This is the transition for the shape (rectangle) that will show up when two shapes collide
     TranslateTransition attackTransition2 = new TranslateTransition();
     //Sets how long it takes to complete 1 cycle of the transition
-    attackTransition2.setDuration(Duration.seconds(4));
+    attackTransition2.setDuration(Duration.seconds(speed2));
     //Set the node
     attackTransition2.setNode(ivHit2);
     //Set end position
-    attackTransition2.setToX(-550);
+    attackTransition2.setToX(-travelDistance);
     attackTransition2.setToY(0);
     //Make the troop be able to move in both reverse and forward direction
     attackTransition2.setAutoReverse(true);
@@ -123,20 +138,20 @@ public class Animations extends Application {
     //Sets the colour
     ImageView iv2 = new ImageView();
     iv2.setImage(troop2);
-    iv2.setFitWidth(100);
+    iv2.setFitWidth(50);
     iv2.setPreserveRatio(true);
     
-    iv2.setLayoutX(500);
+    iv2.setLayoutX(550);
     iv2.setLayoutY(250);
     
     //The troop's movement (it will move from left to right corner of the window)
     TranslateTransition transition2 = new TranslateTransition();
     //Sets how long it takes for 1 cycle to be completed
-    transition2.setDuration(Duration.seconds(4));
+    transition2.setDuration(Duration.seconds(speed2));
     //Set the node
     transition2.setNode(iv2);
     //Set the end position
-    transition2.setToX(-550);
+    transition2.setToX(-travelDistance);
     transition2.setToY(0);
     //Make the troop move in both forward and backwards direction
     transition2.setAutoReverse(true);
@@ -168,10 +183,9 @@ public class Animations extends Application {
       System.out.println("circle2 x : " + (iv2.getLayoutX() - iv2.translateXProperty().doubleValue()));
       System.out.println("circle2 y : " + (iv2.getLayoutY() - iv2.translateYProperty().doubleValue()));
       System.out.println("distance : " + distance);
-      //knightStopRange is used to determine when/how far away the knight will stop
-      double knightStopRange = 150;
+
       //If another troop is in range with the knight
-      if (distance <= knightStopRange) {
+      if (distance <= range1) {
         //Make rect1 visible
         ivHit1.setOpacity(1);
 //        Stop the first troop
@@ -203,10 +217,9 @@ public class Animations extends Application {
       System.out.println("circle2 x : " + (iv2.getLayoutX() - iv2.translateXProperty().doubleValue()));
       System.out.println("circle2 y : " + (iv2.getLayoutY() - iv2.translateYProperty().doubleValue()));
       System.out.println("distance : " + distance);
-      //archerStopRange is used to determine when/how far away the archer will stop
-      double archerStopRange = 350;
+
       //If the another troop is in range of the archer
-      if (distance <= archerStopRange) {
+      if (distance <= range2) {
         //Make ivHit2 visible
         ivHit2.setOpacity(1);
         //Stop the first troop
