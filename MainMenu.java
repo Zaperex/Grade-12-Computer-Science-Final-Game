@@ -9,6 +9,9 @@
 
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.layout.VBox;
+import javafx.scene.layout.HBox;
+import javafx.geometry.Pos;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -22,18 +25,20 @@ import javafx.scene.image.ImageView;
 import javafx.scene.control.Label;
 
 public class MainMenu extends Application {
+    Pane root = new Pane();
+    Scene mainMenu = new Scene(root, 600, 600);
   
   public void start (Stage primaryStage) throws Exception {
     
     //Create a rectangle
     Rectangle rect1 = new Rectangle(0, 0, 600, 1);
     //Set the colour to blue
-    rect1.setFill(Color.BLUE);
+    rect1.setFill(Color.GREY);
     
     //Create another rectangle
     Rectangle rect2 = new Rectangle(0, 599, 600, 1);
     //Set the colour to yellow
-    rect2.setFill(Color.YELLOW);
+    rect2.setFill(Color.BEIGE);
     
     //Transitioin for the first rectangle
     ScaleTransition rect1T = new ScaleTransition(Duration.seconds(1), rect1);
@@ -51,6 +56,10 @@ public class MainMenu extends Application {
     rect2T.setCycleCount(1);
     rect2T.play();
     
+    Label title = new Label("SEAN FRANK GAME");
+    title.setPrefSize(400, 400);
+    title.relocate(225, -50);
+    
     //Create a button that will be used to start a new game
     Button newGameButton = new Button("New Game");
     //Sets the position of the button
@@ -65,7 +74,7 @@ public class MainMenu extends Application {
     //Sets the position of the button
     loadGameButton.relocate(225, 450);
     //Sets the size of the button
-    loadGameButton.setPrefSize(150,25);
+    loadGameButton.setPrefSize(150, 25);
     //Give the button a function when it is pressed
     loadGameButton.setOnAction(e -> loadGameButtonClicked());
     
@@ -78,10 +87,13 @@ public class MainMenu extends Application {
     //Give the button a function when it is pressed
     instructionsButton.setOnAction(e -> instructionsButtonClicked(primaryStage));
     
-    Pane root = new Pane();
+    VBox buttonLayout = new VBox();
+    buttonLayout.getChildren().addAll(newGameButton, loadGameButton, instructionsButton);
+    buttonLayout.relocate(200, 400);
+    buttonLayout.setSpacing(10);
+    buttonLayout.setAlignment(Pos.BOTTOM_CENTER);
     
-    Scene mainMenu = new Scene(root, 600, 600);
-    root.getChildren().addAll(rect1, rect2, newGameButton, loadGameButton, instructionsButton);
+    root.getChildren().addAll(rect1, rect2, title, buttonLayout);
     primaryStage.setTitle("Game");
     primaryStage.setScene(mainMenu);
     primaryStage.show();
@@ -90,7 +102,7 @@ public class MainMenu extends Application {
   public void newGameButtonClicked (Stage primaryStage) {
     
     Pane root = new Pane();
-    Scene gameScene = new Scene(root, 1275, 675);
+    Scene gameScene = new Scene(root, 1050, 675);
     
     //Create a 2D array of buttons (represents the map)
     Button[][] button = new Button[7][7];
@@ -115,7 +127,17 @@ public class MainMenu extends Application {
     
     //Create a label for the terrain's information
     Label terrainInfo = new Label();
-
+    
+    Button archerButton = new Button("Archer");
+    Button knightButton = new Button("Knight");
+    Button cbmButton = new Button("Crossbow Men");
+    Button footManButton = new Button("Foot Man");
+    Button calvaryButton = new Button("Calvary");
+    
+    HBox troopButtonLayout = new HBox(15);
+    troopButtonLayout.relocate(640, 550);
+    troopButtonLayout.getChildren().addAll(archerButton, knightButton, cbmButton, footManButton, calvaryButton);
+    
     //Populate the 2d array of buttons
     for (int i = 0; i < 7; i++) {
       for (int j = 0; j < 7; j++) {
@@ -166,9 +188,10 @@ public class MainMenu extends Application {
         });
         
         //Creates the board/map by adding the button
-        root.getChildren().add(button[i][j]);
+        root.getChildren().addAll(button[i][j]);
       }
     }
+    root.getChildren().add(troopButtonLayout);
     
     primaryStage.setScene(gameScene);
     primaryStage.show();
@@ -177,27 +200,40 @@ public class MainMenu extends Application {
   //Method that will load the previous game
   public void loadGameButtonClicked () {
     
+    
+    
+    
+    
+    
   }
   //Method that will bring the user to an instructions page/window
   public void instructionsButtonClicked (Stage primaryStage) {
     
     Label instructions = new Label("1. first instruction\n" + "2. second instruction\n" + "3. third instruction\n");
-//    instructions.relocate(225, 300);
+    
+    Button menuButton = new Button("Return To Menu");
+    menuButton.relocate(50, 500);
+    menuButton.setOnAction(e -> menuButtonClicked(primaryStage));
     
     Pane root = new Pane();
-    root.getChildren().add(instructions);
+    root.getChildren().addAll(instructions, menuButton);
     
-    Scene instructionsScene = new Scene(root, 400, 300);
+    Scene instructionsScene = new Scene(root, 600, 600);
     
     primaryStage.setScene(instructionsScene);
     primaryStage.show();
+    
+  }
+  public void menuButtonClicked (Stage primaryStage) {
+    
+    primaryStage.setScene(mainMenu);
     
   }
   
   public void checkBuilding (Terrain[][] terrain, Rectangle buildingBox, Label buildingInfo, int x, int y, Pane root) {
     
     //Sets the position of the buildingBox
-    buildingBox.relocate(700, 100);
+    buildingBox.relocate(675, 75);
     //Set the opacity
     buildingBox.setOpacity(0.5);
     //If the building is on the enemy team
@@ -212,18 +248,19 @@ public class MainMenu extends Application {
     }
     //Gather information about the building
    buildingInfo.setText("Building\n" + 
+                        "Name: " + terrain[x][y].getBuilding().getName() + "\n" +
                         "Health: " + terrain[x][y].getBuilding().getHealth() + "\n" + 
                         "Attack: " + terrain[x][y].getBuilding().getAttack() + "\n" + 
                         "Range: " + terrain[x][y].getBuilding().getRange());
     //Set the position of the building's information
-    buildingInfo.relocate(800, 125);
+    buildingInfo.relocate(800, 100);
     
     root.getChildren().addAll(buildingBox, buildingInfo);
   }
   public void checkTroop (Terrain[][] terrain, Rectangle troopBox, Label troopInfo, int x, int y, Pane root) {
 
     //Set the position of the troopBox
-    troopBox.relocate(700, 300);
+    troopBox.relocate(675, 250);
     //Set the opacity
     troopBox.setOpacity(0.5);
     //If the troop is on the enemy team
@@ -242,19 +279,19 @@ public class MainMenu extends Application {
                       "Attack: " + terrain[x][y].getTroop().getAttack() + "\n" + 
                       "Range: " + terrain[x][y].getTroop().getRange());
     //Set the position of the label
-    troopInfo.relocate(800, 325);
+    troopInfo.relocate(800, 275);
     
     root.getChildren().addAll(troopBox, troopInfo);
   }
   public void checkTerrain (Terrain[][] terrain, Rectangle terrainBox, Label terrainInfo, int x, int y, Pane root) {
     
     //Set the position of the terrainBox
-    terrainBox.relocate(700, 475);
+    terrainBox.relocate(675, 425);
     //Set the color of the terrainBox
     terrainBox.setFill(Color.TRANSPARENT);
     terrainBox.setStroke(Color.BLACK);
     terrainInfo.setText("Terrain type: " + terrain[x][y].getType());
-    terrainInfo.relocate(800, 475);
+    terrainInfo.relocate(800, 425);
     root.getChildren().addAll(terrainBox, terrainInfo);
   }
   
