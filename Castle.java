@@ -18,6 +18,13 @@ class Castle extends Building{
   public void setLevel(int level){
     this.level = level;
   }
+  //Getters
+  public int getGold(){
+    return gold;
+  }
+  public int getLevel(){
+    return level;
+  }
   
   //Checks if you can upgrade the Castle
   public String checkUpgrade(){
