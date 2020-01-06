@@ -6,7 +6,7 @@
 public class Terrain {
   //Fields
   private Building building;
-  private Combatant troop;
+  private Troop troop;
   private String type;
   private double distanceRequired;
   private int[] coords = new int[2];
@@ -34,7 +34,7 @@ public class Terrain {
   public Building getBuilding(){
     return building;
   }
-  public Combatant getTroop () {
+  public Troop getTroop () {
     return troop;
   }
   public String getType () {
@@ -50,7 +50,7 @@ public class Terrain {
   public void setBuilding (Building building) {
     this.building = building;
   }
-  public void setTroop (Combatant troop) {
+  public void setTroop (Troop troop) {
     this.troop = troop;
   }
   public void setType (String type) {

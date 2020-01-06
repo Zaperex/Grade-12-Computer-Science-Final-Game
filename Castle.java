@@ -4,8 +4,8 @@
  */
 
 class Castle extends Building{
-  int gold; //The amount of gold your castle stores that you use to recruit troops
-  int level; //Level of castle (Max Lvl is 3)
+  private int gold; //The amount of gold your castle stores that you use to recruit troops
+  private int level; //Level of castle (Max Lvl is 3)
   public Castle(boolean team, int[] coords){
     super("Castle", 3000, 50, 50, team, coords);
     //Castle has 3000HP, 50ATK, 50 RNG, 30 DEF, 0 Penetration Dmg, 0 SPD, 0 MVMT TILES
@@ -21,15 +21,19 @@ class Castle extends Building{
   
   //Checks if you can upgrade the Castle
   public String checkUpgrade(){
+    //If you're already maxed
     if (level == 3){
       return "Castle is already max level";
     }
+    //If you're lvl 2 and have enough gold
     else if (level == 2 && gold >= 2000){
       return "Castle is ready to upgrade to lvl 3";
     }
+    //If you're lvl 1 and have enough gold
     else if (level == 1 && gold >= 1000){
       return "Castle is ready to upgrade to lvl 2";
     }
+    //If you do not have enough gold
     else{
       return "Not enough gold to upgrade";
     }
