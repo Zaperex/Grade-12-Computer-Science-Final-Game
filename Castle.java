@@ -4,11 +4,12 @@
  */
 
 class Castle extends Building{
+  private static int upgradeCost = 1000; //Cost it takes to upgrade castle
   private int gold; //The amount of gold your castle stores that you use to recruit troops
   private int level; //Level of castle (Max Lvl is 3)
   public Castle(boolean team, int[] coords){
     super("Castle", 3000, 50, 50, team, coords);
-    //Castle has 3000HP, 50ATK, 50 RNG, 30 DEF, 0 Penetration Dmg, 0 SPD, 0 MVMT TILES
+    //Castle has 3000HP, 50ATK, 50 RNG, 30 DEF, 0 Penetration Dmg, 0 SPD
   }
   
   //Setters
@@ -18,6 +19,9 @@ class Castle extends Building{
   public void setLevel(int level){
     this.level = level;
   }
+  public static void setUpgradeCost(int cost){
+    upgradeCost = cost;
+  }
   //Getters
   public int getGold(){
     return gold;
@@ -25,24 +29,40 @@ class Castle extends Building{
   public int getLevel(){
     return level;
   }
+  public static int getUpgradeCost(){
+    return upgradeCost;
+  }
+  
+  public void upgrade(){
+    if (checkUpgrade()){
+      gold -= upgradeCost;
+      level++;
+      upgradeCost += 1000;
+    }
+  }
+    
   
   //Checks if you can upgrade the Castle
-  public String checkUpgrade(){
+  public boolean checkUpgrade(){
     //If you're already maxed
     if (level == 3){
-      return "Castle is already max level";
+      //Cannot upgrade since already max level
+      return false;
     }
     //If you're lvl 2 and have enough gold
-    else if (level == 2 && gold >= 2000){
-      return "Castle is ready to upgrade to lvl 3";
+    else if (level == 2 && gold >= upgradeCost){
+      //Requirements met for upgrade
+      return true;
     }
     //If you're lvl 1 and have enough gold
-    else if (level == 1 && gold >= 1000){
-      return "Castle is ready to upgrade to lvl 2";
+    else if (level == 1 && gold >= upgradeCost){
+      //Requirements met for upgrade
+      return true;
     }
     //If you do not have enough gold
     else{
-      return "Not enough gold to upgrade";
+      //Not enough gold to upgrade
+      return false;
     }
   }
   
