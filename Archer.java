@@ -7,8 +7,8 @@ public class Archer extends Troop {
   private static int archerPrice = 50;
   //Constructor
   public Archer (boolean team, int[] coords) {
-    super("Archer", 300, 45, 40, 0, 0, team, 12.5, 5, coords);
-    //Archers have 300 HP, 45 ATK, 40 RNG, 12.5 SPD, 5 TILE MVMT
+    super("Archer", 300, 45, 40, 0, 0, team, 10, 5, coords);
+    //Archers have 300 HP, 45 ATK, 40 RNG, 10 SPD, 5 TILE MVMT
   }
   //Setters
   public static void setArcherPrice(int price){
