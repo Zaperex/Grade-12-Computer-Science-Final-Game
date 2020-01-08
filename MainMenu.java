@@ -23,16 +23,18 @@ import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.control.Label;
+import java.util.*;
 
 public class MainMenu extends Application {
-    Pane root = new Pane();
-    Scene mainMenu = new Scene(root, 600, 600);
+  Pane root = new Pane();
+  Scene mainMenu = new Scene(root, 600, 600);
+  public static boolean turn = true; //Boolean value for whose turn it is. (P1 = True) (P2 = False)
   
   public void start (Stage primaryStage) throws Exception {
     
     //Create a rectangle
     Rectangle rect1 = new Rectangle(0, 0, 600, 1);
-    //Set the colour to blue
+    //Set the colour to grey
     rect1.setFill(Color.GREY);
     
     //Create another rectangle
@@ -57,8 +59,9 @@ public class MainMenu extends Application {
     rect2T.play();
     
     Label title = new Label("SEAN FRANK GAME");
-    title.setPrefSize(400, 400);
-    title.relocate(225, -50);
+    title.setMinWidth(200);
+    title.setMinHeight(100);
+    title.relocate(225, 100);
     
     //Create a button that will be used to start a new game
     Button newGameButton = new Button("New Game");
@@ -91,7 +94,6 @@ public class MainMenu extends Application {
     buttonLayout.getChildren().addAll(newGameButton, loadGameButton, instructionsButton);
     buttonLayout.relocate(200, 400);
     buttonLayout.setSpacing(10);
-    buttonLayout.setAlignment(Pos.BOTTOM_CENTER);
     
     root.getChildren().addAll(rect1, rect2, title, buttonLayout);
     primaryStage.setTitle("Game");
@@ -115,28 +117,28 @@ public class MainMenu extends Application {
     
     //Create a label for the building's information
     Label buildingInfo = new Label();
-
+    
     //Create a rectangle for the troop's information
     Rectangle troopBox = new Rectangle(300, 150);
     
     //Create a label for the troop's information
     Label troopInfo = new Label();
-
+    
     //Create a rectangle for the terrain's information
     Rectangle terrainBox = new Rectangle(300, 30);
     
     //Create a label for the terrain's information
     Label terrainInfo = new Label();
     
-    Button archerButton = new Button("Archer");
-    Button knightButton = new Button("Knight");
-    Button cbmButton = new Button("Crossbow Men");
-    Button footManButton = new Button("Foot Man");
-    Button calvaryButton = new Button("Calvary");
-    
-    HBox troopButtonLayout = new HBox(15);
-    troopButtonLayout.relocate(640, 550);
-    troopButtonLayout.getChildren().addAll(archerButton, knightButton, cbmButton, footManButton, calvaryButton);
+//    Button archerButton = new Button("Archer");----------------------------------------------------------------------------------------------------
+//    Button knightButton = new Button("Knight");
+//    Button cbmButton = new Button("Crossbow Men");
+//    Button footManButton = new Button("Foot Man");
+//    Button calvaryButton = new Button("Calvary");
+//    
+//    HBox troopButtonLayout = new HBox(15);
+//    troopButtonLayout.relocate(640, 550);
+//    troopButtonLayout.getChildren().addAll(archerButton, knightButton, cbmButton, footManButton, calvaryButton);
     
     //Populate the 2d array of buttons
     for (int i = 0; i < 7; i++) {
@@ -159,7 +161,7 @@ public class MainMenu extends Application {
           terrain[i][j].setBuilding(new Building("Home base", 100.0, 50.0, 100.0, true, coords));
         }
         else {
-        
+          
           //VALUES USED FOR TESTING *******************************
           terrain[i][j] = new Terrain("Plain", coords);
           terrain[i][j].setBuilding(new Building("Enemy Base", 100.0, 50.0, 100.0, false, coords));
@@ -181,17 +183,53 @@ public class MainMenu extends Application {
           if (terrain[x][y].getTroop() != null) {
             //Call the checkTroop method
             checkTroop(terrain, troopBox, troopInfo, x, y, root);
+            ArrayList<int[]> possibleMoves = terrain[x][y].getTroop().findMoves(terrain);
+            int[] moves = new int[2];
+            for (int k = 0; k < possibleMoves.size(); k++) {
+              moves = possibleMoves.get(k);
+              System.out.println(moves[0] + " " + moves[1]);
+              button[moves[0]][moves[1]].setStyle("-fx-background-color: red;" + "-fx-text-fill: white");
+            } 
+//button.setStyle(null);
+            
           }
           //Call the check terrain method
           checkTerrain(terrain, terrainBox, terrainInfo, x, y, root);
           
+          if ((x == 0 && y == 0 || x == 6 && y == 6) && terrain[x][y].getBuilding().getTeam() == turn) {
+            Label recruitmentLabel = new Label("Recruitment:");
+            
+            Button archerButton = new Button("Archer");
+            Button knightButton = new Button("Knight");
+            Button cbmButton = new Button("Crossbow Men");
+            Button footManButton = new Button("Foot Man");
+            Button calvaryButton = new Button("Calvary");
+            
+            HBox troopButtonLayout = new HBox(15);
+            troopButtonLayout.getChildren().addAll(archerButton, knightButton, cbmButton, footManButton, calvaryButton);
+            
+            VBox recruitmentLayout = new VBox();
+            recruitmentLayout.relocate(640, 550);
+            recruitmentLayout.getChildren().add(troopButtonLayout);
+            
+            
+            //Checks level of the castle (3 is the max level)
+            if (terrain[x][y].getBuilding() instanceof Castle) {
+              if (((Castle)terrain[x][y].getBuilding()).getLevel() < 3){
+                Button upgradeButton = new Button("Upgrade: " + Castle.getUpgradeCost());
+                recruitmentLayout.getChildren().add(upgradeButton);
+              }
+            }
+            
+            root.getChildren().add(recruitmentLayout);
+          }
         });
         
         //Creates the board/map by adding the button
         root.getChildren().addAll(button[i][j]);
       }
     }
-    root.getChildren().add(troopButtonLayout);
+//    root.getChildren().add(troopButtonLayout); --------------------------------------------------------------------------
     
     primaryStage.setScene(gameScene);
     primaryStage.show();
@@ -247,18 +285,18 @@ public class MainMenu extends Application {
       buildingBox.setFill(Color.BLUE);
     }
     //Gather information about the building
-   buildingInfo.setText("Building\n" + 
-                        "Name: " + terrain[x][y].getBuilding().getName() + "\n" +
-                        "Health: " + terrain[x][y].getBuilding().getHealth() + "\n" + 
-                        "Attack: " + terrain[x][y].getBuilding().getAttack() + "\n" + 
-                        "Range: " + terrain[x][y].getBuilding().getRange());
+    buildingInfo.setText("Building\n" + 
+                         "Name: " + terrain[x][y].getBuilding().getName() + "\n" +
+                         "Health: " + terrain[x][y].getBuilding().getHealth() + "\n" + 
+                         "Attack: " + terrain[x][y].getBuilding().getAttack() + "\n" + 
+                         "Range: " + terrain[x][y].getBuilding().getRange());
     //Set the position of the building's information
     buildingInfo.relocate(800, 100);
     
     root.getChildren().addAll(buildingBox, buildingInfo);
   }
   public void checkTroop (Terrain[][] terrain, Rectangle troopBox, Label troopInfo, int x, int y, Pane root) {
-
+    
     //Set the position of the troopBox
     troopBox.relocate(675, 250);
     //Set the opacity
