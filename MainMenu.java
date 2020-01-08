@@ -144,59 +144,72 @@ public class MainMenu extends Application {
     for (int i = 0; i < 7; i++) {
       for (int j = 0; j < 7; j++) {
         //Create a new button 
-        button[i][j] = new Button("");
+        button[j][i] = new Button("");
         //Set the size of the button
-        button[i][j].setPrefSize(75, 75);
+        button[j][i].setPrefSize(75, 75);
         //Puts the button in the correct spot of the window
-        button[i][j].setLayoutX(i*75 + 75);
-        button[i][j].setLayoutY(j*75 + 75);
+        button[j][i].setLayoutX(i*75 + 75);
+        button[j][i].setLayoutY(j*75 + 75);
         
         //Array used to store the coordinates of the button
-        int[] coords = {i, j};
-        final int x = i;
-        final int y = j;
+        int[] coords = {i, j}; //Based on arraylist orientation with y controlling which row and x controlling which column
+        int x = j;
+        int y = i;
         
-        if (i == 0 && j == 0) {
-          terrain[i][j] = new Terrain("Swamp", coords);
-          terrain[i][j].setBuilding(new Building("Home base", 100.0, 50.0, 100.0, true, coords));
+        if (j == 0 && i == 0) {
+          terrain[j][i] = new Terrain("Swamp", coords);
+          terrain[j][i].setBuilding(new Building("Home base", 100.0, 50.0, 100.0, true, coords));
         }
-        else {
+        else if (j == 6 && i == 6){
           
           //VALUES USED FOR TESTING *******************************
-          terrain[i][j] = new Terrain("Plain", coords);
-          terrain[i][j].setBuilding(new Building("Enemy Base", 100.0, 50.0, 100.0, false, coords));
-          terrain[i][j].setTroop(new Archer(true, coords));
+          terrain[j][i] = new Terrain("Plain", coords);
+          terrain[j][i].setBuilding(new Building("Enemy Base", 100.0, 50.0, 100.0, false, coords));
+          terrain[j][i].setTroop(new Archer(false, coords));
+        }
+        else if (j == 4 && i == 4){
+          terrain[j][i] = new Terrain("Plain", coords);
+          terrain[j][i].setTroop(new Knight(true, coords));
+        }
+        else if (j == 3 && i == 5){
+          terrain[j][i] = new Terrain("Plain", coords);
+          terrain[j][i].setTroop(new Knight(true, coords));
+        }
+        else{
+          terrain[j][i] = new Terrain("Plain", coords);
+          
         }
         //Give the button a function
         // - when the button is pressed, the lambda expression will be executed
-        button[i][j].setOnAction(e -> { 
+        button[j][i].setOnAction(e -> { 
           
           //Remove the previous boxes and labels to prevent any overlapping
           root.getChildren().removeAll(buildingBox, buildingInfo, troopBox, troopInfo, terrainBox, terrainInfo);
           
           //Checks if a building exists on the selected button/tile
-          if (terrain[x][y].getBuilding() != null) {
+          if (terrain[y][x].getBuilding() != null) {
             //Call the checkBuilding method
             checkBuilding(terrain, buildingBox, buildingInfo, x, y, root);
           }
           //Checks if a troop exists on the selected button/tile
-          if (terrain[x][y].getTroop() != null) {
+          if (terrain[y][x].getTroop() != null) {
             //Call the checkTroop method
             checkTroop(terrain, troopBox, troopInfo, x, y, root);
-            ArrayList<int[]> possibleMoves = terrain[x][y].getTroop().findMoves(terrain);
+            ArrayList<int[]> possibleMoves = terrain[y][x].getTroop().findMoves(terrain);
             int[] moves = new int[2];
             for (int k = 0; k < possibleMoves.size(); k++) {
               moves = possibleMoves.get(k);
               System.out.println(moves[0] + " " + moves[1]);
               button[moves[0]][moves[1]].setStyle("-fx-background-color: red;" + "-fx-text-fill: white");
             } 
+            
 //button.setStyle(null);
             
           }
           //Call the check terrain method
           checkTerrain(terrain, terrainBox, terrainInfo, x, y, root);
           
-          if ((x == 0 && y == 0 || x == 6 && y == 6) && terrain[x][y].getBuilding().getTeam() == turn) {
+          if ((x == 0 && y == 0 || x == 6 && y == 6) && terrain[y][x].getBuilding().getTeam() == turn) {
             Label recruitmentLabel = new Label("Recruitment:");
             
             Button archerButton = new Button("Archer");
@@ -214,8 +227,8 @@ public class MainMenu extends Application {
             
             
             //Checks level of the castle (3 is the max level)
-            if (terrain[x][y].getBuilding() instanceof Castle) {
-              if (((Castle)terrain[x][y].getBuilding()).getLevel() < 3){
+            if (terrain[y][x].getBuilding() instanceof Castle) {
+              if (((Castle)terrain[y][x].getBuilding()).getLevel() < 3){
                 Button upgradeButton = new Button("Upgrade: " + Castle.getUpgradeCost());
                 recruitmentLayout.getChildren().add(upgradeButton);
               }
@@ -226,7 +239,7 @@ public class MainMenu extends Application {
         });
         
         //Creates the board/map by adding the button
-        root.getChildren().addAll(button[i][j]);
+        root.getChildren().addAll(button[j][i]);
       }
     }
 //    root.getChildren().add(troopButtonLayout); --------------------------------------------------------------------------
@@ -275,7 +288,7 @@ public class MainMenu extends Application {
     //Set the opacity
     buildingBox.setOpacity(0.5);
     //If the building is on the enemy team
-    if (terrain[x][y].getBuilding().getTeam() == false) {
+    if (terrain[y][x].getBuilding().getTeam() == false) {
       //Set the color of the buildingBox to red
       buildingBox.setFill(Color.RED);
     }
@@ -286,10 +299,10 @@ public class MainMenu extends Application {
     }
     //Gather information about the building
     buildingInfo.setText("Building\n" + 
-                         "Name: " + terrain[x][y].getBuilding().getName() + "\n" +
-                         "Health: " + terrain[x][y].getBuilding().getHealth() + "\n" + 
-                         "Attack: " + terrain[x][y].getBuilding().getAttack() + "\n" + 
-                         "Range: " + terrain[x][y].getBuilding().getRange());
+                         "Name: " + terrain[y][x].getBuilding().getName() + "\n" +
+                         "Health: " + terrain[y][x].getBuilding().getHealth() + "\n" + 
+                         "Attack: " + terrain[y][x].getBuilding().getAttack() + "\n" + 
+                         "Range: " + terrain[y][x].getBuilding().getRange());
     //Set the position of the building's information
     buildingInfo.relocate(800, 100);
     
@@ -302,7 +315,7 @@ public class MainMenu extends Application {
     //Set the opacity
     troopBox.setOpacity(0.5);
     //If the troop is on the enemy team
-    if (terrain[x][y].getTroop().getTeam() == false) {
+    if (terrain[y][x].getTroop().getTeam() == false) {
       //Set the troopBox to red
       troopBox.setFill(Color.RED);
     }
@@ -312,10 +325,10 @@ public class MainMenu extends Application {
       troopBox.setFill(Color.BLUE);
     }
     //Gather information about the troop
-    troopInfo.setText("Troop\n" + "Name: " + terrain[x][y].getTroop().getName() + "\n" + 
-                      "Health: " + terrain[x][y].getTroop().getHealth() + "\n" + 
-                      "Attack: " + terrain[x][y].getTroop().getAttack() + "\n" + 
-                      "Range: " + terrain[x][y].getTroop().getRange());
+    troopInfo.setText("Troop\n" + "Name: " + terrain[y][x].getTroop().getName() + "\n" + 
+                      "Health: " + terrain[y][x].getTroop().getHealth() + "\n" + 
+                      "Attack: " + terrain[y][x].getTroop().getAttack() + "\n" + 
+                      "Range: " + terrain[y][x].getTroop().getRange());
     //Set the position of the label
     troopInfo.relocate(800, 275);
     
@@ -328,7 +341,7 @@ public class MainMenu extends Application {
     //Set the color of the terrainBox
     terrainBox.setFill(Color.TRANSPARENT);
     terrainBox.setStroke(Color.BLACK);
-    terrainInfo.setText("Terrain type: " + terrain[x][y].getType());
+    terrainInfo.setText("Terrain type: " + terrain[y][x].getType());
     terrainInfo.relocate(800, 425);
     root.getChildren().addAll(terrainBox, terrainInfo);
   }
