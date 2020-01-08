@@ -73,7 +73,8 @@ public class Troop extends Combatant{
           
           //If tile already has a troop
           if (terrain.getTroop() != null){
-            System.out.println(x + ", " + y + " has a troop on it already");
+            //Just continues on and doesn't add the coordinates into the arraylist
+            continue;
           }
           
           
@@ -86,7 +87,8 @@ public class Troop extends Combatant{
             }
             //Returns false if it's an enemy building
             else{
-              System.out.println(x + ", " + y + " has an enemy building");
+              //Just continues on and doesn't add the coordinates into the arraylist
+              continue;
             }
           }
           else{
