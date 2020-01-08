@@ -27,20 +27,18 @@ public class Troop extends Combatant{
   //Helper Methods
   //Move method that checks if move is valid
   public boolean move(int x, int y, Terrain terrain){
-    //Calculates distance of travel
-    int distance = Math.abs(x - coords[0]) + Math.abs(y - coords[1]);
+    //Calculates distance of travel 
+    int distance = Math.abs(x - coords[1]) + Math.abs(y - coords[0]);
     //Checks if coordinates goes out of bounds of the 7x7 board
     if (x < 0 || x >= 7 || y < 0 || y >= 7){
       return false;
     }
+    
     //If distance is within the move limit
     else if (distance <= moveDistance){
       return true;
     }
-    //If tile already has a troop from your side
-    else if (terrain.getTroop().getTeam() == getTeam()){
-      return false;
-    }
+    
     //If not within move distance
     else{
       return false;
@@ -49,8 +47,8 @@ public class Troop extends Combatant{
   //Method that makes the actual move after user confirms they want to move there
   public void actualMove(int x, int y){  
     //Method is called after confirmation prompt returns true from GUI
-    coords[0] = x;
-    coords[1] = y;
+    coords[0] = y;
+    coords[1] = x;
     //If tile already has an enemy troop on it, combat will be intiated in the main method
     //then winner will be the one who gets placed in the combatant slot of the terrain tile
   }
@@ -66,14 +64,35 @@ public class Troop extends Combatant{
     ArrayList<int[]> possibleMoves = new ArrayList<int[]>();
     Terrain terrain;
     //Checks all tiles for possible moves
-    for (int i = 0; i < 7; i++){
-      for (int j = 0; j < 7; j++){
+    for (int x = 0; x < 7; x++){
+      for (int y = 0; y < 7; y++){
         //Temporarily stores current tile in terrain
-        terrain = boardState[i][j];
+        terrain = boardState[y][x];
         //If move is within range and valid
-        if (move(i,j, terrain) == true){
-          //Stores coordinates of the terrain tile
-          possibleMoves.add(terrain.getCoords());
+        if (move(y, x, terrain) == true){
+          
+          //If tile already has a troop
+          if (terrain.getTroop() != null){
+            System.out.println(x + ", " + y + " has a troop on it already");
+          }
+          
+          
+          //If tile has a building. 
+          else if (terrain.getBuilding() != null){
+            //Return true if it's a friend building
+            if (terrain.getBuilding().getTeam() == getTeam()){
+              //Stores coordinates of the terrain tile
+              possibleMoves.add(terrain.getCoords());
+            }
+            //Returns false if it's an enemy building
+            else{
+              System.out.println(x + ", " + y + " has an enemy building");
+            }
+          }
+          else{
+            //Stores coordinates of the terrain tile
+            possibleMoves.add(terrain.getCoords());
+          }
         }
       }
     }
