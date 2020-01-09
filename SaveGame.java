@@ -181,8 +181,8 @@ class SaveGame{
         boardState.get(x).get(y).setTroop(troops.get(troops.size()-1)); //Stores troop into it's terrain tile
       }
       //If troop is a calvary
-      else if (tempArr[0].equals("Calvary")){
-        troops.add(new Calvary(tempArr[2], coordinates)); //Creates object in correct coordinates
+      else if (tempArr[0].equals("Cavalry")){
+        troops.add(new Cavalry(tempArr[2], coordinates)); //Creates object in correct coordinates
         troops.get(troops.size()-1).setHealth(Double.parseDouble(tempArr[1])); //Sets health of troop
         boardState.get(x).get(y).setTroop(troops.get(troops.size()-1)); //Stores troop into it's terrain tile
       }

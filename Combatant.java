@@ -3,6 +3,7 @@
  * Description: Combatant class (parent class) for all the combatants: Includes buildings and troops
  */
 import java.util.*;
+import javafx.scene.image.Image;
 
 //MAKE SURE TO REDUCE SPEED ON TROOPS (THEY'RE TOO FAST)
 
@@ -19,10 +20,12 @@ public class Combatant{
   protected double penetration; //Penetration damage of combatant (Ignore defense)
   protected boolean stunned; //Boolean for whether troop is stunned or not
   protected int specialMeter = 0; //Special meter of character
+  protected Image img; //Image of combatant
+  protected String imageFileName; //Name of image file
   //Constructor
  
   public Combatant(String name, double health, double attack, double range, double defense, double penetration,
-                   String team, double speed, int[] coords){
+                   String team, double speed, int[] coords, String imageFileName){
     this.name = name;
     this.health = health;
     this.attack = attack;
@@ -32,6 +35,7 @@ public class Combatant{
     this.team = team;
     this.speed = speed;
     this.coords = coords;
+    this.imageFileName = imageFileName;
   }
   
   //Setters
@@ -61,6 +65,9 @@ public class Combatant{
   }
   public void setSpecialMeter(int specialMeter){
     this.specialMeter = specialMeter;
+  }
+  public void setImageName(String imageFileName){
+    this.imageFileName = imageFileName;
   }
   
   //Getters
@@ -96,6 +103,9 @@ public class Combatant{
   }
   public int getSpecialMeter(){
     return specialMeter;
+  }
+  public String getImageName(){
+    return imageFileName;
   }
   
   //Helper Method

@@ -10,7 +10,7 @@ public class Cavalry extends Troop{
    private double baseDefense = 50; //Base Defense
   //Constructor
   public Cavalry(String team, int[] coords) {
-    super("Cavalry", maxHP, 80, 5, 50, 10, team, 15, 6, coords);
+    super("Cavalry", maxHP, 80, 5, 50, 10, team, 15, 6, coords, "Cavalry.png");
     //Calvary has 500HP, 80 ATK, 5 RNG, 50 DEF, 10 PENETRATE, 15 SPD, 6 TILE MVMT
   }
   //Setters

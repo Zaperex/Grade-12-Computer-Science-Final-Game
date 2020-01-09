@@ -10,7 +10,7 @@ public class Archer extends Troop {
   private double baseDefense = 0; //Base Defense
   //Constructor
   public Archer (String team, int[] coords) {
-    super("Archer", 300, 45, 40, 0, 0, team, 10, 3, coords);
+    super("Archer", 300, 45, 40, 0, 0, team, 10, 3, coords, "Archer.png");
     //Archers have 300 HP, 45 ATK, 40 RNG, 10 SPD, 3 TILE MVMT
   }
   //Setters

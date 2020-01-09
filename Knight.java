@@ -10,7 +10,7 @@ public class Knight extends Troop {
   private double baseDefense = 35; //Base Defense
   //Constructor
   public Knight(String team, int[] coords) {
-    super("Knight", 500, 90, 1, 35, 0, team, 5, 2, coords); //Presets stats for Knight
+    super("Knight", 500, 90, 1, 35, 0, team, 5, 2, coords, "Knight.png"); //Presets stats for Knight
     //Knights have 500HP, 90ATK, 1 RNG, 35 DEF, 5 SPD, 2 TILE MVMT
   }
   //Setters

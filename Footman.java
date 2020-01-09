@@ -8,7 +8,7 @@ class Footman extends Troop{
   private double baseDefense = 0; //Base Defense
   
   public Footman(String team, int[] coords){
-    super("Footman", 400, 60, 5, 0, 0, team, 10, 3, coords);
+    super("Footman", 400, 60, 5, 0, 0, team, 10, 3, coords, "Footman.png");
     //Footmen have 400 HP, 60ATK, 5 RNG, 10 SPD, 3 TILE MVMT
   }
   //Setters
