@@ -6,7 +6,7 @@
 public class Calvary extends Troop{
   public static int calvaryPrice = 500;
   //Constructor
-  public Calvary (boolean team, int[] coords) {
+  public Calvary (String team, int[] coords) {
     super("Calvary", 500, 80, 5, 50, 10, team, 15, 6, coords);
     //Calvary has 500HP, 80 ATK, 5 RNG, 50 DEF, 10 PENETRATE, 15 SPD, 6 TILE MVMT
   }

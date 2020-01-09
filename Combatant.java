@@ -12,15 +12,15 @@ public class Combatant{
   protected double health; //Health
   protected double attack; //Attack
   protected double range; //Attack Range
-  protected boolean team; //Team of combatant
+  protected String team; //Team of combatant
   protected double speed; //Speed of combatant (needed in buildings to simplify combat calculations)
   protected int[] coords = new int[2]; //Coordinates of combatant
   protected double defense; //Defense of combatant (Reduces damage taken)
   protected double penetration; //Penetration damage of combatant (Ignore defense)
   //Constructor
-  //REMEMBER TO ADD COORDINATES TO CONSTRUCTOR
+ 
   public Combatant(String name, double health, double attack, double range, double defense, double penetration,
-                   boolean team, double speed, int[] coords){
+                   String team, double speed, int[] coords){
     this.name = name;
     this.health = health;
     this.attack = attack;
@@ -45,7 +45,7 @@ public class Combatant{
   public void setRange(double range){
     this.range = range;
   }
-  public void setTeam(boolean team){
+  public void setTeam(String team){
     this.team = team;
   }
   public void setCoords(int[] coords){
@@ -68,7 +68,7 @@ public class Combatant{
   public double getSpeed(){
     return speed;
   }
-  public boolean getTeam(){
+  public String getTeam(){
     return team;
   }
   public double getDefense(){

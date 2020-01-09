@@ -158,31 +158,31 @@ class SaveGame{
       int[] coordinates = {x, y}; //Stores the coordinates into an int array
       //If troop is a footman
       if (tempArr[0].equals("Footman")){
-        troops.add(new Footman(Boolean.parseBoolean(tempArr[2]), coordinates)); //Creates object in correct coordinates
+        troops.add(new Footman(tempArr[2], coordinates)); //Creates object in correct coordinates
         troops.get(troops.size()-1).setHealth(Double.parseDouble(tempArr[1])); //Sets health to what they were at
         boardState.get(x).get(y).setTroop(troops.get(troops.size()-1)); //Stores troop into it's terrain tile
       }
       //If troop is an archer
       else if (tempArr[0].equals("Archer")){
-        troops.add(new Archer(Boolean.parseBoolean(tempArr[2]), coordinates)); //Creates object in correct coordinates
+        troops.add(new Archer(tempArr[2], coordinates)); //Creates object in correct coordinates
         troops.get(troops.size()-1).setHealth(Double.parseDouble(tempArr[1])); //Sets health to what they were at
         boardState.get(x).get(y).setTroop(troops.get(troops.size()-1)); //Stores troop into it's terrain tile
       }
       //If troop is a knight
       else if (tempArr[0].equals("Knight")){
-        troops.add(new Knight(Boolean.parseBoolean(tempArr[2]), coordinates)); //Creates object in correct coordinates
+        troops.add(new Knight(tempArr[2], coordinates)); //Creates object in correct coordinates
         troops.get(troops.size()-1).setHealth(Double.parseDouble(tempArr[1])); //Sets health to what they were at
         boardState.get(x).get(y).setTroop(troops.get(troops.size()-1)); //Stores troop into it's terrain tile
       }
       //If troop is a crossbowmen
       else if (tempArr[0].equals("CrossbowMen")){
-        troops.add(new CrossbowMen(Boolean.parseBoolean(tempArr[2]), coordinates)); //Creates object in correct coordinates
+        troops.add(new CrossbowMen(tempArr[2], coordinates)); //Creates object in correct coordinates
         troops.get(troops.size()-1).setHealth(Double.parseDouble(tempArr[1])); //Sets health to what they were at
         boardState.get(x).get(y).setTroop(troops.get(troops.size()-1)); //Stores troop into it's terrain tile
       }
       //If troop is a calvary
       else if (tempArr[0].equals("Calvary")){
-        troops.add(new Calvary(Boolean.parseBoolean(tempArr[2]), coordinates)); //Creates object in correct coordinates
+        troops.add(new Calvary(tempArr[2], coordinates)); //Creates object in correct coordinates
         troops.get(troops.size()-1).setHealth(Double.parseDouble(tempArr[1])); //Sets health of troop
         boardState.get(x).get(y).setTroop(troops.get(troops.size()-1)); //Stores troop into it's terrain tile
       }
@@ -202,7 +202,7 @@ class SaveGame{
         int x = Integer.parseInt(tempArr[5]); //X coordinates
         int y = Integer.parseInt(tempArr[6]); //Y Coordinates
         int[] coordinates = {x, y}; //Stores the coordinates into an int array
-        buildings.add(new Castle(Boolean.parseBoolean(tempArr[2]), coordinates)); //Creates object in correct coordinates
+        buildings.add(new Castle(tempArr[2], coordinates)); //Creates object in correct coordinates
         buildings.get(buildings.size()-1).setHealth(Double.parseDouble(tempArr[1])); //Sets health of building
         ((Castle)(buildings.get(buildings.size()-1))).setLevel(Integer.parseInt(tempArr[3])); //Sets level of Castle
         ((Castle)(buildings.get(buildings.size()-1))).setGold(Integer.parseInt(tempArr[4])); //Sets gold for player
@@ -212,7 +212,7 @@ class SaveGame{
         int x = Integer.parseInt(tempArr[3]); //X coordinates
         int y = Integer.parseInt(tempArr[4]); //Y Coordinates
         int[] coordinates = {x, y}; //Stores the coordinates into an int array
-        buildings.add(new GoldMine(Boolean.parseBoolean(tempArr[2]), coordinates)); //Creates object in correct coordinates
+        buildings.add(new GoldMine(tempArr[2], coordinates)); //Creates object in correct coordinates
         buildings.get(buildings.size()-1).setHealth(Double.parseDouble(tempArr[1])); //Sets health of building
       }
     }
@@ -226,13 +226,13 @@ class SaveGame{
     //While file still has unread lines
     while((line = reader.readLine()) != null){
       //If player 1 turn found in file
-      if (line.equals("P1 Turn")){
+      if (line.equals("P1")){
         reader.close();
         //Returns true
         return true;
       }
       //If player 2 turn found in file
-      else if (line.equals("P2 Turn")){
+      else if (line.equals("P2")){
         reader.close();
         //Returns false
         return false;
@@ -242,7 +242,7 @@ class SaveGame{
         int x = Integer.parseInt(tempArr[3]); //X coordinates
         int y = Integer.parseInt(tempArr[4]); //Y Coordinates
         int[] coordinates = {x, y}; //Stores the coordinates into an int array
-        unclaimedBuildings.add(new GoldMine(Boolean.parseBoolean(tempArr[2]), coordinates)); //Creates object in correct coordinates
+        unclaimedBuildings.add(new GoldMine(tempArr[2], coordinates)); //Creates object in correct coordinates
         unclaimedBuildings.get(unclaimedBuildings.size()-1).setHealth(Double.parseDouble(tempArr[1])); //Sets health of building
       }
     }

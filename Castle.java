@@ -7,7 +7,7 @@ class Castle extends Building{
   private static int upgradeCost = 1000; //Cost it takes to upgrade castle
   private int gold; //The amount of gold your castle stores that you use to recruit troops
   private int level; //Level of castle (Max Lvl is 3)
-  public Castle(boolean team, int[] coords){
+  public Castle(String team, int[] coords){
     super("Castle", 3000, 50, 50, team, coords);
     //Castle has 3000HP, 50ATK, 50 RNG, 30 DEF, 0 Penetration Dmg, 0 SPD
   }

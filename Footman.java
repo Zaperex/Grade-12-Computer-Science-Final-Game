@@ -3,7 +3,7 @@
 // Description: Subcclass of the commbatant class for the footman troop
 class Footman extends Troop{
   private static int footmenPrice = 50;
-  public Footman(boolean team, int[] coords){
+  public Footman(String team, int[] coords){
     super("Footman", 400, 60, 5, 0, 0, team, 10, 3, coords);
     //Footmen have 400 HP, 60ATK, 5 RNG, 10 SPD, 3 TILE MVMT
   }

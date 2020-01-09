@@ -5,7 +5,7 @@
 
 public class GoldMine extends Building{
   //Constructor
-  public GoldMine(boolean team, int[] coordinates){
+  public GoldMine(String team, int[] coordinates){
     super("Gold Mine", 1500, 10, 5, team, coordinates);
     //Gold Mines have 1500HP, 10 ATK, 5 RNG, 30 DEF, 0 Penetration DMG, 0 SPD
   }
