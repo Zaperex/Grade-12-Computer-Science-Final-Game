@@ -94,10 +94,10 @@ class Castle extends Building{
       gold -= CrossbowMen.getCrossbowMenPrice(); //Reduces gold count
       return new CrossbowMen(super.getTeam(), coordinates); //Spawns troop
     }
-    //If you want to recruit calvary, have enough gold and castle is lvl 3 (max)
-    else if (troop.equals("Calvary") && gold >= Calvary.getCalvaryPrice() && level == 3){
-      gold -= Calvary.getCalvaryPrice(); //Reduces gold count
-      return new Calvary(super.getTeam(), coordinates); //Spawns troop
+    //If you want to recruit Cavalry, have enough gold and castle is lvl 3 (max)
+    else if (troop.equals("Cavalry") && gold >= Cavalry.getCavalryPrice() && level == 3){
+      gold -= Cavalry.getCavalryPrice(); //Reduces gold count
+      return new Cavalry(super.getTeam(), coordinates); //Spawns troop
     }
     //If you do not have enough gold or castle is not high level enough
     else{

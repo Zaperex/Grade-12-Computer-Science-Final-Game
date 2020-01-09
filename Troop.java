@@ -9,6 +9,9 @@ public class Troop extends Combatant{
   private boolean action = true; //Boolean for if the troop has not moved or not
   private int moveDistance; //How many tiles combatant can move
   
+  private boolean block = false; //Boolean for whether a character is blocking
+  private boolean dodge = false; //Boolean for whether a character is dodging
+  
   public Troop(String name, double health, double attack, double range, double defense, double penetration,
                String team, double speed, int moveDistance, int[] coords){
     super(name, health, attack, range, defense, penetration, team, speed, coords);
@@ -19,12 +22,26 @@ public class Troop extends Combatant{
   public void setAction(boolean action){
     this.action = action;
   }
+  public void setBlock(boolean block){
+    this.block = block;
+  }
+  public void setDodge(boolean dodge){
+    this.dodge = dodge;
+  }
+  
   //Getters
   public boolean getAction(){
     return action;
   }
+  public boolean getBlock(){
+    return block;
+  }
+  public boolean getDodge(){
+    return dodge;
+  }
   
   //Helper Methods
+  
   //Move method that checks if move is valid
   public boolean move(int x, int y){
     //Calculates distance of travel 
@@ -74,7 +91,7 @@ public class Troop extends Combatant{
           //If tile already has a troop
           if (terrain.getTroop() != null){
             //Just continues on and doesn't add the coordinates into the arraylist
-              continue;
+            continue;
           }
           
           
@@ -91,7 +108,7 @@ public class Troop extends Combatant{
             }
             //Returns false if it's an enemy building
             else{
-               //Just continues on and doesn't add the coordinates into the arraylist
+              //Just continues on and doesn't add the coordinates into the arraylist
               continue;
             }
           }
@@ -165,15 +182,15 @@ public class Troop extends Combatant{
     }
     return possibleAttacks;
   }
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
 }

@@ -17,6 +17,8 @@ public class Combatant{
   protected int[] coords = new int[2]; //Coordinates of combatant
   protected double defense; //Defense of combatant (Reduces damage taken)
   protected double penetration; //Penetration damage of combatant (Ignore defense)
+  protected boolean stunned; //Boolean for whether troop is stunned or not
+  protected int specialMeter = 0; //Special meter of character
   //Constructor
  
   public Combatant(String name, double health, double attack, double range, double defense, double penetration,
@@ -48,8 +50,17 @@ public class Combatant{
   public void setTeam(String team){
     this.team = team;
   }
+  public void setDefense(double defense){
+    this.defense = defense;
+  }
   public void setCoords(int[] coords){
     this.coords = coords;
+  }
+  public void setStun(boolean stunned){
+    this.stunned = stunned;
+  }
+  public void setSpecialMeter(int specialMeter){
+    this.specialMeter = specialMeter;
   }
   
   //Getters
@@ -80,7 +91,46 @@ public class Combatant{
   public int[] getCoords(){
     return coords;
   }
+  public boolean getStun(){
+    return stunned;
+  }
+  public int getSpecialMeter(){
+    return specialMeter;
+  }
   
+  //Helper Method
+  //Method that helps Combatants perform a basic attack
+  public double attack(Combatant opponent){
+    increaseSpecialMeter(); //Increases special meter for using a regular attack
+    //Damage is calculated using attack and reduced by enemy defense
+    double damage = attack*(1-opponent.getDefense());
+    
+    //If opponent is a troop
+    if (opponent instanceof Troop){
+      //If opponent is blocking
+      if (((Troop)(opponent)).getBlock() == true){
+        return 0;
+      }
+    }
+    //If opponent is a building
+    else if (opponent instanceof Building){
+      //If opponent has barrier up
+      if (((Building)(opponent)).getBarrier() == true){
+        return 0;
+      }
+    }
+    //If attack was not blocked
+    return damage;
+  }
+  
+  //Method that increases special meter
+  public void increaseSpecialMeter(){
+    //If special meter is not maxed yet (Max of 3)
+    if (specialMeter < 3){
+      //Increase special meter
+      specialMeter++;
+    }
+  }
 
 }
 
