@@ -5,7 +5,6 @@ class Footman extends Troop{
   private static int footmenPrice = 50;
   private String attackName = "Jab";
   private String specialAttack = "Rocket Thrust";
-  private double baseDefense = 0; //Base Defense
   
   public Footman(String team, int[] coords){
     super("Footman", 400, 60, 5, 0, 0, 400, team, 3, coords, "Footman.png");
