@@ -9,8 +9,8 @@ public class CrossbowMen extends Troop{
   private String specialAttack = "Ballista Shot"; //name of special attack
   private double baseDefense = 5; //Base Defense
   public CrossbowMen(String team, int[] coords){
-    super("CrossbowMen", 500, 75, 60, 5, 25, team, 5, 4, coords, "Crossbowman.png");
-    //Crossbowmen have 500HP, 75DMG, 60 RNG, 5 DEF, 25 PENTRATE, 5 SPD, 4 TILE MVMT
+    super("CrossbowMen", 500, 75, 60, 5, 5, 500, team, 4, coords, "Crossbowman.png");
+    //Crossbowmen have 500HP, 75DMG, 60 RNG, 5 DEF, 5 BASEDEF, 500 MAX HP, 4 TILE MVMT
   }
   //Setters
   public static void setCrossbowMenPrice(int price){

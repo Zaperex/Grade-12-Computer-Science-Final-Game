@@ -7,11 +7,10 @@ public class Archer extends Troop {
   private static int archerPrice = 50;
   private String attackName = "Arrow Shot"; //Name of Basic Attack
   private String specialAttack = "Triple Shot"; //Name of special attack
-  private double baseDefense = 0; //Base Defense
   //Constructor
   public Archer (String team, int[] coords) {
-    super("Archer", 300, 45, 40, 0, 0, team, 10, 3, coords, "Archer.png");
-    //Archers have 300 HP, 45 ATK, 40 RNG, 10 SPD, 3 TILE MVMT
+    super("Archer", 300, 45, 40, 0, 0, 300, team, 3, coords, "Archer.png");
+    //Archers have 300 HP, 45 ATK, 0 DEF, 0 BASEDEF, 300 MAX HP, 40 RNG, 3 TILE MVMT
   }
   //Setters
   public static void setArcherPrice(int price){
@@ -21,13 +20,19 @@ public class Archer extends Troop {
   public static int getArcherPrice(){
     return archerPrice;
   }
+  public String getSpecialAttack(){
+    return specialAttack;
+  }
+  public String getAttackName(){
+    return attackName;
+  }
   //Resets Defense Stat
   public void resetDefense(){
     setDefense(baseDefense);
   }
   
   //Special attack for archer
-   public double specialAttack(Combatant opponent){
+  public double specialAttack(Combatant opponent){
     double damage = attack*3; //Damage is 3 times that of a normal attack and will ignore armour
     //If opponent is a troop
     if (opponent instanceof Troop){
@@ -39,5 +44,5 @@ public class Archer extends Troop {
     //Else just return damage
     return damage;
   }
-    
+  
 }

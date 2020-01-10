@@ -4,14 +4,12 @@
  */
 public class Cavalry extends Troop{
   private static int cavalryPrice = 500;
-  private static double maxHP = 500;
   private String attackName = "Charge"; //Name of Basic Attack
   private String specialAttack = "Lifesteal Lance"; //Name of special attack
-   private double baseDefense = 50; //Base Defense
   //Constructor
   public Cavalry(String team, int[] coords) {
-    super("Cavalry", maxHP, 80, 5, 50, 10, team, 15, 6, coords, "Cavalry.png");
-    //Calvary has 500HP, 80 ATK, 5 RNG, 50 DEF, 10 PENETRATE, 15 SPD, 6 TILE MVMT
+    super("Cavalry", 500, 80, 5, 50, 50, 500, team, 6, coords, "Cavalry.png");
+    //Calvary has 500HP, 80 ATK, 5 RNG, 50 DEF, 50 BASEDEF, 500 MAX HP, 10 PENETRATE, 6 TILE MVMT
   }
   //Setters
   public static void setCavalryPrice(int price){
@@ -35,7 +33,7 @@ public class Cavalry extends Troop{
   //Method to heal the Cavalry
   public void heal(double lifeGain){
     //If amount healed exceeeds max HP, then only heal till full
-    if ((health + lifeGain) >= maxHP){
+    if ((getHealth() + lifeGain) >= maxHP){
       setHealth(maxHP);
     }
     //Else just increase health by amount healed

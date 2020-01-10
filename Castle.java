@@ -7,9 +7,12 @@ class Castle extends Building{
   private static int upgradeCost = 1000; //Cost it takes to upgrade castle
   private int gold; //The amount of gold your castle stores that you use to recruit troops
   private int level; //Level of castle (Max Lvl is 3)
+  private String attackName = "Arrow Volley"; //Name of Basic Attack
+  private String specialAttack = "Fireball"; //Name of special attack
+  
   public Castle(String team, int[] coords){
-    super("Castle", 3000, 50, 50, team, coords, "Castle.png");
-    //Castle has 3000HP, 50ATK, 50 RNG, 30 DEF, 0 Penetration Dmg, 0 SPD
+    super("Castle", 3000, 50, 50, 3000, team, coords, "Castle.png");
+    //Castle has 3000HP, 50ATK, 50 RNG, 30 DEF, 30 BASEDEF, 3000 MAX HP
   }
   
   //Setters
@@ -32,6 +35,12 @@ class Castle extends Building{
   public static int getUpgradeCost(){
     return upgradeCost;
   }
+  public String getSpecialAttack(){
+    return specialAttack;
+  }
+  public String getAttackName(){
+    return attackName;
+  }
   
   public void upgrade(){
     if (checkUpgrade()){
@@ -41,6 +50,43 @@ class Castle extends Building{
     }
   }
     
+  //Special Attack for Castle
+  public double specialMove(Combatant opponent){
+    double damage = attack*3;
+    if (opponent instanceof Troop){
+      if (((Troop)(opponent)).getDodge() == true){
+        //If opponent dodges, attack will "miss" and deal no damage
+        return 0;
+      }
+    }
+    //Stuns opponent 
+    opponent.setStun(true); //(BE SURE TO KEEP TRACK OF NUMBER OF TURNS STUNNED AND RESET BOOLEAN TO FALSE AFTER 1 TURN)
+    return damage;
+  }
+  
+  //Resets Defense Stat
+  public void resetDefense(){
+    setDefense(baseDefense);
+  }
+  
+  //Repair method
+  public boolean repair(double goldBalance){
+    //Repair will cost 40 gold to perform
+    if (goldBalance >= 40){
+      //If healing will make building go past max health
+      if ((getHealth() + maxHP/10) > maxHP){
+        setHealth(maxHP);
+        return true; //Repair is successful so return true
+      }
+      else {
+        //Heals 10% of building health
+        setHealth(getHealth() + maxHP/10);
+        return true; //Repair is successful so return true
+      }
+    }
+    //If not enough gold, return false as repair is not successful
+    return false;
+  }
   
   //Checks if you can upgrade the Castle
   public boolean checkUpgrade(){

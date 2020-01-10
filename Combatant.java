@@ -14,34 +14,31 @@ public class Combatant{
   protected double attack; //Attack
   protected double range; //Attack Range
   protected String team; //Team of combatant
-  protected double speed; //Speed of combatant (needed in buildings to simplify combat calculations)
   protected int[] coords = new int[2]; //Coordinates of combatant
   protected double defense; //Defense of combatant (Reduces damage taken)
-  protected double penetration; //Penetration damage of combatant (Ignore defense)
   protected boolean stunned; //Boolean for whether troop is stunned or not
   protected int specialMeter = 0; //Special meter of character
   protected Image img; //Image of combatant
   protected String imageFileName; //Name of image file
+  protected double baseDefense; //Base Defense (for resetting defense) 
+  protected double maxHP; //Max health (for healing)
   //Constructor
  
-  public Combatant(String name, double health, double attack, double range, double defense, double penetration,
-                   String team, double speed, int[] coords, String imageFileName){
+  public Combatant(String name, double health, double attack, double range, double defense, double baseDefense,
+                   double maxHP,String team, int[] coords, String imageFileName){
     this.name = name;
     this.health = health;
     this.attack = attack;
     this.range = range;
     this.defense = defense;
-    this.penetration = penetration;
+    this.baseDefense = baseDefense;
+    this.maxHP = maxHP;
     this.team = team;
-    this.speed = speed;
     this.coords = coords;
     this.imageFileName = imageFileName;
   }
   
   //Setters
-  public void setSpeed(double speed){
-    this.speed = speed;
-  }
   public void setHealth(double health){
     this.health = health;
   }
@@ -83,17 +80,11 @@ public class Combatant{
   public double getRange(){
     return range;
   }
-  public double getSpeed(){
-    return speed;
-  }
   public String getTeam(){
     return team;
   }
   public double getDefense(){
     return defense;
-  }
-  public double getPenetration(){
-    return penetration;
   }
   public int[] getCoords(){
     return coords;

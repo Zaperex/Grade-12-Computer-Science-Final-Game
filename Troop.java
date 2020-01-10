@@ -12,9 +12,9 @@ public class Troop extends Combatant{
   private boolean block = false; //Boolean for whether a character is blocking
   private boolean dodge = false; //Boolean for whether a character is dodging
   
-  public Troop(String name, double health, double attack, double range, double defense, double penetration,
-               String team, double speed, int moveDistance, int[] coords, String imageFileName){
-    super(name, health, attack, range, defense, penetration, team, speed, coords, imageFileName);
+  public Troop(String name, double health, double attack, double range, double defense, double baseDefense,
+                   double maxHP, String team, int moveDistance, int[] coords, String imageFileName){
+    super(name, health, attack, range, defense, baseDefense, maxHP, team, coords, imageFileName);
     this.moveDistance = moveDistance;
   }
   

@@ -226,13 +226,13 @@ class SaveGame{
     //While file still has unread lines
     while((line = reader.readLine()) != null){
       //If player 1 turn found in file
-      if (line.equals("P1")){
+      if (line.equals("P1 Turn")){
         reader.close();
         //Returns true
         return true;
       }
       //If player 2 turn found in file
-      else if (line.equals("P2")){
+      else if (line.equals("P2 Turn")){
         reader.close();
         //Returns false
         return false;
