@@ -45,7 +45,7 @@ public class Troop extends Combatant{
   //Move method that checks if move is valid
   public boolean move(int x, int y){
     //Calculates distance of travel 
-    int distance = Math.abs(x - coords[1]) + Math.abs(y - coords[0]);
+    int distance = Math.abs(x - coords[0]) + Math.abs(y - coords[1]);
     //Checks if coordinates goes out of bounds of the 7x7 board
     if (x < 0 || x >= 7 || y < 0 || y >= 7){
       return false;
@@ -125,7 +125,7 @@ public class Troop extends Combatant{
   //Method that checks if tile is available to attack
   public boolean checkAttacks(int x, int y){
     //Calculates distance of travel 
-    int distance = Math.abs(x - coords[1]) + Math.abs(y - coords[0]);
+    int distance = Math.abs(x - coords[0]) + Math.abs(y - coords[1]);
     //Checks if coordinates goes out of bounds of the 7x7 board
     if (x < 0 || x >= 7 || y < 0 || y >= 7){
       return false;
