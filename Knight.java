@@ -7,7 +7,6 @@ public class Knight extends Troop {
   private static int knightPrice = 200;
   private String attackName = "Slash";
   private String specialAttack = "Shield Bash";
-  private double baseDefense = 35; //Base Defense
   //Constructor
   public Knight(String team, int[] coords) {
     super("Knight", 500, 90, 1, 35, 35, 500, team, 2, coords, "Knight.png"); //Presets stats for Knight
