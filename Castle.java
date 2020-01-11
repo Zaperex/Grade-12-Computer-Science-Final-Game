@@ -69,24 +69,6 @@ class Castle extends Building{
     setDefense(baseDefense);
   }
   
-  //Repair method
-  public boolean repair(double goldBalance){
-    //Repair will cost 40 gold to perform
-    if (goldBalance >= 40){
-      //If healing will make building go past max health
-      if ((getHealth() + maxHP/10) > maxHP){
-        setHealth(maxHP);
-        return true; //Repair is successful so return true
-      }
-      else {
-        //Heals 10% of building health
-        setHealth(getHealth() + maxHP/10);
-        return true; //Repair is successful so return true
-      }
-    }
-    //If not enough gold, return false as repair is not successful
-    return false;
-  }
   
   //Checks if you can upgrade the Castle
   public boolean checkUpgrade(){

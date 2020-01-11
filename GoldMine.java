@@ -7,8 +7,6 @@ public class GoldMine extends Building{
   //Fields
   private String attackName = "Arrow Volley"; //Name of Basic Attack
   private String specialAttack = "Fireball"; //Name of special attack
-  private double baseDefense = 30; //Base Defense
-  private double maxHP = 1500; //Max Health
   //Constructor
   public GoldMine(String team, int[] coordinates){
     super("Gold Mine", 1500, 10, 5, 1500, team, coordinates, "Gold Mine.png");
@@ -23,24 +21,6 @@ public class GoldMine extends Building{
     return attackName;
   }
   
-  //Repair method
-  public boolean repair(double goldBalance){
-    //Repair will cost 40 gold to perform
-    if (goldBalance >= 40){
-      //If healing will make building go past max health
-      if ((getHealth() + maxHP/10) > maxHP){
-        setHealth(maxHP);
-        return true; //Repair is successful so return true
-      }
-      else {
-        //Heals 10% of building health
-        setHealth(getHealth() + maxHP/10);
-        return true; //Repair is successful so return true
-      }
-    }
-    //If not enough gold, return false as repair is not successful
-    return false;
-  }
   
   //Special Attack for Gold Mine
   public double specialMove(Combatant opponent){
