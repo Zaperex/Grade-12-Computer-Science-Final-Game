@@ -146,7 +146,7 @@ class SaveGame{
     }
   }
   
-  public void loadTroops(ArrayList<ArrayList<Terrain>> boardState, ArrayList<Troop> troops, String fileName) throws IOException{
+  public void loadTroops(Terrain[][] boardState, ArrayList<Troop> troops, String fileName) throws IOException{
     BufferedReader troopReader = new BufferedReader(new FileReader(fileName));
     String line;
     String[] tempArr;
@@ -160,37 +160,37 @@ class SaveGame{
       if (tempArr[0].equals("Footman")){
         troops.add(new Footman(tempArr[2], coordinates)); //Creates object in correct coordinates
         troops.get(troops.size()-1).setHealth(Double.parseDouble(tempArr[1])); //Sets health to what they were at
-        boardState.get(x).get(y).setTroop(troops.get(troops.size()-1)); //Stores troop into it's terrain tile
+        boardState[x][y].setTroop(troops.get(troops.size()-1)); //Stores troop into it's terrain tile
       }
       //If troop is an archer
       else if (tempArr[0].equals("Archer")){
         troops.add(new Archer(tempArr[2], coordinates)); //Creates object in correct coordinates
         troops.get(troops.size()-1).setHealth(Double.parseDouble(tempArr[1])); //Sets health to what they were at
-        boardState.get(x).get(y).setTroop(troops.get(troops.size()-1)); //Stores troop into it's terrain tile
+        boardState[x][y].setTroop(troops.get(troops.size()-1)); //Stores troop into it's terrain tile
       }
       //If troop is a knight
       else if (tempArr[0].equals("Knight")){
         troops.add(new Knight(tempArr[2], coordinates)); //Creates object in correct coordinates
         troops.get(troops.size()-1).setHealth(Double.parseDouble(tempArr[1])); //Sets health to what they were at
-        boardState.get(x).get(y).setTroop(troops.get(troops.size()-1)); //Stores troop into it's terrain tile
+        boardState[x][y].setTroop(troops.get(troops.size()-1)); //Stores troop into it's terrain tile
       }
       //If troop is a crossbowmen
       else if (tempArr[0].equals("CrossbowMen")){
         troops.add(new CrossbowMen(tempArr[2], coordinates)); //Creates object in correct coordinates
         troops.get(troops.size()-1).setHealth(Double.parseDouble(tempArr[1])); //Sets health to what they were at
-        boardState.get(x).get(y).setTroop(troops.get(troops.size()-1)); //Stores troop into it's terrain tile
+        boardState[x][y].setTroop(troops.get(troops.size()-1)); //Stores troop into it's terrain tile
       }
-      //If troop is a calvary
+      //If troop is a cavalry
       else if (tempArr[0].equals("Cavalry")){
         troops.add(new Cavalry(tempArr[2], coordinates)); //Creates object in correct coordinates
         troops.get(troops.size()-1).setHealth(Double.parseDouble(tempArr[1])); //Sets health of troop
-        boardState.get(x).get(y).setTroop(troops.get(troops.size()-1)); //Stores troop into it's terrain tile
+        boardState[x][y].setTroop(troops.get(troops.size()-1)); //Stores troop into it's terrain tile
       }
     }
     troopReader.close(); //Closes Reader
   }
   
-  public void loadBuildings(ArrayList<ArrayList<Terrain>> boardState, ArrayList<Building> buildings, String fileName) throws IOException{
+  public void loadBuildings(Terrain[][] boardState, ArrayList<Building> buildings, String fileName) throws IOException{
     BufferedReader buildReader = new BufferedReader(new FileReader(fileName));
     String line;
     String[] tempArr;
@@ -206,6 +206,7 @@ class SaveGame{
         buildings.get(buildings.size()-1).setHealth(Double.parseDouble(tempArr[1])); //Sets health of building
         ((Castle)(buildings.get(buildings.size()-1))).setLevel(Integer.parseInt(tempArr[3])); //Sets level of Castle
         ((Castle)(buildings.get(buildings.size()-1))).setGold(Integer.parseInt(tempArr[4])); //Sets gold for player
+        boardState[x][y].setBuilding(buildings.get(buildings.size()-1)); //Stores building into it's terrain tile
       }
       //If building is Gold Mine
       else if (tempArr[0].equals("Gold Mine")){
@@ -214,12 +215,13 @@ class SaveGame{
         int[] coordinates = {x, y}; //Stores the coordinates into an int array
         buildings.add(new GoldMine(tempArr[2], coordinates)); //Creates object in correct coordinates
         buildings.get(buildings.size()-1).setHealth(Double.parseDouble(tempArr[1])); //Sets health of building
+        boardState[x][y].setBuilding(buildings.get(buildings.size()-1)); //Stores building into it's terrain tile
       }
     }
     buildReader.close(); //Closes Reader
   }
   
-  public boolean load(ArrayList<ArrayList<Terrain>> boardState, ArrayList<Building> unclaimedBuildings, String fileName) throws IOException{
+  public boolean load(Terrain[][] boardState, ArrayList<Building> unclaimedBuildings, String fileName) throws IOException{
     BufferedReader reader = new BufferedReader(new FileReader(fileName));
     String line;
     String[] tempArr;
@@ -244,6 +246,7 @@ class SaveGame{
         int[] coordinates = {x, y}; //Stores the coordinates into an int array
         unclaimedBuildings.add(new GoldMine(tempArr[2], coordinates)); //Creates object in correct coordinates
         unclaimedBuildings.get(unclaimedBuildings.size()-1).setHealth(Double.parseDouble(tempArr[1])); //Sets health of building
+        boardState[x][y].setBuilding(unclaimedBuildings.get(unclaimedBuildings.size()-1)); //Stores building into it's terrain tile
       }
     }
     reader.close();
