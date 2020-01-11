@@ -5,6 +5,8 @@
 import java.util.*;
 import javafx.scene.image.Image;
 
+//MAKE SURE TO REDUCE SPEED ON TROOPS (THEY'RE TOO FAST)
+
 public class Combatant{
   //Fields
   protected String name; //Name of the combatant
@@ -123,12 +125,14 @@ public class Combatant{
   }
   
   //Method that increases special meter
-  public void increaseSpecialMeter(){
+  public boolean increaseSpecialMeter(){
     //If special meter is not maxed yet (Max of 3)
     if (specialMeter < 3){
       //Increase special meter
       specialMeter++;
+      return true; //Returns that special meter was increased
     }
+    return false; //Returns that special meter was not increased
   }
 
 }
