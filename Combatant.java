@@ -5,8 +5,6 @@
 import java.util.*;
 import javafx.scene.image.Image;
 
-//MAKE SURE TO REDUCE SPEED ON TROOPS (THEY'RE TOO FAST)
-
 public class Combatant{
   //Fields
   protected String name; //Name of the combatant
@@ -104,7 +102,7 @@ public class Combatant{
   public double attack(Combatant opponent){
     increaseSpecialMeter(); //Increases special meter for using a regular attack
     //Damage is calculated using attack and reduced by enemy defense
-    double damage = attack*(1-opponent.getDefense());
+    double damage = attack*(1-(opponent.getDefense()/100));
     
     //If opponent is a troop
     if (opponent instanceof Troop){
