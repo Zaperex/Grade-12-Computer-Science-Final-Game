@@ -1,6 +1,6 @@
 /* Name : Sean Hua
  * Date: December 17, 2019
- * Description: Subclass for the archer troop (exteds from the combatant class)
+ * Description: Subclass for the archer troop (extends from the combatant class)
  */
 
 public class Archer extends Troop {

@@ -22,6 +22,7 @@ public class Combatant{
   protected String imageFileName; //Name of image file
   protected double baseDefense; //Base Defense (for resetting defense) 
   protected double maxHP; //Max health (for healing)
+  protected int stunCounter = 0; //Stores how many turns combatant has been stunned for
   //Constructor
  
   public Combatant(String name, double health, double attack, double range, double defense, double baseDefense,
@@ -66,6 +67,9 @@ public class Combatant{
   public void setImageName(String imageFileName){
     this.imageFileName = imageFileName;
   }
+  public void setStunCounter(int stunCounter){
+    this.stunCounter = stunCounter;
+  }
   
   //Getters
   public String getName(){
@@ -97,6 +101,15 @@ public class Combatant{
   }
   public String getImageName(){
     return imageFileName;
+  }
+  public int getStunCounter(){
+    return stunCounter;
+  }
+  public double getMaxHP(){
+    return maxHP;
+  }
+  public double getBaseDefense(){
+    return baseDefense;
   }
   
   //Helper Method

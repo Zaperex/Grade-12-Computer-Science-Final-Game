@@ -23,7 +23,7 @@ public class GoldMine extends Building{
   
   
   //Special Attack for Gold Mine
-  public double specialMove(Combatant opponent){
+  public double specialAttack(Combatant opponent){
     double damage = attack*3;
     if (opponent instanceof Troop){
       if (((Troop)(opponent)).getDodge() == true){

@@ -51,7 +51,7 @@ class Castle extends Building{
   }
     
   //Special Attack for Castle
-  public double specialMove(Combatant opponent){
+  public double specialAttack(Combatant opponent){
     double damage = attack*3;
     if (opponent instanceof Troop){
       if (((Troop)(opponent)).getDodge() == true){
