@@ -47,7 +47,7 @@ public class Troop extends Combatant{
     //Calculates distance of travel 
     int distance = Math.abs(x - coords[0]) + Math.abs(y - coords[1]);
     //Checks if coordinates goes out of bounds of the 7x7 board
-    if (x < 0 || x >= 7 || y < 0 || y >= 7){
+    if (x < 0 || x > 7 || y < 0 || y > 7){
       return false;
     }
     
@@ -64,8 +64,8 @@ public class Troop extends Combatant{
   //Method that makes the actual move after user confirms they want to move there
   public void actualMove(int x, int y){  
     //Method is called after confirmation prompt returns true from GUI
-    coords[0] = y;
-    coords[1] = x;
+    coords[0] = x;
+    coords[1] = y;
     //If tile already has an enemy troop on it, combat will be intiated in the main method
     //then winner will be the one who gets placed in the combatant slot of the terrain tile
   }
@@ -84,7 +84,7 @@ public class Troop extends Combatant{
     for (int x = 0; x < boardState.length; x++){
       for (int y = 0; y < boardState[x].length; y++){
         //Temporarily stores current tile in terrain
-        terrain = boardState[y][x];
+        terrain = boardState[x][y];
         //If move is within range and valid
         if (move(x, y) == true){
           
@@ -127,7 +127,7 @@ public class Troop extends Combatant{
     //Calculates distance of travel 
     int distance = Math.abs(x - coords[0]) + Math.abs(y - coords[1]);
     //Checks if coordinates goes out of bounds of the 7x7 board
-    if (x < 0 || x >= 7 || y < 0 || y >= 7){
+    if (x < 0 || x > 7 || y < 0 || y > 7){
       return false;
     }
     //If distance is within the attack range of 1
@@ -148,7 +148,7 @@ public class Troop extends Combatant{
     
     for (int x = 0; x < boardState.length; x++){
       for (int y = 0; y < boardState[x].length; y++){
-        terrain = boardState[y][x]; //Temporarily stores terrain tile
+        terrain = boardState[x][y]; //Temporarily stores terrain tile
         //If move is valid
         if (checkAttacks(x, y) == true){
           //If there's an troop
