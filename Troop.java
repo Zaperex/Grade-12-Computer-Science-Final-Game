@@ -62,12 +62,14 @@ public class Troop extends Combatant{
     }
   }
   //Method that makes the actual move after user confirms they want to move there
-  public void actualMove(int x, int y){  
+  public void actualMove(int x, int y, Terrain[][] terrain){  
+    //Deletes Troop from Terrain object
+    terrain[coords[0]][coords[1]].setTroop(null);
+    //Adds Troop to new Terrain object it is moving to
+    terrain[x][y].setTroop(this);
     //Method is called after confirmation prompt returns true from GUI
     coords[0] = x;
     coords[1] = y;
-    //If tile already has an enemy troop on it, combat will be intiated in the main method
-    //then winner will be the one who gets placed in the combatant slot of the terrain tile
   }
   
   //Method is called when capturing an unclaimed building (Null Team)
