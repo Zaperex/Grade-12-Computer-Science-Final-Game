@@ -24,21 +24,27 @@ public class Building extends Combatant{
   }
   
   //Repair method
-  public void repair(double goldBalance){
+  public double repair(double goldBalance){
     double amountHealed = 0;
     //Repair will cost 40 gold to perform
     if (goldBalance >= 40){
       //If healing will make building go past max health
       if ((getHealth() + maxHP/10) > maxHP){
+        //Records how much health was healed
+        amountHealed = maxHP - getHealth();
         setHealth(maxHP); //Sets health back to full
+        return amountHealed; //Returns amount healed
       }
       else {
         //Heals 10% of building health
         setHealth(getHealth() + maxHP/10);
         //Records how much health was healed
         amountHealed = maxHP/10;
+        return amountHealed; //Returns amount healed
       }
     }
+    //If not enough gold, return 0
+    return amountHealed;
   }
       
  
