@@ -35,6 +35,8 @@ public class Knight extends Troop {
   
   //Special Attack for Knight
   public double specialAttack(Combatant opponent){
+    //Sets special meter back to 0
+    setSpecialMeter(0);
     double damage = attack*3;
     //If opponent is a troop
     if (opponent instanceof Troop){
