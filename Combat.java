@@ -199,11 +199,13 @@ public class Combat{
           }
         }
       }
-      //Attacker Basic Attacks =============================================================================================================
+      //Attacker Special Attacks =============================================================================================================
       else if (attackAction.equals("Special Attack")){
         //If attacker is a footmen
         if (attacker instanceof Footman){
           damage = ((Footman)attacker).specialAttack(defender); //Performs special attack and calculates damage and effects
+          //Damages defender if they are not Dodging
+          defender.setHealth(defender.getHealth() - damage);
           if (damage > 0){
             //Stores what happened inside combat log
             combatLog.add(attacker.getTeam() + " " + attacker.getName() + " used " + ((Footman)attacker).getSpecialAttack() + 
@@ -219,6 +221,8 @@ public class Combat{
         //If attacker is an archer
         else if (attacker instanceof Archer){
           damage = ((Archer)attacker).specialAttack(defender); //Performs special attack and calculates damage and effects
+          //Damages defender if they are not Dodging
+          defender.setHealth(defender.getHealth() - damage);
           if (damage > 0){
             //Stores what happened inside combat log
             combatLog.add(attacker.getTeam() + " " + attacker.getName() + " used " + ((Archer)attacker).getSpecialAttack() + 
@@ -234,6 +238,8 @@ public class Combat{
         //If attacker is a knight
         else if (attacker instanceof Knight){
           damage = ((Knight)attacker).specialAttack(defender); //Performs special attack and calculates damage and effects
+          //Damages defender if they are not Dodging
+          defender.setHealth(defender.getHealth() - damage);
           //If attack connected
           if (damage > 0){
             //Stores what happened inside combat log
@@ -250,6 +256,8 @@ public class Combat{
         //If attacker is a crossbowmen
         else if (attacker instanceof CrossbowMen){
           damage = ((CrossbowMen)attacker).specialAttack(defender); //Performs special attack and calculates damage and effects
+          //Damages defender if they are not Dodging
+          defender.setHealth(defender.getHealth() - damage);
           if (damage > 0){
             //Stores what happened inside combat log
             combatLog.add(attacker.getTeam() + " " + attacker.getName() + " used " + ((CrossbowMen)attacker).getSpecialAttack() + 
@@ -267,6 +275,8 @@ public class Combat{
           //Stores the health of the cavalry before it healed
           double oldHealth = attacker.getHealth();
           damage = ((Cavalry)attacker).specialAttack(defender); //Performs special attack and calculates damage and effects
+         //Damages defender if they are not Dodging
+          defender.setHealth(defender.getHealth() - damage);
           if (damage > 0){
             //If healing does not exceed max health
             if ((attacker.getHealth() + damage/2) < attacker.getMaxHP()){
@@ -417,6 +427,8 @@ public class Combat{
         //If defender is a footmen
         if (defender instanceof Footman){
           damage = ((Footman)defender).specialAttack(attacker); //Performs special attack and calculates damage and effects
+          //Damages attacker if they are not Dodging
+          attacker.setHealth(attacker.getHealth() - damage);
           if (damage > 0){
             //Stores what happened inside combat log
             combatLog.add(defender.getTeam() + " " + defender.getName() + " used " + ((Footman)defender).getSpecialAttack() + 
@@ -432,6 +444,8 @@ public class Combat{
         //If defender is an archer
         else if (defender instanceof Archer){
           damage = ((Archer)defender).specialAttack(attacker); //Performs special attack and calculates damage and effects
+         //Damages attacker if they are not Dodging
+          attacker.setHealth(attacker.getHealth() - damage);
           if (damage > 0){
             //Stores what happened inside combat log
             combatLog.add(defender.getTeam() + " " + defender.getName() + " used " + ((Archer)defender).getSpecialAttack() + 
@@ -447,6 +461,8 @@ public class Combat{
         //If defender is a knight
         else if (defender instanceof Knight){
           damage = ((Knight)defender).specialAttack(attacker); //Performs special attack and calculates damage and effects
+          //Damages attacker if they are not Dodging
+          attacker.setHealth(attacker.getHealth() - damage);
           //If attack connected
           if (damage > 0){
             //Stores what happened inside combat log
@@ -463,6 +479,8 @@ public class Combat{
         //If defender is a crossbowmen
         else if (defender instanceof CrossbowMen){
           damage = ((CrossbowMen)defender).specialAttack(attacker); //Performs special attack and calculates damage and effects
+         //Damages attacker if they are not Dodging
+          attacker.setHealth(attacker.getHealth() - damage);
           if (damage > 0){
             //Stores what happened inside combat log
             combatLog.add(defender.getTeam() + " " + defender.getName() + " used " + ((CrossbowMen)defender).getSpecialAttack() + 
@@ -480,6 +498,8 @@ public class Combat{
           //Stores the health of the cavalry before it healed
           double oldHealth = defender.getHealth();
           damage = ((Cavalry)defender).specialAttack(attacker); //Performs special attack and calculates damage and effects
+          //Damages attacker if they are not Dodging
+          attacker.setHealth(attacker.getHealth() - damage);
           if (damage > 0){
             //Stores what happened inside combat log
             //If healing does not exceed max health
@@ -507,6 +527,8 @@ public class Combat{
         //If defender is a Castle
         else if (defender instanceof Castle){
           damage = ((Castle)defender).specialAttack(attacker); //Performs special attack and calculates damage and effects
+          //Damages attacker if they are not Dodging
+          attacker.setHealth(attacker.getHealth() - damage);
           //If attack connected
           if (damage > 0){
             //Stores what happened inside combat log
@@ -523,6 +545,8 @@ public class Combat{
         else if (defender instanceof GoldMine){
           double oldDefense = defender.getDefense(); //Stores the defense of the Gold Mine before it is increased
           damage = ((GoldMine)defender).specialAttack(attacker); //Performs special attack and calculates damage and effects
+          //Damages attacker if they are not Dodging
+          attacker.setHealth(attacker.getHealth() - damage);
           //If attack connected
           if (damage > 0){
             //Stores what happened inside combat log
