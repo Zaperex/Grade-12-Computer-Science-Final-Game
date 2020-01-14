@@ -24,6 +24,8 @@ public class GoldMine extends Building{
   
   //Special Attack for Gold Mine
   public double specialAttack(Combatant opponent){
+    //Sets special meter back to 0
+    setSpecialMeter(0);
     double damage = attack*3;
     if (opponent instanceof Troop){
       if (((Troop)(opponent)).getDodge() == true){

@@ -13,7 +13,7 @@ public class Troop extends Combatant{
   private boolean dodge = false; //Boolean for whether a character is dodging
   
   public Troop(String name, double health, double attack, double range, double defense, double baseDefense,
-                   double maxHP, String team, int moveDistance, int[] coords, String imageFileName){
+               double maxHP, String team, int moveDistance, int[] coords, String imageFileName){
     super(name, health, attack, range, defense, baseDefense, maxHP, team, coords, imageFileName);
     this.moveDistance = moveDistance;
   }
@@ -92,9 +92,15 @@ public class Troop extends Combatant{
           
           //If tile already has a troop
           if (terrain.getTroop() != null){
-            //Just continues on and doesn't add the coordinates into the arraylist
-            continue;
+            if (terrain.getTroop() == this){
+              possibleMoves.add(terrain.getCoords());
+            }
+            else{
+              //Just continues on and doesn't add the coordinates into the arraylist
+              continue;
+            }
           }
+        }
           
           
           //If tile has a building. 
@@ -120,7 +126,6 @@ public class Troop extends Combatant{
           }
         }
       }
-    }
     return possibleMoves;
   }
   

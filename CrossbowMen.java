@@ -31,7 +31,9 @@ public class CrossbowMen extends Troop{
   }
   
   //Special move for Crossbowmen
-   public double specialAttack(Combatant opponent){
+  public double specialAttack(Combatant opponent){
+    //Sets special meter back to 0
+    setSpecialMeter(0);
     double damage = attack*3;
     //If opponent is a troop
     if (opponent instanceof Troop){
@@ -44,5 +46,5 @@ public class CrossbowMen extends Troop{
     opponent.setDefense(opponent.getDefense()*(0.5));
     return damage;
   }
-    
+  
 }

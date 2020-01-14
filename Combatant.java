@@ -5,8 +5,6 @@
 import java.util.*;
 import javafx.scene.image.Image;
 
-//MAKE SURE TO REDUCE SPEED ON TROOPS (THEY'RE TOO FAST)
-
 public class Combatant{
   //Fields
   protected String name; //Name of the combatant

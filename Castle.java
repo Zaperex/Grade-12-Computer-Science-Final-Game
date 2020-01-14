@@ -49,9 +49,11 @@ class Castle extends Building{
       upgradeCost += 1000;
     }
   }
-    
+  
   //Special Attack for Castle
   public double specialAttack(Combatant opponent){
+    //Sets special meter back to 0
+    setSpecialMeter(0);
     double damage = attack*3;
     if (opponent instanceof Troop){
       if (((Troop)(opponent)).getDodge() == true){
@@ -134,7 +136,7 @@ class Castle extends Building{
   }
 }
 
-  
-  
-  
-  
+
+
+
+

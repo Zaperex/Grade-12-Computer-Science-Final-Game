@@ -33,6 +33,8 @@ public class Archer extends Troop {
   
   //Special attack for archer
   public double specialAttack(Combatant opponent){
+    //Sets special meter back to 0
+    setSpecialMeter(0);
     double damage = attack*3; //Damage is 3 times that of a normal attack and will ignore armour
     //If opponent is a troop
     if (opponent instanceof Troop){

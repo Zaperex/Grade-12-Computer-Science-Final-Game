@@ -42,7 +42,9 @@ public class Cavalry extends Troop{
     }
   }
   //Cavalry Special Attack
-   public double specialAttack(Combatant opponent){
+  public double specialAttack(Combatant opponent){
+    //Sets special meter back to 0
+    setSpecialMeter(0);
     double damage = attack*3;
     double lifeSteal = damage/2; //Special attack will only health half of damage dealt
     
