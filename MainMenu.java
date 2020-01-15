@@ -507,6 +507,7 @@ public class MainMenu extends Application {
     root.getChildren().addAll(terrainBox, terrainInfo);
   }
   public void combatScreen () {
+    combatRoot = new Pane();
     
     Label attackerStun = new Label();
     attackerStun.relocate(50, 150);
@@ -626,8 +627,8 @@ public class MainMenu extends Application {
     combatRoot.getChildren().addAll(attackerButtonLayout, defenderButtonLayout, 
                                     attackerIV, defenderIV, turnLabel, attackerInfo, defenderInfo, combatLogLabel, attackerStun, defenderStun);
     
+    
     Scene combatScene = new Scene(combatRoot, 1000, 400);
-    combatScene.setRoot(new Region());
     Stage combatStage = new Stage();
     combatStage.setScene(combatScene);
     combatStage.showAndWait();
