@@ -3,10 +3,16 @@
  * Description: Main Menu for the game
  * */
 
+//First make the troops only be able to do 1 move per turn
+// -flip the boolean after they move and cannot attack
+// -flip the boolean after combat (when continue is pressed) flip attacker's troop to false
+//At the start of each turn, go through the respective player's tropp arraylist (p1Troops, p2Troops) and set all action booleans to true;
 
-//Still have to create a back to main menu button
 
-
+//Claiming buildings:
+// - player will move to a stop
+// add additional check to check if there is a building with a team of "None"
+//if so, automatically call the claim  building method
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
@@ -26,11 +32,12 @@ import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.event.EventHandler;
 import java.util.*;
+import java.io.*;
 
 public class MainMenu extends Application {
   private Pane primaryRoot = new Pane();
   private Scene primaryScene = new Scene(primaryRoot, 600, 600);
-  private boolean turn = true; //Boolean value for whose turn it is. (P1 = True) (P2 = False)
+  public static String turn = "P1"; //String value for whose turn it is
   private int[] previousMoveCoords = new int[2];
   private boolean firstClick = true;
   private ArrayList<int[]> possibleMoves;  
@@ -43,6 +50,15 @@ public class MainMenu extends Application {
   private String attackAction;
   private String defendAction;
   private Combatant combatWinner;
+  VBox recruitmentLayout = new VBox(15); //Create a layout for the overall recruitment layout
+  
+  public static Terrain[][] terrain = new Terrain[7][7];
+  public static ArrayList<Troop> p1Troops = new ArrayList<Troop>();
+  public static ArrayList<Troop> p2Troops = new ArrayList<Troop>();
+  public static ArrayList<Building> p1Buildings = new ArrayList<Building>();
+  public static ArrayList<Building> p2Buildings = new ArrayList<Building>();
+  public static ArrayList<Building> unclaimedBuildings = new ArrayList<Building>();
+  
   
   
   public void start (Stage primaryStage) throws Exception {
@@ -84,19 +100,18 @@ public class MainMenu extends Application {
     newGameButton.relocate(225, 400);
     //Sets the size of the button
     newGameButton.setPrefSize(150, 25);
+    Button loadGameButton = new Button("Load Button");
+    
+    
     //Give the button a function when it is pressed
     newGameButton.setOnAction(e -> newGameButtonClicked(primaryStage));
     
-    //Create a button that will load the previous game
-    Button loadGameButton = new Button("Load Game");
-    //Sets the position of the button
-    loadGameButton.relocate(225, 450);
-    //Sets the size of the button
-    loadGameButton.setPrefSize(150, 25);
-    //Give the button a function when it is pressed
-    loadGameButton.setOnAction(e -> loadGameButtonClicked());
+//    loadGameButton = createLoadButton();
     
-    //Create a button that will show the instructions
+    
+    
+    
+//    Create a button that will show the instructions
     Button instructionsButton = new Button("Instructions");
     //Sets the position of the button
     instructionsButton.relocate(225, 500);
@@ -116,9 +131,23 @@ public class MainMenu extends Application {
     primaryStage.show();
   }
   
-  
   //Method that will start a new game
-  public void newGameButtonClicked (Stage primaryStage) {
+  public void newGameButtonClicked (Stage primaryStage){
+    
+    mainMethods.newGame(terrain, p1Troops, p2Troops, p1Buildings, p2Buildings, unclaimedBuildings);
+    
+    for (int a = 0; a < p1Troops.size(); a++) {
+      
+    }
+    for (int b = 0; b < p2Troops.size(); b++) {
+      
+    }
+    for (int c = 0; c < p1Buildings.size(); c++) {
+      
+    }
+    for (int d = 0; d < p2Buildings.size(); d++) {
+      
+    }
     
     Pane root = new Pane();
     Scene gameScene = new Scene(root, 1050, 675);
@@ -160,11 +189,11 @@ public class MainMenu extends Application {
 //    Button knightButton = new Button("Knight");
 //    Button cbmButton = new Button("Crossbow Men");
 //    Button footManButton = new Button("Foot Man");
-//    Button calvaryButton = new Button("Calvary");
+//    Button cavalryButton = new Button("cavalry");
 //    
 //    HBox troopButtonLayout = new HBox(15);
 //    troopButtonLayout.relocate(640, 550);
-//    troopButtonLayout.getChildren().addAll(archerButton, knightButton, cbmButton, footManButton, calvaryButton);
+//    troopButtonLayout.getChildren().addAll(archerButton, knightButton, cbmButton, footManButton, cavalryButton);
     
     //Populate the 2d array of buttons
     for (int i = 0; i < 7; i++) {
@@ -181,24 +210,33 @@ public class MainMenu extends Application {
         int[] coords = {i, j}; //Based on arraylist orientation with y controlling which row and x controlling which column
         int x = i;
         int y = j;
+        if (y == 3 && x == 3){
+          terrain[i][j] = new Terrain("Plains", coords);
+          
+          terrain[i][j].setBuilding(new GoldMine("None", coords));
+          unclaimedBuildings.add(terrain[i][j].getBuilding());
         
-        if (y == 0 && x == 0) {
+        }
+        else if (y == 0 && x == 0) {
           terrain[i][j] = new Terrain("Swamp", coords);
           terrain[i][j].setBuilding(new Castle("P1", coords));
+          p1Buildings.add(terrain[i][j].getBuilding());
         }
         else if (y == 6 && x == 6){
           
           //VALUES USED FOR TESTING *******************************
           terrain[i][j] = new Terrain("Plain", coords);
           terrain[i][j].setBuilding(new Castle("P2", coords));
+          ((Castle)terrain[i][j].getBuilding()).setGold(1000);
+          p2Buildings.add(terrain[i][j].getBuilding());
         }
-        else if (y == 0 && x == 4){
+        else if (y == 0 && x == 3){
           terrain[i][j] = new Terrain("Plain", coords);
           terrain[i][j].setTroop(new Archer("P2", coords));
         }
         else if (y == 3 && x == 4){
           terrain[i][j] = new Terrain("Plain", coords);
-          terrain[i][j].setTroop(new Knight("P1", coords));
+          terrain[i][j].setTroop(new Footman("P1", coords));
         }
         else if (y == 3 && x == 5){
           terrain[i][j] = new Terrain("Plain", coords);
@@ -214,6 +252,13 @@ public class MainMenu extends Application {
         button[i][j].addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
           public void handle(MouseEvent e) {
             
+            try{
+              root.getChildren().remove(recruitmentLayout);
+            }
+            catch (Exception error){
+              System.out.println("BUtton doesn't exist");
+            }
+            
             System.out.println("CLICK COUNT: " + e.getClickCount());
             System.out.println(x + ", " + y);
             //Remove the previous boxes and labels to prevent any overlapping
@@ -223,6 +268,46 @@ public class MainMenu extends Application {
             if (terrain[x][y].getBuilding() != null) {
               //Call the checkBuilding method
               checkBuilding(terrain, buildingBox, buildingInfo, x, y, root);
+              //If a the home base (castle) of the player's team is clicked
+              if (terrain[x][y].getBuilding().getTeam().equals(turn)){
+                if (terrain[x][y].getBuilding() instanceof Castle && terrain[x][y].getBuilding().getTeam().equals(turn)) {
+                  
+                  System.out.println("RECRUITMENT");
+                  Label recruitmentLabel = new Label("Recruitment:"); //Create a label for recruitment
+                  
+                  Button archerButton = new Button("Archer"); //Create a button to recruit an archer
+                  Button knightButton = new Button("Knight"); //Create a button to recruit a knight
+                  Button cbmButton = new Button("Crossbow Men"); //Create a button to recruit a crossbow men
+                  Button footManButton = new Button("Foot Man"); //Create a button to recruit a footman
+                  Button cavalryButton = new Button("Cavalry"); //Create a button to recruit cavalry
+                  
+                  HBox troopButtonLayout = new HBox(15); //Create a layout for the buttons
+                  //Add all of the buttons to the layout
+                  troopButtonLayout.getChildren().addAll(archerButton, knightButton, cbmButton, footManButton, cavalryButton);
+                  
+//                  VBox recruitmentLayout = new VBox(15); //Create a layout for the overall recruitment layout
+                  recruitmentLayout.relocate(640, 500); //Set the location of the layout
+                  recruitmentLayout.getChildren().addAll(recruitmentLabel, troopButtonLayout); //Add the label and the buttons to the layout
+                  
+                  
+                  /*
+                   archerButton.setOnAction();
+                   knightButton.setOnAction();
+                   cbmButton.setOnAction();
+                   footManButton.setOnAction();
+                   cavalryButton.setOnAction();                   
+                   */
+                  
+                  //Checks if there is a castle
+                  //Checks level of the castle (3 is the max level)
+                  if (((Castle)terrain[x][y].getBuilding()).getLevel() < 3){
+                    Button upgradeButton = new Button("Upgrade: Costs " +  Castle.getUpgradeCost() + " gold");
+                    recruitmentLayout.getChildren().add(upgradeButton);
+                  }
+                  
+                  root.getChildren().add(recruitmentLayout);
+                }
+              }
             }
             if (terrain[x][y].getTroop() != null) {
               //Call the checkTroop method
@@ -233,157 +318,168 @@ public class MainMenu extends Application {
             
             System.out.println("Top First Click: " + firstClick);
             
+            //If the user clicks on a red tile, it means that they are choosing another troop/building to fight
             if (firstClick == true && button[x][y].getStyle().equals("-fx-background-color: red;" + "-fx-text-fill: white")) {
+              //If the selected button is a building
               if (terrain[x][y].getBuilding() != null) {
-                defender = terrain[x][y].getBuilding();
+                defender = terrain[x][y].getBuilding(); //Store the building as the defender
               }
+              //If the selected button is a troop
               else {
-                defender = terrain[x][y].getTroop();
+                defender = terrain[x][y].getTroop(); //Store the troop as the defender
               }
-              System.out.println("first move: " + previousMoveCoords[0]);
+              System.out.println("first move x: " + previousMoveCoords[0]);
               System.out.println("first move y: " + previousMoveCoords[1]);
+              //Checks if the previous selected combatant is a troop
               if (terrain[previousMoveCoords[0]][previousMoveCoords[1]].getTroop() != null) {
-                attacker = terrain[previousMoveCoords[0]][previousMoveCoords[1]].getTroop();
+                attacker = terrain[previousMoveCoords[0]][previousMoveCoords[1]].getTroop(); //Set the troop as the attacker
               }
               
+              //Calls the combatScreen method, which will show a pop up window where the attacker and defender will fight
               combatScreen();
               
+              //Used to store the coordinates of the troop that loses the fight
               int[] loserCoords = new int[2];
               
-           
+              //If the defender loses
               if (combatWinner == defender) {
                 System.out.println("WINNER IS DEFENDER");
-                loserCoords = attacker.getCoords();
+                loserCoords = attacker.getCoords(); //Sets the attacker's coords as the loserCoords
               }
+              //If the attacker loses
               else {
                 System.out.println("WINNER IS ATTACKER");
-                loserCoords = defender.getCoords();
+                loserCoords = defender.getCoords(); //Sets the defender's coords as the loserCoords
               }
-              button[loserCoords[0]][loserCoords[1]].setGraphic(null);
-              terrain[loserCoords[0]][loserCoords[1]].setTroop(null);
               
+              button[loserCoords[0]][loserCoords[1]].setGraphic(null); //Deletes the loser's picture 
+              terrain[loserCoords[0]][loserCoords[1]].setTroop(null); //Deletes the object of the loser
+              
+              //Loops through the entire board of buttons
               for (int l = 0; l < 7; l++) {
                 for (int m = 0; m < 7; m++) {
-                  button[l][m].setDisable(false);
-                  button[l][m].setStyle(null);
+                  button[l][m].setDisable(false); //Enable the button so that it is clickable
+                  button[l][m].setStyle(null); //Unhighlight the button 
                 }
               }
-              
             }
+            //If the player selects/clicks on a troop on the board
             else if (firstClick == true && terrain[x][y].getTroop() != null) {
               
-              previousMoveCoords[0] = x;
-              previousMoveCoords[1] = y;
-              
-//                System.out.println("CLICK COUNT: " + e.getClickCount());
-//                System.out.println(x + ", " + y);
-//                //If the user single clicks
-//                if (e.getClickCount() == 1) {
-//                  attackerCoords[1] = x;
-//                  attackerCoords[0] = y;
-//                }
-//                //If the user double clicks
-//                else {
-//                  defenderCoords[1] = x;
-//                  defenderCoords[0] = y;
-//                  combatScreen(terrain);
-//                }            
-              
-              //Checks if a troop exists on the selected button/tile
-              if (terrain[x][y].getTroop() != null) {
+              if (terrain[x][y].getTroop().getTeam().equals(turn)){
+                //Keeps track of the initial position of the troop
+                previousMoveCoords[0] = x; //Save their x-coordinate
+                previousMoveCoords[1] = y; //Save their y-coordinate
+                
+                
+                //Loops through the board of buttons
                 for (int l = 0; l < 7; l++) {
                   for (int m = 0; m < 7; m++) {
-                    button[l][m].setDisable(true);
+                    button[l][m].setDisable(true); //Disable every button on the board 
                   }
                 }
-                possibleMoves = terrain[x][y].getTroop().findMoves(terrain);
-                int[] move = new int[2];
+                //possibleMoves is used to store an ArrayList of integer arrays of possible coordinates that the selected troop can move to
+                possibleMoves = terrain[x][y].getTroop().findMoves(terrain); //Calls findMoves, which returns the ArrayList
+                int[] move = new int[2];//Stores the int array stored inside of the ArrayList
                 for (int k = 0; k < possibleMoves.size(); k++) {
-                  move = possibleMoves.get(k);
-                  button[move[0]][move[1]].setStyle("-fx-background-color: blue;" + "-fx-text-fill: white");
-                  button[move[0]][move[1]].setDisable(false);
+                  move = possibleMoves.get(k); //Save the coordinates of where the troop is allowed to travel to
+                  button[move[0]][move[1]].setStyle("-fx-background-color: blue;" + "-fx-text-fill: white"); //Highlight the button
+                  button[move[0]][move[1]].setDisable(false); //Enable the button 
                 }                 
+                
+//              //If a the home base (castle) of the player's team is clicked
+//              if (terrain[x][y].getBuilding() instanceof Castle && terrain[x][y].getBuilding() != null &&
+//                  terrain[x][y].getBuilding().getTeam() != null && terrain[x][y].getBuilding().getTeam().equals(turn)) {
+//                
+//                Label recruitmentLabel = new Label("Recruitment:"); //Create a label for recruitment
+//                
+//                Button archerButton = new Button("Archer"); //Create a button to recruit an archer
+//                Button knightButton = new Button("Knight"); //Create a button to recruit a knight
+//                Button cbmButton = new Button("Crossbow Men"); //Create a button to recruit a crossbow men
+//                Button footManButton = new Button("Foot Man"); //Create a button to recruit a footman
+//                Button cavalryButton = new Button("Cavalry"); //Create a button to recruit cavalry
+//                
+//                HBox troopButtonLayout = new HBox(15); //Create a layout for the buttons
+//                //Add all of the buttons to the layout
+//                troopButtonLayout.getChildren().addAll(archerButton, knightButton, cbmButton, footManButton, cavalryButton);
+//                
+//                VBox recruitmentLayout = new VBox(); //Create a layout for the overall recruitment layout
+//                recruitmentLayout.relocate(640, 550); //Set the location of the layout
+//                recruitmentLayout.getChildren().addAll(recruitmentLabel, troopButtonLayout); //Add the label and the buttons to the layout
+//                
+//                //Checks if there is a castle
+//                  //Checks level of the castle (3 is the max level)
+//                  if (((Castle)terrain[x][y].getBuilding()).getLevel() < 3){
+//                    Button upgradeButton = new Button("Upgrade: " + Castle.getUpgradeCost());
+//                    recruitmentLayout.getChildren().add(upgradeButton);
+//                  }
+//                
+//                root.getChildren().add(recruitmentLayout);
+//              }
+                firstClick = false;
               }
-              
-              if ((x == 0 && y == 0 || x == 6 && y == 6) && terrain[x][y].getBuilding() != null &&
-                  terrain[x][y].getBuilding().getTeam() != null && terrain[x][y].getBuilding().getTeam().equals(turn)) {
-                Label recruitmentLabel = new Label("Recruitment:");
-                
-                Button archerButton = new Button("Archer");
-                Button knightButton = new Button("Knight");
-                Button cbmButton = new Button("Crossbow Men");
-                Button footManButton = new Button("Foot Man");
-                Button calvaryButton = new Button("Cavalry");
-                
-                HBox troopButtonLayout = new HBox(15);
-                troopButtonLayout.getChildren().addAll(archerButton, knightButton, cbmButton, footManButton, calvaryButton);
-                
-                VBox recruitmentLayout = new VBox();
-                recruitmentLayout.relocate(640, 550);
-                recruitmentLayout.getChildren().add(troopButtonLayout);
-                
-                
-                //Checks level of the castle (3 is the max level)
-                if (terrain[x][y].getBuilding() instanceof Castle) {
-                  if (((Castle)terrain[x][y].getBuilding()).getLevel() < 3){
-                    Button upgradeButton = new Button("Upgrade: " + Castle.getUpgradeCost());
-                    recruitmentLayout.getChildren().add(upgradeButton);
-                  }
-                }
-                
-                root.getChildren().add(recruitmentLayout);
-              }
-              firstClick = false;
             }
+            //If the user is clicking a second time and is clicking on a button without a troop
+            //Means that they are choosing a location to move to
             else if (firstClick == false && terrain[x][y].getTroop() == null) {
-//                possibleMoves = terrain[previousMoveCoords[0]][previousMoveCoords[1]].getTroop().findMoves(terrain);
+              //Loops through the board 
               for (int l = 0; l < 7; l++) {
                 for (int m = 0; m < 7; m++) {
-                  button[l][m].setDisable(false);
+                  button[l][m].setDisable(false); //Enable the button
                 }
               }
-              int[] move = new int[2];
+              
+              int[] move = new int[2]; //Since possibleMoves is an ArrayList of int arrays, move is used to store the int arrays
+              //Loops through the ArrayList of possible moves
               for (int k = 0; k < possibleMoves.size(); k++) {
-                move = possibleMoves.get(k);
-                button[move[0]][move[1]].setStyle(null);
+                move = possibleMoves.get(k); //Store the int array of possibleMoves to move
+                button[move[0]][move[1]].setStyle(null); //Unhighlight the previously highlighted buttons
               }
               
-              
-              terrain[x][y].setTroop(terrain[previousMoveCoords[0]][previousMoveCoords[1]].getTroop());
+              //Move the troop from the previous move, to the recently selected button
+              terrain[x][y].setTroop(terrain[previousMoveCoords[0]][previousMoveCoords[1]].getTroop()); 
+              //Deletes the image from the previous button
               button[previousMoveCoords[0]][previousMoveCoords[1]].setGraphic(null);
+              if (terrain[previousMoveCoords[0]][previousMoveCoords[1]].getBuilding() != null) {
+                Image castleImage = new Image(terrain[previousMoveCoords[0]][previousMoveCoords[1]].getBuilding().getImageName(), 60, 60, false, false);
+                button[previousMoveCoords[0]][previousMoveCoords[1]].setGraphic(new ImageView(castleImage));
+              }
+              //Create a new image for the troop that was moved
               Image image = new Image(terrain[x][y].getTroop().getImageName(), 60, 60, false, false);
+              //Set an image for the recently selected button
               button[x][y].setGraphic(new ImageView(image));
+              //Update the troop's coordinates by calling the actualMove method from the Troop class
               terrain[previousMoveCoords[0]][previousMoveCoords[1]].getTroop().actualMove(x, y, terrain);
+              //Delete the previous troop by setting it to null
               terrain[previousMoveCoords[0]][previousMoveCoords[1]].setTroop(null);
               
+              //possibleAttacks an ArrayList that will store coordinates that the troop is allowed to attack
               possibleAttacks = terrain[x][y].getTroop().findAttacks(terrain);
+              //Checks if there are any possible choices (size is > 0)
               if (possibleAttacks.size() > 0) {
+                //Loops through the board of buttons
                 for (int l = 0; l < 7; l++) {
                   for (int m = 0; m < 7; m++) {
-                    button[l][m].setDisable(true);
+                    button[l][m].setDisable(true); //Disable all buttons
                   }
                 }
+                //Since possibleAttacis 8s ah ArrayList of int arrays, attack will store these int arrays
                 int[] attack = new int[2];
+                //Loops through the possibleAttacks ArrayList
                 for (int k = 0; k < possibleAttacks.size(); k++) {
-                  attack = possibleAttacks.get(k);
+                  attack = possibleAttacks.get(k); //Store the int array into attack
+                  //highlight the button
                   button[attack[0]][attack[1]].setStyle("-fx-background-color: red;" + "-fx-text-fill: white");
-                  button[attack[0]][attack[1]].setDisable(false);
+                  button[attack[0]][attack[1]].setDisable(false); //Enable the button
                 }
               }
-              firstClick = true;
-              previousMoveCoords[0] = x;
-              previousMoveCoords[1] = y;            
+              firstClick = true; //Update the firstClick boolean
+              //Store the troop's position
+              previousMoveCoords[0] = x; //Save the x-coordinate
+              previousMoveCoords[1] = y; //Save the y-coordinate
             }
           }
         });
-        
-        //Give the button a function
-        // - when the button is pressed, the lambda expression will be executed
-//        button[i][j].addEventHandler(MouseEvent.MOUSE_DRAGGED, new EventHandler<MouseEvent>() {
-//          public void handle(MouseEvent e) {
-//            System.out.println("x: " + e.getX() + " y: " + e.getY());
-//          }
-//        });
         
         //Creates the board/map by adding the button
         root.getChildren().add(button[i][j]);
@@ -410,14 +506,30 @@ public class MainMenu extends Application {
     
   }
   //Method that will load the previous game
-  public void loadGameButtonClicked () {
+  public void loadGameButtonClicked () throws IOException{
     
     
     
-    
+    mainMethods.loadGame(mainMethods.saveFolderPath, terrain, p1Troops, p2Troops, p1Buildings, p2Buildings, unclaimedBuildings);
     
     
   }
+//  public Button createLoadButton () throws IOException{
+//    //Create a button that will load the previous game
+//    Button loadGameButton = new Button("Load Game");
+//    //Sets the position of the button
+//    loadGameButton.relocate(225, 450);
+//    //Sets the size of the button
+//    loadGameButton.setPrefSize(150, 25);
+//    try{
+//    //Give the button a function when it is pressed
+//    loadGameButton.setOnAction(e -> loadGameButtonClicked());
+//    }
+//    catch(IOException e1){
+//      System.out.println("An IOException has occured");
+//    }
+//    return loadGameButton;
+//  }
   //Method that will bring the user to an instructions page/window
   public void instructionsButtonClicked (Stage primaryStage) {
     
@@ -454,9 +566,13 @@ public class MainMenu extends Application {
       buildingBox.setFill(Color.RED);
     }
     //If the building is on the player's team
-    else {
+    else if (terrain[x][y].getBuilding().getTeam().equals("P1")){
       //Set the color of the buildingBox to blue
       buildingBox.setFill(Color.BLUE);
+    }
+    else{
+      //Set the color of the buildingBox to yellow
+      buildingBox.setFill(Color.YELLOW);
     }
     //Gather information about the building
     buildingInfo.setText("Building\n" + 
@@ -515,7 +631,7 @@ public class MainMenu extends Application {
     defenderStun.relocate(400, 150);
     
     turnLabel.relocate(225, 50);
-    turnLabel.setText("Player 1's Turn");
+    turnLabel.setText("Attacker's Turn");
     
     Image attackerImage = new Image(attacker.getImageName(), 80, 80, false, false);
     ImageView attackerIV = new ImageView(attackerImage);
@@ -525,11 +641,11 @@ public class MainMenu extends Application {
     ImageView defenderIV = new ImageView(defenderImage);
     defenderIV.relocate(400, 150);
     
-    Label attackerInfo = new Label(attacker.getTeam() + " health: " + attacker.getHealth() + "\n" + 
+    Label attackerInfo = new Label("Attacker Health: " + attacker.getHealth() + "\n" + 
                                    "Special Meter: " + attacker.getSpecialMeter() + "/3" + "\n" +
                                    "Defense: " + attacker.getDefense());
     attackerInfo.relocate(50, 250);
-    Label defenderInfo = new Label(defender.getTeam() + " health: " + defender.getHealth() + "\n" + 
+    Label defenderInfo = new Label("Defender Health: " + defender.getHealth() + "\n" + 
                                    "Special Meter: " + defender.getSpecialMeter() + "/3" + "\n" +
                                    "Defense: " + defender.getDefense());
     defenderInfo.relocate(400, 250);
@@ -662,24 +778,40 @@ public class MainMenu extends Application {
     }
     
     
-    int[] testingCoords  = {1,2};
-    Castle castle = new Castle("P1", testingCoords);
     
     
-    
-    
-    Combat combat = new Combat(attacker, defender);
     
     ArrayList<String> combatLog = new ArrayList<String>();
     
     if (attackAction != null && defendAction != null) {
+      int gold = 0; //Stores defender's gold
+      if (defender.getTeam().equals("P1")){ //If defender is player 1's team
+        //Check the player 1 arraylist for a castle
+        for (int i = 0; i < p1Buildings.size(); i++){
+          //If Building is a Castle
+          if (p1Buildings.get(i) instanceof Castle){
+            gold = ((Castle)p1Buildings.get(i)).getGold(); //Stores gold of player's castle
+            break; //Breaks out since there is only 1 castle
+          }
+        }
+      }
+      else if (defender.getTeam().equals("P2")){ //If defender is on player 2's team
+        //Check the player 2 arraylist for a castle
+        for (int i = 0; i < p2Buildings.size(); i++){
+          //If Building is a Castle
+          if (p2Buildings.get(i) instanceof Castle){
+            gold = ((Castle)p2Buildings.get(i)).getGold(); //Stores gold of player's castle
+            break; //Breaks out since there is only 1 castle
+          }
+        }
+      }
       
-      combatLog = combat.combatPhase(attacker, defender, attackAction, defendAction, castle.getGold());
+      combatLog = Combat.combatPhase(attacker, defender, attackAction, defendAction, gold);
       displayCombatLog(combatLog, combatLogLabel);
-      attackerInfo.setText(attacker.getTeam() + " health: " + attacker.getHealth() + "\n" + 
+      attackerInfo.setText("Attacker Health: " + attacker.getHealth() + "\n" + 
                            "Special Meter: " + attacker.getSpecialMeter() + "/3" + "\n" + 
                            "Defense: " + attacker.getDefense());
-      defenderInfo.setText(defender.getTeam() + " health: " + defender.getHealth() + "\n" + 
+      defenderInfo.setText("Defender Health: " + " health: " + defender.getHealth() + "\n" + 
                            "Special Meter: " + defender.getSpecialMeter() + "/3" + "\n" + 
                            "Defense: " + defender.getDefense());
       
@@ -692,7 +824,7 @@ public class MainMenu extends Application {
                           attackerButton1, attackerButton2, attackerButton3, attackerButton4, 
                           defenderButton1, defenderButton2, defenderButton3, defenderButton4, 
                           combatLogLabel, attackerStun, defenderStun, attackerIV, defenderIV, attackerButtonLayout, defenderButtonLayout);
-
+      
       
       attackAction = null;
       defendAction = null;
@@ -704,7 +836,7 @@ public class MainMenu extends Application {
                                       Label combatLogLabel, Label attackerStun, Label defenderStun, ImageView attackerIV, ImageView defenderIV, HBox attackerButtonLayout, HBox defenderButtonLayout) {
     attackAction = attackerButton1.getText();
     
-    turnLabel.setText("Player 2's turn");
+    turnLabel.setText("Defender's turn");
     playerTurn = false;
     
     combatCheck(attackerInfo, defenderInfo, 
@@ -725,7 +857,7 @@ public class MainMenu extends Application {
     
     attackAction = attackerButton2.getText();
     
-    turnLabel.setText("Player 2's turn");
+    turnLabel.setText("Defender's turn");
     playerTurn = false;
     
     combatCheck(attackerInfo, defenderInfo, 
@@ -744,7 +876,7 @@ public class MainMenu extends Application {
     
     attackAction = attackerButton3.getText();
     
-    turnLabel.setText("Player 2's turn");
+    turnLabel.setText("Defender's turn");
     playerTurn = false;
     
     combatCheck(attackerInfo, defenderInfo, 
@@ -765,7 +897,7 @@ public class MainMenu extends Application {
     
     attackAction = attackerButton4.getText();
     
-    turnLabel.setText("Player 2's turn");
+    turnLabel.setText("Defender's turn");
     playerTurn = false;
     
     combatCheck(attackerInfo, defenderInfo, 
@@ -784,7 +916,7 @@ public class MainMenu extends Application {
     
     defendAction = defenderButton1.getText();
     
-    turnLabel.setText("Player 1's turn");
+    turnLabel.setText("Attacker's turn");
     playerTurn = true;
     
     combatCheck(attackerInfo, defenderInfo, 
@@ -803,7 +935,7 @@ public class MainMenu extends Application {
     
     defendAction = defenderButton2.getText();
     
-    turnLabel.setText("Player 1's turn");
+    turnLabel.setText("Attacker's turn");
     playerTurn = true;
     
     combatCheck(attackerInfo, defenderInfo, 
@@ -823,7 +955,7 @@ public class MainMenu extends Application {
     
     defendAction = defenderButton3.getText();
     
-    turnLabel.setText("Player 1's turn");
+    turnLabel.setText("Attacker's turn");
     playerTurn = true;
     
     combatCheck(attackerInfo, defenderInfo, 
@@ -845,7 +977,7 @@ public class MainMenu extends Application {
     
     defendAction = defenderButton4.getText();
     
-    turnLabel.setText("Player 1's turn");
+    turnLabel.setText("Attacker's turn");
     playerTurn = true;
     
     combatCheck(attackerInfo, defenderInfo, 
@@ -880,7 +1012,7 @@ public class MainMenu extends Application {
     System.out.println("Attacker Health: " + attacker.getHealth());
     if (attacker.getHealth() <= 0) {
       combatWinner = defender;
-      turnLabel.setText("Player 2 wins");
+      turnLabel.setText("Defender wins");
       combatRoot.getChildren().removeAll(attackerButtonLayout, defenderButtonLayout, attackerIV);
       Button continueButton = new Button("Continue");
       continueButton.relocate(800, 300);
@@ -920,15 +1052,15 @@ public class MainMenu extends Application {
       if (defender instanceof Troop){
         combatWinner = attacker;
         combatRoot.getChildren().removeAll(attackerButtonLayout, defenderButtonLayout, defenderIV);
-        turnLabel.setText("Player 1 wins");
+        turnLabel.setText("Attacker wins");
         Button continueButton = new Button("Continue");
         continueButton.relocate(800, 300);
         continueButton.setOnAction(e -> {
           // get a handle to the stage
           Stage stage = (Stage) continueButton.getScene().getWindow();
           stage.close();
-        attackerButtonLayout.getChildren().clear();
-        defenderButtonLayout.getChildren().clear();
+          attackerButtonLayout.getChildren().clear();
+          defenderButtonLayout.getChildren().clear();
           combatRoot.getChildren().removeAll(combatRoot.getChildren());
         });
         combatRoot.getChildren().add(continueButton);
@@ -941,7 +1073,22 @@ public class MainMenu extends Application {
       }
     }
   }
-
+  public void archerButtonClicked () {
+    
+  }
+  public void knightButtonClicked () {
+    
+  }
+  public void footManButtonClicked () {
+    
+  }
+  public void cavalryButtonClicked () {
+    
+  }
+  public void cbbButtonClicked () {
+    
+  }
+  
   public void displayCombatLog (ArrayList<String> combatLog, Label combatLogLabel) {
     String temp = "";
     for (int i = 0; i < combatLog.size(); i++) {
