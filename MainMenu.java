@@ -28,8 +28,8 @@ import javafx.event.EventHandler;
 import java.util.*;
 
 public class MainMenu extends Application {
-  private Pane root = new Pane();
-  private Scene mainMenu = new Scene(root, 600, 600);
+  private Pane primaryRoot = new Pane();
+  private Scene primaryScene = new Scene(primaryRoot, 600, 600);
   private boolean turn = true; //Boolean value for whose turn it is. (P1 = True) (P2 = False)
   private int[] previousMoveCoords = new int[2];
   private boolean firstClick = true;
@@ -37,11 +37,13 @@ public class MainMenu extends Application {
   private ArrayList<int[]> possibleAttacks; 
   private boolean playerTurn = true; //True = attacker, false = defender
   private Label turnLabel = new Label();
-  private static Troop attacker;  
-  private static Combatant defender;  
+  private Troop attacker;  
+  private Combatant defender;  
   private Pane combatRoot = new Pane();
   private String attackAction;
   private String defendAction;
+  private Combatant combatWinner;
+  
   
   public void start (Stage primaryStage) throws Exception {
     
@@ -108,14 +110,13 @@ public class MainMenu extends Application {
     buttonLayout.relocate(200, 400);
     buttonLayout.setSpacing(10);
     
-    root.getChildren().addAll(rect1, rect2, title, buttonLayout);
+    primaryRoot.getChildren().addAll(rect1, rect2, title, buttonLayout);
     primaryStage.setTitle("Game");
-    primaryStage.setScene(mainMenu);
+    primaryStage.setScene(primaryScene);
     primaryStage.show();
   }
-  public void newGameButtonClicked1 (Stage primaryStage) {
-    combatScreen();
-  }
+  
+  
   //Method that will start a new game
   public void newGameButtonClicked (Stage primaryStage) {
     
@@ -145,6 +146,10 @@ public class MainMenu extends Application {
     
     //Create a label for the terrain's information
     Label terrainInfo = new Label();
+    
+    Button saveButton = new Button("Save Game");
+    saveButton.relocate(950, 550);
+//    saveButton.setOnAction(e ->);
     
 //    boolean attacker = true;
     int[] attackerCoords = new int[2];
@@ -187,7 +192,7 @@ public class MainMenu extends Application {
           terrain[i][j] = new Terrain("Plain", coords);
           terrain[i][j].setBuilding(new Castle("P2", coords));
         }
-        else if (y == 3 && x == 6){
+        else if (y == 0 && x == 4){
           terrain[i][j] = new Terrain("Plain", coords);
           terrain[i][j].setTroop(new Archer("P2", coords));
         }
@@ -240,9 +245,31 @@ public class MainMenu extends Application {
               if (terrain[previousMoveCoords[0]][previousMoveCoords[1]].getTroop() != null) {
                 attacker = terrain[previousMoveCoords[0]][previousMoveCoords[1]].getTroop();
               }
+              
               combatScreen();
+              
+              int[] loserCoords = new int[2];
+              
+           
+              if (combatWinner == defender) {
+                System.out.println("WINNER IS DEFENDER");
+                loserCoords = attacker.getCoords();
+              }
+              else {
+                System.out.println("WINNER IS ATTACKER");
+                loserCoords = defender.getCoords();
+              }
+              button[loserCoords[0]][loserCoords[1]].setGraphic(null);
+              terrain[loserCoords[0]][loserCoords[1]].setTroop(null);
+              
+              for (int l = 0; l < 7; l++) {
+                for (int m = 0; m < 7; m++) {
+                  button[l][m].setDisable(false);
+                  button[l][m].setStyle(null);
+                }
+              }
+              
             }
-            
             else if (firstClick == true && terrain[x][y].getTroop() != null) {
               
               previousMoveCoords[0] = x;
@@ -377,7 +404,7 @@ public class MainMenu extends Application {
     }
     
 //    root.getChildren().add(troopButtonLayout); --------------------------------------------------------------------------
-    
+    root.getChildren().add(saveButton);
     primaryStage.setScene(gameScene);
     primaryStage.show();
     
@@ -411,7 +438,7 @@ public class MainMenu extends Application {
   }
   public void menuButtonClicked (Stage primaryStage) {
     
-    primaryStage.setScene(mainMenu);
+    primaryStage.setScene(primaryScene);
     
   }
   
@@ -481,12 +508,14 @@ public class MainMenu extends Application {
   }
   public void combatScreen () {
     
+    Label attackerStun = new Label();
+    attackerStun.relocate(50, 150);
+    Label defenderStun = new Label();
+    defenderStun.relocate(400, 150);
+    
     turnLabel.relocate(225, 50);
     turnLabel.setText("Player 1's Turn");
     
-//    attacker = new Archer("P1", previousMoveCoords);
-//    defender = new Knight("P2", previousMoveCoords);
-//    
     Image attackerImage = new Image(attacker.getImageName(), 80, 80, false, false);
     ImageView attackerIV = new ImageView(attackerImage);
     attackerIV.relocate(50, 150);
@@ -504,142 +533,146 @@ public class MainMenu extends Application {
                                    "Defense: " + defender.getDefense());
     defenderInfo.relocate(400, 250);
     
-    Button button1 = new Button();
-    Button button2 = new Button();
-    Button button3 = new Button();
-    Button button4 = new Button();
-    button4.setDisable(true);
+    Button attackerButton1 = new Button("Attack");
+    Button attackerButton2 = new Button("Block");
+    Button attackerButton3 = new Button("Dodge");
+    Button attackerButton4 = new Button("Special Attack");
     
-    HBox combatButtonLayout = new HBox(10);
-    combatButtonLayout.getChildren().addAll(button1, button2, button3, button4);
-    combatButtonLayout.relocate(155, 325);
+    attackerButton4.setDisable(true);
+    
+    Button defenderButton1 = new Button();
+    Button defenderButton2 = new Button();
+    Button defenderButton3 = new Button();
+    Button defenderButton4 = new Button();
+    
+    defenderButton1.setDisable(true);
+    defenderButton2.setDisable(true);
+    defenderButton3.setDisable(true);
+    defenderButton4.setDisable(true);
+    
+    HBox attackerButtonLayout = new HBox(10);
+    attackerButtonLayout.relocate(50, 325);
+    attackerButtonLayout.getChildren().addAll(attackerButton1, attackerButton2, attackerButton3, attackerButton4);
+    
+    HBox defenderButtonLayout = new HBox(10);
+    defenderButtonLayout.relocate(400, 325);
+    defenderButtonLayout.getChildren().addAll(defenderButton1, defenderButton2, defenderButton3, defenderButton4);
     
     Label combatLogLabel = new Label();
     
     if (defender instanceof Building) {
-      button1.setText("Attack");
-      button1.setOnAction(e -> attackButtonClicked(attackerInfo, defenderInfo, button4, combatLogLabel));
-      button2.setText("Magic Barrier");
-      button2.setOnAction(e -> magicBarrierButtonClicked(attackerInfo, defenderInfo, combatLogLabel));
-      button3.setText("Repair");
-      button3.setOnAction(e -> repairButtonClicked(attackerInfo, defenderInfo, combatLogLabel));
-      button4.setText("Special Attack");
-      button4.setOnAction(e -> specialAttackButtonClicked(attackerInfo, defenderInfo, button4, combatLogLabel));
+      defenderButton1.setText("Attack");
+      defenderButton1.setOnAction(e -> defenderButton1Clicked(attackerInfo, defenderInfo, 
+                                                              attackerButton1, attackerButton2, attackerButton3, attackerButton4,
+                                                              defenderButton1, defenderButton2, defenderButton3, defenderButton4, 
+                                                              combatLogLabel, attackerStun, defenderStun, attackerIV, defenderIV, attackerButtonLayout, defenderButtonLayout));
+      defenderButton2.setText("Magic Barrier");
+      defenderButton2.setOnAction(e -> defenderButton2Clicked(attackerInfo, defenderInfo, 
+                                                              attackerButton1, attackerButton2, attackerButton3, attackerButton4,
+                                                              defenderButton1, defenderButton2, defenderButton3, defenderButton4,
+                                                              combatLogLabel, attackerStun, defenderStun, attackerIV, defenderIV, attackerButtonLayout, defenderButtonLayout));
+      defenderButton3.setText("Repair");
+      defenderButton3.setOnAction(e -> defenderButton3Clicked(attackerInfo, defenderInfo, 
+                                                              attackerButton1, attackerButton2, attackerButton3, attackerButton4,
+                                                              defenderButton1, defenderButton2, defenderButton3, defenderButton4, 
+                                                              combatLogLabel, attackerStun, defenderStun, attackerIV, defenderIV, attackerButtonLayout, defenderButtonLayout));
+      defenderButton4.setText("Special Attack");
+      defenderButton4.setOnAction(e -> defenderButton4Clicked(attackerInfo, defenderInfo, 
+                                                              attackerButton1, attackerButton2, attackerButton3, attackerButton4,
+                                                              defenderButton1, defenderButton2, defenderButton3, defenderButton4, 
+                                                              combatLogLabel, attackerStun, defenderStun, attackerIV, defenderIV, attackerButtonLayout, defenderButtonLayout));
     }
     else {
-      button1.setText("Attack");
-      button1.setOnAction(e -> attackButtonClicked(attackerInfo, defenderInfo, button4, combatLogLabel));
-      button2.setText("Block");
-      button2.setOnAction(e -> blockButtonClicked(attackerInfo, defenderInfo, combatLogLabel));
-      button3.setText("Dodge");
-      button3.setOnAction(e -> dodgeButtonClicked(attackerInfo, defenderInfo, combatLogLabel));
-      button4.setText("Special Attack");
-      button4.setOnAction(e -> specialAttackButtonClicked(attackerInfo, defenderInfo, button4, combatLogLabel));
+      defenderButton1.setText("Attack");
+      defenderButton1.setOnAction(e -> defenderButton1Clicked(attackerInfo, defenderInfo, 
+                                                              attackerButton1, attackerButton2, attackerButton3, attackerButton4,
+                                                              defenderButton1, defenderButton2, defenderButton3, defenderButton4, 
+                                                              combatLogLabel, attackerStun, defenderStun, attackerIV, defenderIV, 
+                                                              attackerButtonLayout, defenderButtonLayout));
+      defenderButton2.setText("Block");
+      defenderButton2.setOnAction(e -> defenderButton2Clicked(attackerInfo, defenderInfo, 
+                                                              attackerButton1, attackerButton2, attackerButton3, attackerButton4,
+                                                              defenderButton1, defenderButton2, defenderButton3, defenderButton4, 
+                                                              combatLogLabel, attackerStun, defenderStun, attackerIV, defenderIV, attackerButtonLayout, defenderButtonLayout));
+      defenderButton3.setText("Dodge");
+      defenderButton3.setOnAction(e -> defenderButton3Clicked(attackerInfo, defenderInfo, 
+                                                              attackerButton1, attackerButton2, attackerButton3, attackerButton4,
+                                                              defenderButton1, defenderButton2, defenderButton3, defenderButton4, 
+                                                              combatLogLabel, attackerStun, defenderStun, attackerIV, defenderIV, attackerButtonLayout, defenderButtonLayout));
+      defenderButton4.setText("Special Attack");
+      defenderButton4.setOnAction(e -> defenderButton4Clicked(attackerInfo, defenderInfo, 
+                                                              attackerButton1, attackerButton2, attackerButton3, attackerButton4,
+                                                              defenderButton1, defenderButton2, defenderButton3, defenderButton4, 
+                                                              combatLogLabel, attackerStun, defenderStun, attackerIV, defenderIV, attackerButtonLayout, defenderButtonLayout));
     }
     
-//    Image stunImage = new Image();
-//    ImageView stunIV = new ImageView(stunImage);
-    if (attacker.getStun() == true) {
-      
-    }
-    if (defender.getStun() == true) {
-      
-    }
+    attackerButton1.setOnAction(e -> attackerButton1Clicked(attackerInfo, defenderInfo, 
+                                                            attackerButton1, attackerButton2, attackerButton3, attackerButton4,
+                                                            defenderButton1, defenderButton2, defenderButton3, defenderButton4, 
+                                                            combatLogLabel, attackerStun, defenderStun, attackerIV, defenderIV, attackerButtonLayout, defenderButtonLayout));
+    attackerButton2.setOnAction(e -> attackerButton2Clicked(attackerInfo, defenderInfo, 
+                                                            attackerButton1, attackerButton2, attackerButton3, attackerButton4,
+                                                            defenderButton1, defenderButton2, defenderButton3, defenderButton4, 
+                                                            combatLogLabel, attackerStun, defenderStun, attackerIV, defenderIV, attackerButtonLayout, defenderButtonLayout));
+    attackerButton3.setOnAction(e -> attackerButton3Clicked(attackerInfo, defenderInfo, 
+                                                            attackerButton1, attackerButton2, attackerButton3, attackerButton4,
+                                                            defenderButton1, defenderButton2, defenderButton3, defenderButton4, 
+                                                            combatLogLabel, attackerStun, defenderStun, attackerIV, defenderIV, attackerButtonLayout, defenderButtonLayout));  
+    attackerButton4.setOnAction(e -> attackerButton4Clicked(attackerInfo, defenderInfo, 
+                                                            attackerButton1, attackerButton2, attackerButton3, attackerButton4,
+                                                            defenderButton1, defenderButton2, defenderButton3, defenderButton4, 
+                                                            combatLogLabel, attackerStun, defenderStun, attackerIV, defenderIV, attackerButtonLayout, defenderButtonLayout));
     
-    System.out.println(attacker.getTeam() + " health: " + attacker.getHealth());
-    System.out.println(defender.getTeam() + " health: " + defender.getHealth());
+    combatRoot.getChildren().addAll(attackerButtonLayout, defenderButtonLayout, 
+                                    attackerIV, defenderIV, turnLabel, attackerInfo, defenderInfo, combatLogLabel, attackerStun, defenderStun);
     
-    combatRoot.getChildren().addAll(combatButtonLayout, attackerIV, defenderIV, turnLabel, attackerInfo, defenderInfo, combatLogLabel);
-    
-    Scene combatScene = new Scene(combatRoot, 800, 400);
-    
+    Scene combatScene = new Scene(combatRoot, 1000, 400);
+    combatScene.setRoot(new Region());
     Stage combatStage = new Stage();
     combatStage.setScene(combatScene);
-    combatStage.show();
+    combatStage.showAndWait();
   }
-  public void attackButtonClicked (Label attackerInfo, Label defenderInfo, Button button4, Label combatLogLabel) {
+  public void combatCheck (Label attackerInfo, Label defenderInfo, 
+                           Button attackerButton1, Button attackerButton2, Button attackerButton3, Button attackerButton4, 
+                           Button defenderButton1, Button defenderButton2, Button defenderButton3, Button defenderButton4, 
+                           Label combatLogLabel, Label attackerStun, Label defenderStun, ImageView attackerIV, ImageView defenderIV, HBox attackerButtonLayout, HBox defenderButtonLayout) {
+    
     if (playerTurn == true) {
-      attackAction = "Attack";
-      playerTurn = false;
-      turnLabel.setText("Player 2's Turn");
+      attackerButton1.setDisable(false);
+      attackerButton2.setDisable(false);
+      attackerButton3.setDisable(false);
+      attackerButton4.setDisable(false);
+      
+      defenderButton1.setDisable(true);
+      defenderButton2.setDisable(true);
+      defenderButton3.setDisable(true);
+      defenderButton4.setDisable(true);
     }
     else {
-      defendAction = "Attack";
-      playerTurn = true;
-      turnLabel.setText("Player 1's Turn");
-    }
-    if (attacker.getSpecialMeter() < 2 || defender.getSpecialMeter() < 2) {
-      button4.setDisable(true);
-    }
-    else {
-      button4.setDisable(false);
+      attackerButton1.setDisable(true);
+      attackerButton2.setDisable(true);
+      attackerButton3.setDisable(true);
+      attackerButton4.setDisable(true);
+      
+      defenderButton1.setDisable(false);
+      defenderButton2.setDisable(false);
+      defenderButton3.setDisable(false);
+      defenderButton4.setDisable(false);
     }
     
-    combatCheck(attackerInfo, defenderInfo, combatLogLabel);
-  }
-  public void blockButtonClicked (Label attackerInfo, Label defenderInfo, Label combatLogLabel) {
-    if (playerTurn == true) {
-      attackAction = "Block";
-      playerTurn = false;
-      turnLabel.setText("Player 2's Turn");
-    }
-    else {
-      defendAction = "Block";
-      playerTurn = true;
-      turnLabel.setText("Player 1's Turn");
-    }
-    combatCheck(attackerInfo, defenderInfo, combatLogLabel);
-  }
-  public void dodgeButtonClicked (Label attackerInfo, Label defenderInfo, Label combatLogLabel) {
-    if (playerTurn == true) {
-      attackAction = "Dodge";
-      playerTurn = false;
-      turnLabel.setText("Player 2's Turn");
-    }
-    else {
-      defendAction = "Dodge";
-      playerTurn = true;
-      turnLabel.setText("Player 1's Turn");
-    }
-    combatCheck(attackerInfo, defenderInfo, combatLogLabel);
-  }
-  public void specialAttackButtonClicked (Label attackerInfo, Label defenderInfo, Button button4, Label combatLogLabel) {
-    button4.setDisable(true);
-    if (playerTurn == true) {
-      attackAction = "Special Attack";
-      playerTurn = false;
-      attacker.setSpecialMeter(0);
-      turnLabel.setText("Player 2's Turn");
-    }
-    else {
-      defendAction = "Special Attack";
-      playerTurn = true;
-      defender.setSpecialMeter(0);
-      turnLabel.setText("Player 1's Turn");
-    }
-    combatCheck(attackerInfo, defenderInfo, combatLogLabel);
-  }
-  public void magicBarrierButtonClicked (Label attackerInfo, Label defenderInfo, Label combatLogLabel) {
-    defendAction = "Magic Barrier";
-    playerTurn = true;
-    turnLabel.setText("Player 2's Turn");
-    combatCheck(attackerInfo, defenderInfo, combatLogLabel);
-  }
-  public void repairButtonClicked (Label attackerInfo, Label defenderInfo, Label combatLogLabel) {
-    defendAction = "Repair";
-    playerTurn = true;
-    turnLabel.setText("Player 1's Turn");
-    combatCheck(attackerInfo, defenderInfo, combatLogLabel);
-  }
-  public void combatCheck (Label attackerInfo, Label defenderInfo, Label combatLogLabel) {
+    
     int[] testingCoords  = {1,2};
     Castle castle = new Castle("P1", testingCoords);
+    
+    
+    
     
     Combat combat = new Combat(attacker, defender);
     
     ArrayList<String> combatLog = new ArrayList<String>();
     
     if (attackAction != null && defendAction != null) {
+      
       combatLog = combat.combatPhase(attacker, defender, attackAction, defendAction, castle.getGold());
       displayCombatLog(combatLog, combatLogLabel);
       attackerInfo.setText(attacker.getTeam() + " health: " + attacker.getHealth() + "\n" + 
@@ -649,16 +682,265 @@ public class MainMenu extends Application {
                            "Special Meter: " + defender.getSpecialMeter() + "/3" + "\n" + 
                            "Defense: " + defender.getDefense());
       
-      if (attacker.getHealth() <= 0) {
-        combatRoot.getChildren().remove(attacker);
-      }
-      else if (defender.getHealth() <= 0) {
-        combatRoot.getChildren().remove(defender);
-      }
+      defenderCombatCheck(attackerInfo, defenderInfo, 
+                          attackerButton1, attackerButton2, attackerButton3, attackerButton4, 
+                          defenderButton1, defenderButton2, defenderButton3, defenderButton4, 
+                          combatLogLabel, attackerStun, defenderStun, attackerIV, defenderIV, attackerButtonLayout, defenderButtonLayout);
+      
+      attackerCombatCheck(attackerInfo, defenderInfo, 
+                          attackerButton1, attackerButton2, attackerButton3, attackerButton4, 
+                          defenderButton1, defenderButton2, defenderButton3, defenderButton4, 
+                          combatLogLabel, attackerStun, defenderStun, attackerIV, defenderIV, attackerButtonLayout, defenderButtonLayout);
+
+      
       attackAction = null;
       defendAction = null;
     } 
   }
+  public void attackerButton1Clicked (Label attackerInfo, Label defenderInfo, 
+                                      Button attackerButton1, Button attackerButton2, Button attackerButton3, Button attackerButton4, 
+                                      Button defenderButton1, Button defenderButton2, Button defenderButton3, Button defenderButton4, 
+                                      Label combatLogLabel, Label attackerStun, Label defenderStun, ImageView attackerIV, ImageView defenderIV, HBox attackerButtonLayout, HBox defenderButtonLayout) {
+    attackAction = attackerButton1.getText();
+    
+    turnLabel.setText("Player 2's turn");
+    playerTurn = false;
+    
+    combatCheck(attackerInfo, defenderInfo, 
+                attackerButton1, attackerButton2, attackerButton3, attackerButton4, 
+                defenderButton1, defenderButton2, defenderButton3, defenderButton4, 
+                combatLogLabel, attackerStun, defenderStun, attackerIV, defenderIV, attackerButtonLayout, defenderButtonLayout);
+    
+    defenderCombatCheck(attackerInfo, defenderInfo, 
+                        attackerButton1, attackerButton2, attackerButton3, attackerButton4, 
+                        defenderButton1, defenderButton2, defenderButton3, defenderButton4, 
+                        combatLogLabel, attackerStun, defenderStun, attackerIV, defenderIV, attackerButtonLayout, defenderButtonLayout);
+    
+  }
+  public void attackerButton2Clicked (Label attackerInfo, Label defenderInfo, 
+                                      Button attackerButton1, Button attackerButton2, Button attackerButton3, Button attackerButton4, 
+                                      Button defenderButton1, Button defenderButton2, Button defenderButton3, Button defenderButton4, 
+                                      Label combatLogLabel, Label attackerStun, Label defenderStun, ImageView attackerIV, ImageView defenderIV, HBox attackerButtonLayout, HBox defenderButtonLayout) {
+    
+    attackAction = attackerButton2.getText();
+    
+    turnLabel.setText("Player 2's turn");
+    playerTurn = false;
+    
+    combatCheck(attackerInfo, defenderInfo, 
+                attackerButton1, attackerButton2, attackerButton3, attackerButton4, 
+                defenderButton1, defenderButton2, defenderButton3, defenderButton4, 
+                combatLogLabel, attackerStun, defenderStun, attackerIV, defenderIV, attackerButtonLayout, defenderButtonLayout);
+    defenderCombatCheck(attackerInfo, defenderInfo, 
+                        attackerButton1, attackerButton2, attackerButton3, attackerButton4, 
+                        defenderButton1, defenderButton2, defenderButton3, defenderButton4, 
+                        combatLogLabel, attackerStun, defenderStun, attackerIV, defenderIV, attackerButtonLayout, defenderButtonLayout);
+  }
+  public void attackerButton3Clicked (Label attackerInfo, Label defenderInfo, 
+                                      Button attackerButton1, Button attackerButton2, Button attackerButton3, Button attackerButton4, 
+                                      Button defenderButton1, Button defenderButton2, Button defenderButton3, Button defenderButton4, 
+                                      Label combatLogLabel, Label attackerStun, Label defenderStun, ImageView attackerIV, ImageView defenderIV, HBox attackerButtonLayout, HBox defenderButtonLayout) {
+    
+    attackAction = attackerButton3.getText();
+    
+    turnLabel.setText("Player 2's turn");
+    playerTurn = false;
+    
+    combatCheck(attackerInfo, defenderInfo, 
+                attackerButton1, attackerButton2, attackerButton3, attackerButton4, 
+                defenderButton1, defenderButton2, defenderButton3, defenderButton4, 
+                combatLogLabel, attackerStun, defenderStun, attackerIV, defenderIV, attackerButtonLayout, defenderButtonLayout);
+    defenderCombatCheck(attackerInfo, defenderInfo, 
+                        attackerButton1, attackerButton2, attackerButton3, attackerButton4, 
+                        defenderButton1, defenderButton2, defenderButton3, defenderButton4, 
+                        combatLogLabel, attackerStun, defenderStun, attackerIV, defenderIV, attackerButtonLayout, defenderButtonLayout);
+  }
+  public void attackerButton4Clicked (Label attackerInfo, Label defenderInfo, 
+                                      Button attackerButton1, Button attackerButton2, Button attackerButton3, Button attackerButton4, 
+                                      Button defenderButton1, Button defenderButton2, Button defenderButton3, Button defenderButton4, 
+                                      Label combatLogLabel, Label attackerStun, Label defenderStun, ImageView attackerIV, ImageView defenderIV, HBox attackerButtonLayout, HBox defenderButtonLayout) {
+    
+    attackerButton4.setDisable(true);
+    
+    attackAction = attackerButton4.getText();
+    
+    turnLabel.setText("Player 2's turn");
+    playerTurn = false;
+    
+    combatCheck(attackerInfo, defenderInfo, 
+                attackerButton1, attackerButton2, attackerButton3, attackerButton4, 
+                defenderButton1, defenderButton2, defenderButton3, defenderButton4, 
+                combatLogLabel, attackerStun, defenderStun, attackerIV, defenderIV, attackerButtonLayout, defenderButtonLayout);
+    defenderCombatCheck(attackerInfo, defenderInfo, 
+                        attackerButton1, attackerButton2, attackerButton3, attackerButton4, 
+                        defenderButton1, defenderButton2, defenderButton3, defenderButton4, 
+                        combatLogLabel, attackerStun, defenderStun, attackerIV, defenderIV, attackerButtonLayout, defenderButtonLayout);
+  }
+  public void defenderButton1Clicked (Label attackerInfo, Label defenderInfo, 
+                                      Button attackerButton1, Button attackerButton2, Button attackerButton3, Button attackerButton4, 
+                                      Button defenderButton1, Button defenderButton2, Button defenderButton3, Button defenderButton4, 
+                                      Label combatLogLabel, Label attackerStun, Label defenderStun, ImageView attackerIV, ImageView defenderIV, HBox attackerButtonLayout, HBox defenderButtonLayout) {
+    
+    defendAction = defenderButton1.getText();
+    
+    turnLabel.setText("Player 1's turn");
+    playerTurn = true;
+    
+    combatCheck(attackerInfo, defenderInfo, 
+                attackerButton1, attackerButton2, attackerButton3, attackerButton4, 
+                defenderButton1, defenderButton2, defenderButton3, defenderButton4, 
+                combatLogLabel, attackerStun, defenderStun, attackerIV, defenderIV, attackerButtonLayout, defenderButtonLayout);
+    attackerCombatCheck(attackerInfo, defenderInfo, 
+                        attackerButton1, attackerButton2, attackerButton3, attackerButton4, 
+                        defenderButton1, defenderButton2, defenderButton3, defenderButton4, 
+                        combatLogLabel, attackerStun, defenderStun, attackerIV, defenderIV, attackerButtonLayout, defenderButtonLayout);
+  }
+  public void defenderButton2Clicked (Label attackerInfo, Label defenderInfo, 
+                                      Button attackerButton1, Button attackerButton2, Button attackerButton3, Button attackerButton4, 
+                                      Button defenderButton1, Button defenderButton2, Button defenderButton3, Button defenderButton4, 
+                                      Label combatLogLabel, Label attackerStun, Label defenderStun, ImageView attackerIV, ImageView defenderIV, HBox attackerButtonLayout, HBox defenderButtonLayout) {
+    
+    defendAction = defenderButton2.getText();
+    
+    turnLabel.setText("Player 1's turn");
+    playerTurn = true;
+    
+    combatCheck(attackerInfo, defenderInfo, 
+                attackerButton1, attackerButton2, attackerButton3, attackerButton4, 
+                defenderButton1, defenderButton2, defenderButton3, defenderButton4, 
+                combatLogLabel, attackerStun, defenderStun, attackerIV, defenderIV, attackerButtonLayout, defenderButtonLayout);
+    attackerCombatCheck(attackerInfo, defenderInfo, 
+                        attackerButton1, attackerButton2, attackerButton3, attackerButton4, 
+                        defenderButton1, defenderButton2, defenderButton3, defenderButton4, 
+                        combatLogLabel, attackerStun, defenderStun, attackerIV, defenderIV, attackerButtonLayout, defenderButtonLayout);
+  }
+  public void defenderButton3Clicked (Label attackerInfo, Label defenderInfo, 
+                                      Button attackerButton1, Button attackerButton2, Button attackerButton3, Button attackerButton4, 
+                                      Button defenderButton1, Button defenderButton2, Button defenderButton3, Button defenderButton4,
+                                      Label combatLogLabel, Label attackerStun, Label defenderStun, ImageView attackerIV, ImageView defenderIV,
+                                      HBox attackerButtonLayout, HBox defenderButtonLayout) {
+    
+    defendAction = defenderButton3.getText();
+    
+    turnLabel.setText("Player 1's turn");
+    playerTurn = true;
+    
+    combatCheck(attackerInfo, defenderInfo, 
+                attackerButton1, attackerButton2, attackerButton3, attackerButton4, 
+                defenderButton1, defenderButton2, defenderButton3, defenderButton4, 
+                combatLogLabel, attackerStun, defenderStun, attackerIV, defenderIV, attackerButtonLayout, defenderButtonLayout);
+    attackerCombatCheck(attackerInfo, defenderInfo, 
+                        attackerButton1, attackerButton2, attackerButton3, attackerButton4, 
+                        defenderButton1, defenderButton2, defenderButton3, defenderButton4, 
+                        combatLogLabel, attackerStun, defenderStun, attackerIV, defenderIV, attackerButtonLayout, defenderButtonLayout);
+  }
+  public void defenderButton4Clicked (Label attackerInfo, Label defenderInfo, 
+                                      Button attackerButton1, Button attackerButton2, Button attackerButton3, Button attackerButton4, 
+                                      Button defenderButton1, Button defenderButton2, Button defenderButton3, Button defenderButton4, 
+                                      Label combatLogLabel, Label attackerStun, Label defenderStun, ImageView attackerIV, ImageView defenderIV,
+                                      HBox attackerButtonLayout, HBox defenderButtonLayout) {
+    
+    defenderButton4.setDisable(true);
+    
+    defendAction = defenderButton4.getText();
+    
+    turnLabel.setText("Player 1's turn");
+    playerTurn = true;
+    
+    combatCheck(attackerInfo, defenderInfo, 
+                attackerButton1, attackerButton2, attackerButton3, attackerButton4, 
+                defenderButton1, defenderButton2, defenderButton3, defenderButton4, 
+                combatLogLabel, attackerStun, defenderStun, attackerIV, defenderIV, attackerButtonLayout, defenderButtonLayout);
+    attackerCombatCheck(attackerInfo, defenderInfo, 
+                        attackerButton1, attackerButton2, attackerButton3, attackerButton4, 
+                        defenderButton1, defenderButton2, defenderButton3, defenderButton4, 
+                        combatLogLabel, attackerStun, defenderStun, attackerIV, defenderIV, attackerButtonLayout, defenderButtonLayout);
+  }
+  public void attackerCombatCheck (Label attackerInfo, Label defenderInfo, 
+                                   Button attackerButton1, Button attackerButton2, Button attackerButton3, Button attackerButton4, 
+                                   Button defenderButton1, Button defenderButton2, Button defenderButton3, Button defenderButton4, 
+                                   Label combatLogLabel, Label attackerStun, Label defenderStun, ImageView attackerIV, ImageView defenderIV, HBox attackerButtonLayout, HBox defenderButtonLayout) {
+    
+    System.out.println("attacker stun: " + attacker.getStun());
+    if (attacker.getStun() == true && attacker.getHealth() > 0) {
+      attackerStun.setText("STUNNED");
+    }
+    else {
+      attackerStun.setText("");
+    }
+    
+    if (attacker.getSpecialMeter() == 3 && playerTurn == true) {
+      attackerButton4.setDisable(false);
+    }
+    else {
+      attackerButton4.setDisable(true);
+    }
+    
+    System.out.println("Attacker Health: " + attacker.getHealth());
+    if (attacker.getHealth() <= 0) {
+      combatWinner = defender;
+      turnLabel.setText("Player 2 wins");
+      combatRoot.getChildren().removeAll(attackerButtonLayout, defenderButtonLayout, attackerIV);
+      Button continueButton = new Button("Continue");
+      continueButton.relocate(800, 300);
+      continueButton.setOnAction(e -> {
+        // get a handle to the stage
+        Stage stage = (Stage) continueButton.getScene().getWindow();
+        stage.close();
+        attackerButtonLayout.getChildren().clear();
+        defenderButtonLayout.getChildren().clear();
+        combatRoot.getChildren().removeAll(combatRoot.getChildren());
+      });
+      combatRoot.getChildren().add(continueButton);
+    }
+  }
+  public void defenderCombatCheck (Label attackerInfo, Label defenderInfo, 
+                                   Button attackerButton1, Button attackerButton2, Button attackerButton3, Button attackerButton4, 
+                                   Button defenderButton1, Button defenderButton2, Button defenderButton3, Button defenderButton4, 
+                                   Label combatLogLabel, Label attackerStun, Label defenderStun, ImageView attackerIV, ImageView defenderIV, HBox attackerButtonLayout, HBox defenderButtonLayout) {
+    
+    System.out.println("defender stun: " + defender.getStun());
+    if (defender.getStun() == true && defender.getHealth() > 0) {
+      defenderStun.setText("STUNNED");
+    }
+    else {
+      defenderStun.setText("");
+    }
+    
+    if (defender.getSpecialMeter() == 3 && playerTurn == false) {
+      defenderButton4.setDisable(false);
+    }
+    else {
+      defenderButton4.setDisable(true);
+    }
+    
+    System.out.println("Defender Health: " + defender.getHealth());
+    if (defender.getHealth() <= 0) {
+      if (defender instanceof Troop){
+        combatWinner = attacker;
+        combatRoot.getChildren().removeAll(attackerButtonLayout, defenderButtonLayout, defenderIV);
+        turnLabel.setText("Player 1 wins");
+        Button continueButton = new Button("Continue");
+        continueButton.relocate(800, 300);
+        continueButton.setOnAction(e -> {
+          // get a handle to the stage
+          Stage stage = (Stage) continueButton.getScene().getWindow();
+          stage.close();
+        attackerButtonLayout.getChildren().clear();
+        defenderButtonLayout.getChildren().clear();
+          combatRoot.getChildren().removeAll(combatRoot.getChildren());
+        });
+        combatRoot.getChildren().add(continueButton);
+      }
+      else if (defender instanceof GoldMine){
+        defender.setTeam("None");
+      }
+      else if (defender instanceof Castle){
+        //Put variable or do something to indicate that player loses or wins since castle was destroyed
+      }
+    }
+  }
+
   public void displayCombatLog (ArrayList<String> combatLog, Label combatLogLabel) {
     String temp = "";
     for (int i = 0; i < combatLog.size(); i++) {
