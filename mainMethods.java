@@ -163,18 +163,18 @@ public class mainMethods{
     //If it's currently P1, 
     if (turn.equals("P1")){
       newTurn = "P2";
-      Castle castle = terrain[6][6].getBuilding();
+      Castle castle = ((Castle)(terrain[6][6].getBuilding()));
       for (int i = 0; i < p1Troops.size(); i++){
-        p1Troop.get(i).setAction(true); //Sets the action of each troop to true
+        p1Troops.get(i).setAction(true); //Sets the action of each troop to true
       }
       //Adds gold income equal to the number of buildings times 100
       castle.setGold(castle.getGold() + p2Buildings.size()*100);
     }
     else {
       newTurn = "P1";
-      Castle castle = terrain[0][0].getBuilding();
+      Castle castle = ((Castle)(terrain[0][0].getBuilding()));
       for (int i = 0; i < p2Troops.size(); i++){
-        p2Troop.get(i).setAction(true); //Sets the action of each troop to true
+        p2Troops.get(i).setAction(true); //Sets the action of each troop to true
       }
       //Adds gold income equal to the number of buildings times 100
       castle.setGold(castle.getGold() + p1Buildings.size()*100);
