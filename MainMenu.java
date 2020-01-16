@@ -259,14 +259,11 @@ public class MainMenu extends Application {
                   recruitmentLayout.relocate(640, 500); //Set the location of the layout
                   recruitmentLayout.getChildren().addAll(recruitmentLabel, troopButtonLayout); //Add the label and the buttons to the layout
                   
-                  
-                  /*
-                   archerButton.setOnAction();
-                   knightButton.setOnAction();
-                   cbmButton.setOnAction();
-                   footManButton.setOnAction();
-                   cavalryButton.setOnAction();                   
-                   */
+                  archerButton.setOnAction(event -> recruitmentButtonClicked(archerButton.getText(), x, y, root));
+                  knightButton.setOnAction(event -> recruitmentButtonClicked(knightButton.getText(), x, y, root));
+                  cbmButton.setOnAction(event -> recruitmentButtonClicked(cbmButton.getText(), x, y, root));
+                  footManButton.setOnAction(event -> recruitmentButtonClicked(footManButton.getText(), x, y, root));
+                  cavalryButton.setOnAction(event -> recruitmentButtonClicked(cavalryButton.getText(), x, y, root));                   
                   
                   //Checks if there is a castle
                   //Checks level of the castle (3 is the max level)
@@ -1183,20 +1180,17 @@ public class MainMenu extends Application {
     }
   }
   
-  public void archerButtonClicked () {
+  public void recruitmentButtonClicked (String troopName, int x, int y, Pane root) {
     
-  }
-  public void knightButtonClicked () {
-    
-  }
-  public void footManButtonClicked () {
-    
-  }
-  public void cavalryButtonClicked () {
-    
-  }
-  public void cbbButtonClicked () {
-    
+    if (mainMethods.recruitTroops(terrain, troopName, (Castle)terrain[x][y].getBuilding()) == true) {
+      Image image = new Image(terrain[x][y].getTroop().getImageName(), 60, 60, false, false);
+      button[x][y].setGraphic(new ImageView(image));
+    }
+    else {
+      Label errorMessage = new Label("You currently do not meet the requirements to recruit" +
+                                     "that troop or there is a troop on the terrain already");
+      root.getChildren().add(errorMessage);
+    }
   }
   //Method that will display the combat log
   public void displayCombatLog (ArrayList<String> combatLog, Label combatLogLabel) {
