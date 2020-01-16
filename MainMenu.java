@@ -175,12 +175,16 @@ public class MainMenu extends Application {
     //Create a save game button
     Button saveButton = new Button("Save Game");
     //Set the location of the button
-    saveButton.relocate(950, 550);
-    
-    
-//    saveButton.setOnAction(e ->);
-    
-//    boolean attacker = true;
+    saveButton.relocate(950, 600);
+    //Give the save button a function
+    saveButton.setOnAction(e -> saveGameButtonClicked());
+   
+    //Create an end turn button
+    Button endTurnButton = new Button("End Turn");
+    //Set the location of the button
+    endTurnButton.relocate(850, 600);
+    //Give the endTurn button a function
+    endTurnButton.setOnAction(e -> endTurnButtonClicked());
     
     //Stores the coordintes of the attacker
     int[] attackerCoords = new int[2];
@@ -372,6 +376,7 @@ public class MainMenu extends Application {
               //Loops through the ArrayList of possible moves
               for (int k = 0; k < possibleMoves.size(); k++) {
                 move = possibleMoves.get(k); //Store the int array of possibleMoves to move
+                System.out.println(move[0] + "," + move[1]);
                 button[move[0]][move[1]].setStyle(null); //Unhighlight the previously highlighted buttons
               }
               
@@ -450,14 +455,14 @@ public class MainMenu extends Application {
         }
       }
     }
-    root.getChildren().add(saveButton); //Add the saveButton to the pane
+    root.getChildren().addAll(saveButton, endTurnButton); //Add the saveButton and endTurnButton to the pane
     primaryStage.setScene(gameScene); //Set the scene
     primaryStage.show(); //Show the stage
     
   }
   
   //Method that will load the previous game
-  public void loadGameButtonClicked(){
+  public void loadGameButtonClicked () {
     try{
       mainMethods.loadGame(mainMethods.saveFolderPath, terrain, p1Troops, p2Troops, p1Buildings, p2Buildings, unclaimedBuildings);
     }
@@ -465,6 +470,12 @@ public class MainMenu extends Application {
       System.out.println("An IOException has occured");
     }
     
+  }
+  public void saveGameButtonClicked () {
+//    mainMethods.saveGame.
+  }
+  public void endTurnButtonClicked () {
+    turn = mainMethods.turnFlip(turn, terrain, p1Troops, p2Troops, p1Buildings, p2Buildings, unclaimedBuildings);
   }
   //Create the load button and will return the button
   public Button createLoadButton () throws Exception{
@@ -518,7 +529,7 @@ public class MainMenu extends Application {
   }
   //Method that will display the building's information onto the window
   public void checkBuilding (Terrain[][] terrain, Rectangle buildingBox, Label buildingInfo, int x, int y, Pane root) {
-    System.out.println(terrain[x][y].getBuilding().getTeam());
+    
     //Sets the position of the buildingBox
     buildingBox.relocate(675, 75);
     //Set the opacity
@@ -538,24 +549,13 @@ public class MainMenu extends Application {
       buildingBox.setFill(Color.YELLOW);
     }
     System.out.println("buildingInfo.setText\n");
-    if (terrain[x][y].getBuilding() instanceof Castle){
-      //Gather information about the building
-      buildingInfo.setText("Building\n" + 
-                           "Name: " + terrain[x][y].getBuilding().getName() + "\n" +
-                           "Health: " + terrain[x][y].getBuilding().getHealth() + "\n" + 
-                           "Attack: " + terrain[x][y].getBuilding().getAttack() + "\n" + 
-                           "Range: " + terrain[x][y].getBuilding().getRange() + "\n" + 
-                           "Gold: " + ((Castle)terrain[x][y].getBuilding()).getGold() + "\n" +
-                           "Level: " + ((Castle)terrain[x][y].getBuilding()).getLevel());
-    }
-    else{
-      //Gather information about the building
-      buildingInfo.setText("Building\n" + 
-                           "Name: " + terrain[x][y].getBuilding().getName() + "\n" +
-                           "Health: " + terrain[x][y].getBuilding().getHealth() + "\n" + 
-                           "Attack: " + terrain[x][y].getBuilding().getAttack() + "\n" + 
-                           "Range: " + terrain[x][y].getBuilding().getRange());
-    }
+    //Gather information about the building
+    buildingInfo.setText("Building\n" + 
+                         "Name: " + terrain[x][y].getBuilding().getName() + "\n" +
+                         "Health: " + terrain[x][y].getBuilding().getHealth() + "\n" + 
+                         "Attack: " + terrain[x][y].getBuilding().getAttack() + "\n" + 
+                         "Range: " + terrain[x][y].getBuilding().getRange() + "\n" + 
+                         "Gold: " + ((Castle)terrain[x][y].getBuilding()).getGold());
     //Set the position of the building's information
     buildingInfo.relocate(800, 100);
     
