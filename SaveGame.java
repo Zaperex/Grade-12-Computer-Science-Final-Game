@@ -145,33 +145,38 @@ class SaveGame{
       //While file still has unread lines
       while ((line = troopReader.readLine()) != null){
         tempArr = line.split(","); //Splits line into String array
-        int x = Integer.parseInt(tempArr[3]); //X coordinates
-        int y = Integer.parseInt(tempArr[4]); //Y Coordinates
+        int x = Integer.parseInt(tempArr[4]); //X coordinates
+        int y = Integer.parseInt(tempArr[5]); //Y Coordinates
         int[] coordinates = {x, y}; //Stores the coordinates into an int array
         //If troop is a footman
         if (tempArr[0].equals("Footman")){
           troops.add(new Footman(tempArr[2], coordinates)); //Creates object in correct coordinates
           troops.get(troops.size()-1).setHealth(Double.parseDouble(tempArr[1])); //Sets health to what they were at
+          troops.get(troops.size()-1).setAction(Boolean.parseBoolean(tempArr[3])); //Sets action boolean
         }
         //If troop is an archer
         else if (tempArr[0].equals("Archer")){
           troops.add(new Archer(tempArr[2], coordinates)); //Creates object in correct coordinates
           troops.get(troops.size()-1).setHealth(Double.parseDouble(tempArr[1])); //Sets health to what they were at
+          troops.get(troops.size()-1).setAction(Boolean.parseBoolean(tempArr[3])); //Sets action boolean
         }
         //If troop is a knight
         else if (tempArr[0].equals("Knight")){
           troops.add(new Knight(tempArr[2], coordinates)); //Creates object in correct coordinates
           troops.get(troops.size()-1).setHealth(Double.parseDouble(tempArr[1])); //Sets health to what they were at
+          troops.get(troops.size()-1).setAction(Boolean.parseBoolean(tempArr[3])); //Sets action boolean
         }
         //If troop is a crossbowmen
         else if (tempArr[0].equals("CrossbowMen")){
           troops.add(new CrossbowMen(tempArr[2], coordinates)); //Creates object in correct coordinates
           troops.get(troops.size()-1).setHealth(Double.parseDouble(tempArr[1])); //Sets health to what they were at
+          troops.get(troops.size()-1).setAction(Boolean.parseBoolean(tempArr[3])); //Sets action boolean
         }
         //If troop is a cavalry
         else if (tempArr[0].equals("Cavalry")){
           troops.add(new Cavalry(tempArr[2], coordinates)); //Creates object in correct coordinates
           troops.get(troops.size()-1).setHealth(Double.parseDouble(tempArr[1])); //Sets health of troop
+          troops.get(troops.size()-1).setAction(Boolean.parseBoolean(tempArr[3])); //Sets action boolean
         }
       }
     }
