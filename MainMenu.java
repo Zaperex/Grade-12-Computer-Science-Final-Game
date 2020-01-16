@@ -52,6 +52,9 @@ public class MainMenu extends Application {
   private Combatant combatWinner;
   VBox recruitmentLayout = new VBox(15); //Create a layout for the overall recruitment layout
   
+  //Create a 2D array of buttons (represents the map)
+    Button[][] button = new Button[7][7];
+    
   public static Terrain[][] terrain = new Terrain[7][7];
   public static ArrayList<Troop> p1Troops = new ArrayList<Troop>();
   public static ArrayList<Troop> p2Troops = new ArrayList<Troop>();
@@ -136,27 +139,8 @@ public class MainMenu extends Application {
     
     mainMethods.newGame(terrain, p1Troops, p2Troops, p1Buildings, p2Buildings, unclaimedBuildings);
     
-    for (int a = 0; a < p1Troops.size(); a++) {
-      
-    }
-    for (int b = 0; b < p2Troops.size(); b++) {
-      
-    }
-    for (int c = 0; c < p1Buildings.size(); c++) {
-      
-    }
-    for (int d = 0; d < p2Buildings.size(); d++) {
-      
-    }
-    
     Pane root = new Pane();
     Scene gameScene = new Scene(root, 1050, 675);
-    
-    //Create a 2D array of buttons (represents the map)
-    Button[][] button = new Button[7][7];
-    
-    //USED FOR TESTING ONLY *************************
-    Terrain[][] terrain = new Terrain[7][7];
     
     //Creates a box for information about the building
     Rectangle buildingBox = new Rectangle(300, 150);
@@ -184,17 +168,6 @@ public class MainMenu extends Application {
     int[] attackerCoords = new int[2];
     int[] defenderCoords = new int[2];
     
-    
-//    Button archerButton = new Button("Archer");----------------------------------------------------------------------------------------------------
-//    Button knightButton = new Button("Knight");
-//    Button cbmButton = new Button("Crossbow Men");
-//    Button footManButton = new Button("Foot Man");
-//    Button cavalryButton = new Button("cavalry");
-//    
-//    HBox troopButtonLayout = new HBox(15);
-//    troopButtonLayout.relocate(640, 550);
-//    troopButtonLayout.getChildren().addAll(archerButton, knightButton, cbmButton, footManButton, cavalryButton);
-    
     //Populate the 2d array of buttons
     for (int i = 0; i < 7; i++) {
       for (int j = 0; j < 7; j++) {
@@ -210,25 +183,35 @@ public class MainMenu extends Application {
         int[] coords = {i, j}; //Based on arraylist orientation with y controlling which row and x controlling which column
         int x = i;
         int y = j;
+        
+        if (terrain[i][j].getTroop() != null) {
+          Image troopImage = new Image(terrain[i][j].getTroop().getImageName(), 60, 60, false, false);
+          button[i][j].setGraphic(new ImageView(troopImage));
+        }
+        else if (terrain[i][j].getBuilding() != null) {
+          Image buildingImage = new Image(terrain[i][j].getBuilding().getImageName(), 60, 60, false, false);
+          button[i][j].setGraphic(new ImageView(buildingImage));
+        }
+        
         if (y == 3 && x == 3){
           terrain[i][j] = new Terrain("Plains", coords);
           
-          terrain[i][j].setBuilding(new GoldMine("None", coords));
-          unclaimedBuildings.add(terrain[i][j].getBuilding());
+//          terrain[i][j].setBuilding(new GoldMine("None", coords));
+//          unclaimedBuildings.add(terrain[i][j].getBuilding());
         
         }
         else if (y == 0 && x == 0) {
           terrain[i][j] = new Terrain("Swamp", coords);
-          terrain[i][j].setBuilding(new Castle("P1", coords));
-          p1Buildings.add(terrain[i][j].getBuilding());
+//          terrain[i][j].setBuilding(new Castle("P1", coords));
+//          p1Buildings.add(terrain[i][j].getBuilding());
         }
         else if (y == 6 && x == 6){
           
           //VALUES USED FOR TESTING *******************************
           terrain[i][j] = new Terrain("Plain", coords);
-          terrain[i][j].setBuilding(new Castle("P2", coords));
-          ((Castle)terrain[i][j].getBuilding()).setGold(1000);
-          p2Buildings.add(terrain[i][j].getBuilding());
+//          terrain[i][j].setBuilding(new Castle("P2", coords));
+//          ((Castle)terrain[i][j].getBuilding()).setGold(1000);
+//          p2Buildings.add(terrain[i][j].getBuilding());
         }
         else if (y == 0 && x == 3){
           terrain[i][j] = new Terrain("Plain", coords);
@@ -267,6 +250,7 @@ public class MainMenu extends Application {
             //Checks if a building exists on the selected button/tile
             if (terrain[x][y].getBuilding() != null) {
               //Call the checkBuilding method
+              System.out.println("CheckBuilding");
               checkBuilding(terrain, buildingBox, buildingInfo, x, y, root);
               //If a the home base (castle) of the player's team is clicked
               if (terrain[x][y].getBuilding().getTeam().equals(turn)){
@@ -505,6 +489,22 @@ public class MainMenu extends Application {
     primaryStage.show();
     
   }
+  public void initializeBoard (Button[][] button, Terrain[][] terrain) {
+    for (int i = 0; i < terrain.length; i++) {
+      for (int j = 0; j < terrain[0].length; j++) {
+        
+        if (terrain[i][j].getTroop() != null) {
+          Image troopImage = new Image(terrain[i][j].getTroop().getImageName(), 60, 60, false, false);
+          button[i][j].setGraphic(new ImageView(troopImage));
+        }
+        else if (terrain[i][j].getBuilding() != null) {
+          Image buildingImage = new Image(terrain[i][j].getBuilding().getImageName(), 60, 60, false, false);
+          button[i][j].setGraphic(new ImageView(buildingImage));
+        }
+        
+      }
+    }
+  }
   //Method that will load the previous game
   public void loadGameButtonClicked () throws IOException{
     
@@ -574,6 +574,7 @@ public class MainMenu extends Application {
       //Set the color of the buildingBox to yellow
       buildingBox.setFill(Color.YELLOW);
     }
+    System.out.println("buildingInfo.setText\n");
     //Gather information about the building
     buildingInfo.setText("Building\n" + 
                          "Name: " + terrain[x][y].getBuilding().getName() + "\n" +
