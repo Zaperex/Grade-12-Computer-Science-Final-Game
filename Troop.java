@@ -82,11 +82,13 @@ public class Troop extends Combatant{
     //Arraylist that stores all possible coordinates combatant can move to
     ArrayList<int[]> possibleMoves = new ArrayList<int[]>();
     Terrain terrain;
+    
     //Checks all tiles for possible moves
     for (int x = 0; x < boardState.length; x++){
       for (int y = 0; y < boardState[x].length; y++){
         //Temporarily stores current tile in terrain
         terrain = boardState[x][y];
+        int[] coordinates = {x, y};
         //If move is within range and valid
         if (move(x, y) == true){
           
@@ -94,7 +96,7 @@ public class Troop extends Combatant{
           if (terrain.getTroop() != null){
             //If troop on tile is itself
             if (terrain.getTroop() == this){
-              possibleMoves.add(terrain.getCoords());
+              possibleMoves.add(coordinates); 
             }
             else{
               //Just continues on and doesn't add the coordinates into the arraylist
@@ -107,11 +109,11 @@ public class Troop extends Combatant{
             //Return true if it's a friend building
             if (terrain.getBuilding().getTeam() == getTeam()){
               //Stores coordinates of the terrain tile
-              possibleMoves.add(terrain.getCoords());
+              possibleMoves.add(coordinates);
             }
             //Returns true if it's an unclaimed building
             else if (terrain.getBuilding().getTeam().equals("None")){
-              possibleMoves.add(terrain.getCoords());
+              possibleMoves.add(coordinates);
             }
             //Returns false if it's an enemy building
             else{
@@ -121,7 +123,7 @@ public class Troop extends Combatant{
           }
           else{
             //Stores coordinates of the terrain tile
-            possibleMoves.add(terrain.getCoords());
+            possibleMoves.add(coordinates);
           }
         }
       }    
