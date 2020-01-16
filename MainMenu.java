@@ -109,11 +109,13 @@ public class MainMenu extends Application {
     //Give the button a function when it is pressed
     newGameButton.setOnAction(e -> newGameButtonClicked(primaryStage));
     
-//    loadGameButton = createLoadButton();
-    
-    
-    
-    
+    try{
+      loadGameButton = createLoadButton();
+    }
+    catch(Exception e){
+      System.out.println("IOException has occured");
+    }
+
 //    Create a button that will show the instructions
     Button instructionsButton = new Button("Instructions");
     //Sets the position of the button
@@ -185,34 +187,16 @@ public class MainMenu extends Application {
         int y = j;
         
         if (terrain[i][j].getTroop() != null) {
-          Image troopImage = new Image(terrain[i][j].getTroop().getImageName(), 60, 60, false, false);
-          button[i][j].setGraphic(new ImageView(troopImage));
+          System.out.println(terrain[i][j].getTroop() + "Hello");
+          //Image troopImage = new Image(terrain[i][j].getTroop().getImageName(), 60, 60, false, false);
+          //button[i][j].setGraphic(new ImageView(troopImage));
         }
         else if (terrain[i][j].getBuilding() != null) {
+          System.out.println(terrain[i][j].getBuilding());
           Image buildingImage = new Image(terrain[i][j].getBuilding().getImageName(), 60, 60, false, false);
           button[i][j].setGraphic(new ImageView(buildingImage));
         }
-        
-        if (y == 3 && x == 3){
-          terrain[i][j] = new Terrain("Plains", coords);
-          
-//          terrain[i][j].setBuilding(new GoldMine("None", coords));
-//          unclaimedBuildings.add(terrain[i][j].getBuilding());
-        
-        }
-        else if (y == 0 && x == 0) {
-          terrain[i][j] = new Terrain("Swamp", coords);
-//          terrain[i][j].setBuilding(new Castle("P1", coords));
-//          p1Buildings.add(terrain[i][j].getBuilding());
-        }
-        else if (y == 6 && x == 6){
-          
-          //VALUES USED FOR TESTING *******************************
-          terrain[i][j] = new Terrain("Plain", coords);
-//          terrain[i][j].setBuilding(new Castle("P2", coords));
-//          ((Castle)terrain[i][j].getBuilding()).setGold(1000);
-//          p2Buildings.add(terrain[i][j].getBuilding());
-        }
+       
         else if (y == 0 && x == 3){
           terrain[i][j] = new Terrain("Plain", coords);
           terrain[i][j].setTroop(new Archer("P2", coords));
@@ -225,9 +209,9 @@ public class MainMenu extends Application {
           terrain[i][j] = new Terrain("Plain", coords);
           terrain[i][j].setTroop(new Knight("P1", coords));
         }
-        else{
-          terrain[i][j] = new Terrain("Plain", coords); 
-        }
+//        else{
+//          terrain[i][j] = new Terrain("Plain", coords); 
+//        }
         
         
         //Give the button a function
@@ -239,18 +223,19 @@ public class MainMenu extends Application {
               root.getChildren().remove(recruitmentLayout);
             }
             catch (Exception error){
-              System.out.println("BUtton doesn't exist");
+              System.out.println("Button doesn't exist");
             }
             
             System.out.println("CLICK COUNT: " + e.getClickCount());
             System.out.println(x + ", " + y);
             //Remove the previous boxes and labels to prevent any overlapping
             root.getChildren().removeAll(buildingBox, buildingInfo, troopBox, troopInfo, terrainBox, terrainInfo);
-            
+            System.out.println(terrain[x][y].getBuilding());
+            System.out.println(terrain[x][y].getTroop());
             //Checks if a building exists on the selected button/tile
             if (terrain[x][y].getBuilding() != null) {
               //Call the checkBuilding method
-              System.out.println("CheckBuilding");
+              System.out.println("Building");
               checkBuilding(terrain, buildingBox, buildingInfo, x, y, root);
               //If a the home base (castle) of the player's team is clicked
               if (terrain[x][y].getBuilding().getTeam().equals(turn)){
@@ -295,6 +280,7 @@ public class MainMenu extends Application {
             }
             if (terrain[x][y].getTroop() != null) {
               //Call the checkTroop method
+              System.out.println("Troop is present here!");
               checkTroop(terrain, troopBox, troopInfo, x, y, root);
             }
             //Call the check terrain method
@@ -506,30 +492,31 @@ public class MainMenu extends Application {
     }
   }
   //Method that will load the previous game
-  public void loadGameButtonClicked () throws IOException{
-    
-    
-    
-    mainMethods.loadGame(mainMethods.saveFolderPath, terrain, p1Troops, p2Troops, p1Buildings, p2Buildings, unclaimedBuildings);
-    
+  public void loadGameButtonClicked(){
+    try{
+      mainMethods.loadGame(mainMethods.saveFolderPath, terrain, p1Troops, p2Troops, p1Buildings, p2Buildings, unclaimedBuildings);
+    }
+    catch(Exception e){
+      System.out.println("An IOException has occured");
+    }
     
   }
-//  public Button createLoadButton () throws IOException{
-//    //Create a button that will load the previous game
-//    Button loadGameButton = new Button("Load Game");
-//    //Sets the position of the button
-//    loadGameButton.relocate(225, 450);
-//    //Sets the size of the button
-//    loadGameButton.setPrefSize(150, 25);
-//    try{
-//    //Give the button a function when it is pressed
-//    loadGameButton.setOnAction(e -> loadGameButtonClicked());
-//    }
-//    catch(IOException e1){
-//      System.out.println("An IOException has occured");
-//    }
-//    return loadGameButton;
-//  }
+  public Button createLoadButton () throws Exception{
+    //Create a button that will load the previous game
+    Button loadGameButton = new Button("Load Game");
+    //Sets the position of the button
+    loadGameButton.relocate(225, 450);
+    //Sets the size of the button
+    loadGameButton.setPrefSize(150, 25);
+    try{
+    //Give the button a function when it is pressed
+    loadGameButton.setOnAction(e -> loadGameButtonClicked());
+    }
+    catch(Exception e){
+      System.out.println("An IOException has occured");
+    }
+    return loadGameButton;
+  }
   //Method that will bring the user to an instructions page/window
   public void instructionsButtonClicked (Stage primaryStage) {
     
@@ -593,7 +580,7 @@ public class MainMenu extends Application {
     //Set the opacity
     troopBox.setOpacity(0.5);
     //If the troop is on the enemy team
-    if (terrain[x][y].getTroop().getTeam().equals("P2")) {
+    if (terrain[x][y].getTroop().getTeam().equals("P2")){
       //Set the troopBox to red
       troopBox.setFill(Color.RED);
     }
@@ -777,10 +764,6 @@ public class MainMenu extends Application {
       defenderButton3.setDisable(false);
       defenderButton4.setDisable(false);
     }
-    
-    
-    
-    
     
     ArrayList<String> combatLog = new ArrayList<String>();
     
@@ -993,7 +976,8 @@ public class MainMenu extends Application {
   public void attackerCombatCheck (Label attackerInfo, Label defenderInfo, 
                                    Button attackerButton1, Button attackerButton2, Button attackerButton3, Button attackerButton4, 
                                    Button defenderButton1, Button defenderButton2, Button defenderButton3, Button defenderButton4, 
-                                   Label combatLogLabel, Label attackerStun, Label defenderStun, ImageView attackerIV, ImageView defenderIV, HBox attackerButtonLayout, HBox defenderButtonLayout) {
+                                   Label combatLogLabel, Label attackerStun, Label defenderStun, ImageView attackerIV, ImageView defenderIV, 
+                                   HBox attackerButtonLayout, HBox defenderButtonLayout) {
     
     System.out.println("attacker stun: " + attacker.getStun());
     if (attacker.getStun() == true && attacker.getHealth() > 0) {
