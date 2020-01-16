@@ -19,9 +19,9 @@ class SaveGame{
   static String saveFolderPath = currentDirPath + "\\save"; //Stores the path of the main folder
   
   //Troop Saving
-  public static void saveTroops(ArrayList<Troop> troops, boolean team) throws IOException{
+  public static void saveTroops(ArrayList<Troop> troops, String team) throws IOException{
     String fileName;
-    if (team){
+    if (team == "P1"){
       fileName = "player_1_troop_save.csv";
     }
     else{
@@ -53,9 +53,9 @@ class SaveGame{
     }
   }
   //Building Save
-  public void saveBuildings(ArrayList<Building> buildings, boolean team) throws IOException{
+  public static void saveBuildings(ArrayList<Building> buildings, String team) throws IOException{
     String fileName;
-    if (team){
+    if (team == "P1"){
       fileName = "player_1_building_save.csv";
     }
     else{
@@ -106,7 +106,7 @@ class SaveGame{
   }
   
 //Saves everything else
-  public static void save(ArrayList<Building> buildings, boolean turn, boolean team) throws IOException{
+  public static void save(ArrayList<Building> buildings, String turn, String team) throws IOException{
     PrintWriter otherInfoWriter = new PrintWriter(new File(saveFolderPath + "\\board_state_save.csv"));
     try{
       for (int i = 0; i < buildings.size(); i++){
@@ -122,7 +122,7 @@ class SaveGame{
         otherInfoWriter.write(tempBuild.getCoords()[0] + "," + tempBuild.getCoords()[0]);
         
         //Stores whose turn it is currently (last line will always be what turn it is)
-        if (turn){
+        if (turn == "P1"){
           otherInfoWriter.write("P1 Turn");
         }
         else{
