@@ -8,8 +8,8 @@ public class Cavalry extends Troop{
   private String specialAttack = "Lifesteal Lance"; //Name of special attack
   //Constructor
   public Cavalry(String team, int[] coords) {
-    super("Cavalry", 500, 80, 5, 50, 50, 500, team, 6, coords, "Cavalry.png");
-    //Calvary has 500HP, 80 ATK, 5 RNG, 50 DEF, 50 BASEDEF, 500 MAX HP, 10 PENETRATE, 6 TILE MVMT
+    super("Cavalry", 600, 100, 5, 50, 50, 500, team, 4, coords, "Cavalry.png");
+    //Calvary has 500HP, 100 ATK, 5 RNG, 50 DEF, 50 BASEDEF, 500 MAX HP, 4 TILE MVMT
   }
   //Setters
   public static void setCavalryPrice(int price){
@@ -24,10 +24,6 @@ public class Cavalry extends Troop{
   }
   public String getSpecialAttack(){
     return specialAttack;
-  }
-  //Resets Defense Stat
-  public void resetDefense(){
-    setDefense(baseDefense);
   }
   
   //Method to heal the Cavalry

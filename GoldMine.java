@@ -9,8 +9,8 @@ public class GoldMine extends Building{
   private String specialAttack = "Fireball"; //Name of special attack
   //Constructor
   public GoldMine(String team, int[] coordinates){
-    super("Gold Mine", 1500, 10, 5, 1500, team, coordinates, "Gold Mine.png");
-    //Gold Mines have 1500HP, 10 ATK, 5 RNG, 30 DEF, 30 BASEDEF, 1500 BASE HP
+    super("Gold Mine", 750, 30, 5, 750, team, coordinates, "Gold Mine.png");
+    //Gold Mines have 1500HP, 30 ATK, 5 RNG, 30 DEF, 30 BASEDEF, 1500 BASE HP
 
   }
   //Getters
@@ -36,10 +36,5 @@ public class GoldMine extends Building{
     //Increase defense by 20%
     setDefense(getDefense()*1.2);
     return damage;
-  }
-  
-  //Resets Defense Stat
-  public void resetDefense(){
-    setDefense(baseDefense);
   }
 }

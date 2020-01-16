@@ -23,7 +23,7 @@ public class Building extends Combatant{
     return barrier;
   }
   
-  //Repair method
+  //Repair methoD
   public double repair(double goldBalance){
     double amountHealed = 0;
     //Repair will cost 40 gold to perform

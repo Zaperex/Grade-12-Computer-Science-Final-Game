@@ -9,8 +9,8 @@ public class Archer extends Troop {
   private String specialAttack = "Triple Shot"; //Name of special attack
   //Constructor
   public Archer (String team, int[] coords) {
-    super("Archer", 300, 45, 40, 0, 0, 300, team, 3, coords, "Archer.png");
-    //Archers have 300 HP, 45 ATK, 0 DEF, 0 BASEDEF, 300 MAX HP, 40 RNG, 3 TILE MVMT
+    super("Archer", 200, 50, 40, 15, 15, 150, team, 3, coords, "Archer.png");
+    //Archers have 150 HP, 50 ATK, 15 DEF, 15 BASEDEF, 150 MAX HP, 40 RNG, 3 TILE MVMT
   }
   //Setters
   public static void setArcherPrice(int price){
@@ -25,10 +25,6 @@ public class Archer extends Troop {
   }
   public String getAttackName(){
     return attackName;
-  }
-  //Resets Defense Stat
-  public void resetDefense(){
-    setDefense(baseDefense);
   }
   
   //Special attack for archer

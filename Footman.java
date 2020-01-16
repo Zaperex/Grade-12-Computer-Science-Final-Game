@@ -7,8 +7,8 @@ class Footman extends Troop{
   private String specialAttack = "Rocket Thrust";
   
   public Footman(String team, int[] coords){
-    super("Footman", 400, 60, 5, 0, 0, 400, team, 3, coords, "Footman.png");
-    //Footmen have 400 HP, 60ATK, 5 RNG, 0 DEF, 0 BASEDEF, 400 MAX HP, 3 TILE MVMT
+    super("Footman", 300, 50, 5, 20, 20, 200, team, 3, coords, "Footman.png");
+    //Footmen have 200 HP, 50 ATK, 5 RNG, 20 DEF, 20 BASEDEF, 200 MAX HP, 3 TILE MVMT
   }
   //Setters
   public static void setFootMenPrice(int price){
@@ -23,10 +23,6 @@ class Footman extends Troop{
   }
   public String getAttackName(){
     return attackName;
-  }
-  //Resets Defense Stat
-  public void resetDefense(){
-    setDefense(baseDefense);
   }
   
   //Special attack for footmen

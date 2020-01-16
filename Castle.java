@@ -11,7 +11,7 @@ class Castle extends Building{
   private String specialAttack = "Fireball"; //Name of special attack
   
   public Castle(String team, int[] coords){
-    super("Castle", 3000, 50, 50, 3000, team, coords, "Castle.png");
+    super("Castle", 1500, 50, 50, 1500, team, coords, "Castle.png");
     //Castle has 3000HP, 50ATK, 50 RNG, 30 DEF, 30 BASEDEF, 3000 MAX HP
   }
   
@@ -65,13 +65,7 @@ class Castle extends Building{
     opponent.setStun(true); //(BE SURE TO KEEP TRACK OF NUMBER OF TURNS STUNNED AND RESET BOOLEAN TO FALSE AFTER 1 TURN)
     return damage;
   }
-  
-  //Resets Defense Stat
-  public void resetDefense(){
-    setDefense(baseDefense);
-  }
-  
-  
+    
   //Checks if you can upgrade the Castle
   public boolean checkUpgrade(){
     //If you're already maxed
@@ -101,7 +95,7 @@ class Castle extends Building{
     int[] coordinates = super.getCoords(); //Stores coordinates of building
     Terrain terrain = boardState[coordinates[0]][coordinates[1]]; //Stores terrain of castle
     //If there is a troop on the tile, return nothing since there is no space to spawn a troop
-    if (!(terrain.getTroop().equals(null))){
+    if (terrain.getTroop() != (null)){
       return null;
     }
     //If you want to recruit footmen and you have enough gold

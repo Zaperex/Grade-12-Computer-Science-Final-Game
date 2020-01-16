@@ -8,8 +8,8 @@ public class CrossbowMen extends Troop{
   private String attackName = "Crossbow Bolt Shot"; //Name of basic attack
   private String specialAttack = "Ballista Shot"; //name of special attack
   public CrossbowMen(String team, int[] coords){
-    super("CrossbowMen", 500, 75, 60, 5, 5, 500, team, 4, coords, "Crossbowman.png");
-    //Crossbowmen have 500HP, 75DMG, 60 RNG, 5 DEF, 5 BASEDEF, 500 MAX HP, 4 TILE MVMT
+    super("CrossbowMen", 400, 75, 60, 25, 25, 300, team, 2, coords, "Crossbowman.png");
+    //Crossbowmen have 300HP, 75DMG, 60 RNG, 25 DEF, 25 BASEDEF, 300 MAX HP, 2 TILE MVMT
   }
   //Setters
   public static void setCrossbowMenPrice(int price){
@@ -24,10 +24,6 @@ public class CrossbowMen extends Troop{
   }
   public String getSpecialAttack(){
     return specialAttack;
-  }
-  //Resets Defense Stat
-  public void resetDefense(){
-    setDefense(baseDefense);
   }
   
   //Special move for Crossbowmen

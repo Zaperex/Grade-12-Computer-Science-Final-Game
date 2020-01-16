@@ -10,8 +10,8 @@ public class Knight extends Troop {
   private double baseDefense = 35; //Base Defense
   //Constructor
   public Knight(String team, int[] coords) {
-    super("Knight", 500, 90, 1, 35, 35, 500, team, 2, coords, "Knight.png"); //Presets stats for Knight
-    //Knights have 500HP, 90ATK, 1 RNG, 35 DEF, 35 Base Def, 500 Max HP, 2 TILE MVMT
+    super("Knight", 500, 80, 5, 35, 35, 400, team, 2, coords, "Knight.png"); //Presets stats for Knight
+    //Knights have 400HP, 90ATK, 5 RNG, 35 DEF, 35 Base Def, 400 Max HP, 2 TILE MVMT
   }
   //Setters
   public static void setKnightPrice(int price){
@@ -26,11 +26,6 @@ public class Knight extends Troop {
   }
   public String getAttackName(){
     return attackName;
-  }
-  
-  //Resets Defense Stat
-  public void resetDefense(){
-    setDefense(baseDefense);
   }
   
   //Special Attack for Knight

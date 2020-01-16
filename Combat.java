@@ -63,6 +63,12 @@ public class Combat{
         if (defendAction.equals("Repair")){
           //Stores what happened inside combat log
           combatLog.add(defender.getTeam() + " " + defender.getName() + " repaired itself for " + ((Building)defender).repair(goldCount));
+          if (defender.getTeam() == "P1"){
+            ((Castle)MainMenu.terrain[0][0].getBuilding()).setGold(((Castle)MainMenu.terrain[0][0].getBuilding()).getGold() - 40);
+          }
+          else{
+            ((Castle)MainMenu.terrain[6][6].getBuilding()).setGold(((Castle)MainMenu.terrain[6][6].getBuilding()).getGold() - 40);
+          }
         }
       } 
     }

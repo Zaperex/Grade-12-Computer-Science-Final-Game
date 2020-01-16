@@ -111,6 +111,10 @@ public class Combatant{
   }
   
   //Helper Method
+  //Resets Defense Stat
+  public void resetDefense(){
+    setDefense(baseDefense);
+  }
   //Method that helps Combatants perform a basic attack
   public double attack(Combatant opponent){
     increaseSpecialMeter(); //Increases special meter for using a regular attack

@@ -53,8 +53,8 @@ public class MainMenu extends Application {
   VBox recruitmentLayout = new VBox(15); //Create a layout for the overall recruitment layout
   
   //Create a 2D array of buttons (represents the map)
-    Button[][] button = new Button[7][7];
-    
+  Button[][] button = new Button[7][7];
+  
   public static Terrain[][] terrain = new Terrain[7][7];
   public static ArrayList<Troop> p1Troops = new ArrayList<Troop>();
   public static ArrayList<Troop> p2Troops = new ArrayList<Troop>();
@@ -115,7 +115,7 @@ public class MainMenu extends Application {
     catch(Exception e){
       System.out.println("IOException has occured");
     }
-
+    
 //    Create a button that will show the instructions
     Button instructionsButton = new Button("Instructions");
     //Sets the position of the button
@@ -131,7 +131,7 @@ public class MainMenu extends Application {
     buttonLayout.getChildren().addAll(newGameButton, loadGameButton, instructionsButton);
     //Sete the location of the layout
     buttonLayout.relocate(200, 400);
-
+    
     //Adds everything to the pane (rect1, rect2, title and buttonLayout)
     primaryRoot.getChildren().addAll(rect1, rect2, title, buttonLayout);
     //Sets the title for the window
@@ -173,12 +173,12 @@ public class MainMenu extends Application {
     Label terrainInfo = new Label();
     
     //Create a save game button
-    Button saveButton = new Button("Save Game");
+    Button saveButton = new Button("Save and Exit");
     //Set the location of the button
     saveButton.relocate(950, 600);
     //Give the save button a function
     saveButton.setOnAction(e -> saveGameButtonClicked());
-   
+    
     //Create an end turn button
     Button endTurnButton = new Button("End Turn");
     //Set the location of the button
@@ -206,15 +206,15 @@ public class MainMenu extends Application {
         int[] coords = {i, j}; //Based on arraylist orientation with y controlling which row and x controlling which column
         int x = i;
         int y = j;
-       
+        
         
         if (y == 0 && x == 3){
           terrain[i][j] = new Terrain("Plain", coords);
-          terrain[i][j].setTroop(new Archer("P2", coords));
+          terrain[i][j].setTroop(new CrossbowMen("P2", coords));
         }
         else if (y == 3 && x == 4){
           terrain[i][j] = new Terrain("Plain", coords);
-          terrain[i][j].setTroop(new Footman("P1", coords));
+          terrain[i][j].setTroop(new Cavalry("P1", coords));
         }
         else if (y == 3 && x == 5){
           terrain[i][j] = new Terrain("Plain", coords);
@@ -228,7 +228,7 @@ public class MainMenu extends Application {
           public void handle(MouseEvent e) {
             
             try{
-              //Remove the recruitmentLayout (archer, footman, knight, corssbow man, cavalry, upgrade button and the recruitment label)
+              //Remove the recruitmentLayout (archer, footman, knight, crossbow man, cavalry, upgrade button and the recruitment label)
               root.getChildren().remove(recruitmentLayout);
             }
             catch (Exception error){
@@ -321,9 +321,31 @@ public class MainMenu extends Application {
                 System.out.println("WINNER IS ATTACKER");
                 loserCoords = defender.getCoords(); //Sets the defender's coords as the loserCoords
               }
-              
-              button[loserCoords[0]][loserCoords[1]].setGraphic(null); //Deletes the loser's picture 
-              terrain[loserCoords[0]][loserCoords[1]].setTroop(null); //Deletes the object of the loser
+              //If defender is a troop
+              if (defender instanceof Troop){
+                button[loserCoords[0]][loserCoords[1]].setGraphic(null); //Deletes the loser's picture 
+                terrain[loserCoords[0]][loserCoords[1]].setTroop(null); //Deletes the object of the loser
+              }
+              //If defender is a gold mine
+              else if (defender instanceof GoldMine){
+                //Sets the health of the gold mine back to full
+                terrain[loserCoords[0]][loserCoords[1]].getBuilding().setHealth(terrain[loserCoords[0]][loserCoords[1]].getBuilding().getMaxHP());
+                
+                //If defender is player 1
+                if (defender.getTeam().equals("P1")){
+                  //Removes building from defender's building arraylist
+                  p1Buildings.remove(terrain[loserCoords[0]][loserCoords[1]].getBuilding());
+                  //Adds building to winner's building arraylist
+                  p2Buildings.add(terrain[loserCoords[0]][loserCoords[1]].getBuilding());
+                }
+                //If defender is player 2
+                else if (defender.getTeam().equals("P2")){
+                  //Removes building from defender's building arraylist
+                  p2Buildings.remove(terrain[loserCoords[0]][loserCoords[1]].getBuilding());
+                  //Adds building to winner's building arraylist
+                  p1Buildings.add(terrain[loserCoords[0]][loserCoords[1]].getBuilding());
+                }
+              }
               
               //Loops through the entire board of buttons
               for (int l = 0; l < 7; l++) {
@@ -403,7 +425,7 @@ public class MainMenu extends Application {
                   mainMethods.claimBuilding(terrain, unclaimedBuildings, p1Buildings, terrain[x][y].getTroop());
                 }
                 else {
-                 mainMethods.claimBuilding(terrain, unclaimedBuildings, p2Buildings, terrain[x][y].getTroop());
+                  mainMethods.claimBuilding(terrain, unclaimedBuildings, p2Buildings, terrain[x][y].getTroop());
                 }
               }
               
@@ -461,7 +483,7 @@ public class MainMenu extends Application {
   //Method that will load the previous game
   public void loadGameButtonClicked () {
     try{
-      mainMethods.loadGame(mainMethods.saveFolderPath, terrain, p1Troops, p2Troops, p1Buildings, p2Buildings, unclaimedBuildings);
+      mainMethods.loadGame(SaveGame.saveFolderPath, terrain, p1Troops, p2Troops, p1Buildings, p2Buildings, unclaimedBuildings);
     }
     catch(Exception e){
       System.out.println("An IOException has occured");
@@ -469,7 +491,12 @@ public class MainMenu extends Application {
     
   }
   public void saveGameButtonClicked () {
-//    mainMethods.saveGame.
+    try{
+      mainMethods.saveGame(turn, p1Troops, p2Troops, p1Buildings, p2Buildings, unclaimedBuildings);
+    }
+    catch (Exception e){
+      System.out.println(e);
+    }
   }
   public void endTurnButtonClicked () {
     System.out.println("Hi");
@@ -485,8 +512,8 @@ public class MainMenu extends Application {
     //Sets the size of the button
     loadGameButton.setPrefSize(150, 25);
     try{
-    //Give the button a function when it is pressed
-    loadGameButton.setOnAction(e -> loadGameButtonClicked());
+      //Give the button a function when it is pressed
+      loadGameButton.setOnAction(e -> loadGameButtonClicked());
     }
     catch(Exception e){
       System.out.println("An IOException has occured");
@@ -550,23 +577,23 @@ public class MainMenu extends Application {
     System.out.println("buildingInfo.setText\n");
     //If Building is a Castle
     if (terrain[x][y].getBuilding() instanceof Castle){
-    //Gather information about the Castle
-    buildingInfo.setText("Building\n" + 
-                         "Name: " + terrain[x][y].getBuilding().getName() + "\n" +
-                         "Health: " + terrain[x][y].getBuilding().getHealth() + "\n" + 
-                         "Attack: " + terrain[x][y].getBuilding().getAttack() + "\n" + 
-                         "Range: " + terrain[x][y].getBuilding().getRange() + "\n" + 
-                         "Gold: " + ((Castle)terrain[x][y].getBuilding()).getGold() + "\n" +
-                         "Level: " + ((Castle)terrain[x][y].getBuilding()).getLevel());
+      //Gather information about the Castle
+      buildingInfo.setText("Building\n" + 
+                           "Name: " + terrain[x][y].getBuilding().getName() + "\n" +
+                           "Health: " + terrain[x][y].getBuilding().getHealth() + "\n" + 
+                           "Attack: " + terrain[x][y].getBuilding().getAttack() + "\n" + 
+                           "Range: " + terrain[x][y].getBuilding().getRange() + "\n" + 
+                           "Gold: " + ((Castle)terrain[x][y].getBuilding()).getGold() + "\n" +
+                           "Level: " + ((Castle)terrain[x][y].getBuilding()).getLevel());
     }
     //Else if Building is a gold mine
     else{
       //Gather information about the Gold Mine
-    buildingInfo.setText("Building\n" + 
-                         "Name: " + terrain[x][y].getBuilding().getName() + "\n" +
-                         "Health: " + terrain[x][y].getBuilding().getHealth() + "\n" + 
-                         "Attack: " + terrain[x][y].getBuilding().getAttack() + "\n" + 
-                         "Range: " + terrain[x][y].getBuilding().getRange());
+      buildingInfo.setText("Building\n" + 
+                           "Name: " + terrain[x][y].getBuilding().getName() + "\n" +
+                           "Health: " + terrain[x][y].getBuilding().getHealth() + "\n" + 
+                           "Attack: " + terrain[x][y].getBuilding().getAttack() + "\n" + 
+                           "Range: " + terrain[x][y].getBuilding().getRange());
     }
     //Set the position of the building's information
     buildingInfo.relocate(800, 100);
@@ -775,7 +802,7 @@ public class MainMenu extends Application {
                                                             defenderButton1, defenderButton2, defenderButton3, defenderButton4, 
                                                             combatLogLabel, attackerStun, defenderStun, attackerIV, defenderIV, 
                                                             attackerButtonLayout, defenderButtonLayout));
-   //Give the button a function
+    //Give the button a function
     attackerButton2.setOnAction(e -> attackerButton2Clicked(attackerInfo, defenderInfo, 
                                                             attackerButton1, attackerButton2, attackerButton3, attackerButton4,
                                                             defenderButton1, defenderButton2, defenderButton3, defenderButton4, 
@@ -851,26 +878,12 @@ public class MainMenu extends Application {
       int gold = 0; //Stores defender's gold
       
       if (defender.getTeam().equals("P1")){ //If defender is player 1's team
-        
-        //Check the player 1 arraylist for a castle
-        for (int i = 0; i < p1Buildings.size(); i++){
-          
-          //If Building is a Castle
-          if (p1Buildings.get(i) instanceof Castle){
-            gold = ((Castle)p1Buildings.get(i)).getGold(); //Stores gold of player's castle
-            break; //Breaks out since there is only 1 castle
-          } 
-        }
+        //Stores gold of player 1
+        gold = ((Castle)terrain[0][0].getBuilding()).getGold();
       }
       else if (defender.getTeam().equals("P2")){ //If defender is on player 2's team
-        //Check the player 2 arraylist for a castle
-        for (int i = 0; i < p2Buildings.size(); i++){
-          //If Building is a Castle
-          if (p2Buildings.get(i) instanceof Castle){
-            gold = ((Castle)p2Buildings.get(i)).getGold(); //Stores gold of player's castle
-            break; //Breaks out since there is only 1 castle
-          }
-        }
+        //Stores gold of player 2
+        gold = ((Castle)terrain[6][6].getBuilding()).getGold();
       }
       
       //Calls the combatPhase method that will return an arrayList for the combatLog each round
@@ -1131,6 +1144,10 @@ public class MainMenu extends Application {
       continueButton.relocate(800, 300);
       //Give the button a function
       continueButton.setOnAction(e -> {
+        attacker.setSpecialMeter(0); //Resets the special meter of the attacker
+        defender.setSpecialMeter(0); //Resets the special meter of the defender
+        attacker.resetDefense(); //Resets attacker's defense
+        defender.resetDefense(); //Resets defender's defense
         //Get a handle to the stage
         Stage stage = (Stage) continueButton.getScene().getWindow();
         //Closes the window
@@ -1173,8 +1190,40 @@ public class MainMenu extends Application {
     
     //If the defender is dead
     if (defender.getHealth() <= 0) {
+      //If the defender is a GoldMine
+      if (defender instanceof GoldMine){
+        combatWinner = attacker; //Update the winner of the fight
+        //remove the attacker's information from the pane
+        combatRoot.getChildren().removeAll(attackerButtonLayout, defenderButtonLayout, defenderIV);
+        
+        turnLabel.setText("Attacker wins");
+        
+        //Create a continue button
+        Button continueButton = new Button("Continue");
+        continueButton.relocate(800, 300);
+        //Give the button a fucntion
+        continueButton.setOnAction(e -> {
+          attacker.setSpecialMeter(0); //Resets the special meter of the attacker
+          defender.setSpecialMeter(0); //Resets the special meter of the defender
+          attacker.resetDefense(); //Resets attacker's defense
+          defender.resetDefense(); //Resets defender's defense
+          //Get a handle to the stage
+          Stage stage = (Stage) continueButton.getScene().getWindow();
+          //Closes the window
+          stage.close();
+          attacker.setSpecialMeter(0); //Resets the special meter of the attacker
+          defender.setSpecialMeter(0); //Resets the special meter of the defender
+          attacker.resetDefense(); //Resets attacker's defense
+          defender.resetDefense(); //Resets defender's defense
+          attacker.resetDefense(); //Resets attacker's defense
+          defender.resetDefense(); //Resets defender's defense
+          defender.setTeam(attacker.getTeam()); //Sets team of gold mine to the winner's
+        });
+        //Add the continue button to the pane
+        combatRoot.getChildren().add(continueButton);
+      }
       //if the defender is a troop
-      if (defender instanceof Troop){
+      else if (defender instanceof Troop){
         
         combatWinner = attacker; //Update the winner of the fight
         //remove the attacker's information from the pane
@@ -1187,6 +1236,10 @@ public class MainMenu extends Application {
         continueButton.relocate(800, 300);
         //Give the button a fucntion
         continueButton.setOnAction(e -> {
+          attacker.setSpecialMeter(0); //Resets the special meter of the attacker
+          defender.setSpecialMeter(0); //Resets the special meter of the defender
+          attacker.resetDefense(); //Resets attacker's defense
+          defender.resetDefense(); //Resets defender's defense
           //Get a handle to the stage
           Stage stage = (Stage) continueButton.getScene().getWindow();
           //Closes the window
@@ -1201,12 +1254,12 @@ public class MainMenu extends Application {
         //Add the continue button to the pane
         combatRoot.getChildren().add(continueButton);
       }
-      //If the defender is a GoldMine
-      else if (defender instanceof GoldMine){
-        defender.setTeam("None");
-      }
       //If the defender is a Castle
       else if (defender instanceof Castle){
+        attacker.setSpecialMeter(0); //Resets the special meter of the attacker
+        defender.setSpecialMeter(0); //Resets the special meter of the defender
+        attacker.resetDefense(); //Resets attacker's defense
+        defender.resetDefense(); //Resets defender's defense
         //Put variable or do something to indicate that player loses or wins since castle was destroyed
       }
     }
@@ -1215,6 +1268,7 @@ public class MainMenu extends Application {
   public void recruitmentButtonClicked (String troopName, int x, int y, Pane root) {
     
     if (mainMethods.recruitTroops(terrain, troopName, (Castle)terrain[x][y].getBuilding()) == true) {
+      System.out.println("Hello");
       Image image = new Image(terrain[x][y].getTroop().getImageName(), 60, 60, false, false);
       button[x][y].setGraphic(new ImageView(image));
     }
