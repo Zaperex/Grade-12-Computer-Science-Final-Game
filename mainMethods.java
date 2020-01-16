@@ -6,14 +6,7 @@ import java.util.*;
 import java.io.*;
 
 public class mainMethods{
-  public static Terrain[][] terrain = new Terrain[7][7];
-  public static ArrayList<Troop> p1Troops = new ArrayList<Troop>();
-  public static ArrayList<Troop> p2Troops = new ArrayList<Troop>();
-  public static ArrayList<Building> p1Buildings = new ArrayList<Building>();
-  public static ArrayList<Building> p2Buildings = new ArrayList<Building>();
-  public static ArrayList<Building> unclaimedBuildings = new ArrayList<Building>();
-  public static String turn;
-  
+
   static String currentDirPath = System.getProperty("user.dir"); //Finds the path of the working directory
   static String saveFolderPath = currentDirPath + "\\save"; //Stores the path of the main folder
   
@@ -92,8 +85,9 @@ public class mainMethods{
     }
   }
   
-  public static void loadGame(String saveFolderPath, Terrain[][] terrain, ArrayList<Troop> p1Troops, ArrayList<Troop> p2Troops, ArrayList<Building> p1Buildings,
+  public static String loadGame(String saveFolderPath, Terrain[][] terrain, ArrayList<Troop> p1Troops, ArrayList<Troop> p2Troops, ArrayList<Building> p1Buildings,
                               ArrayList<Building> p2Buildings, ArrayList<Building> unclaimedBuildings) throws IOException{
+    String playerTurn = "P1"; 
     try{
       File saveFolder = new File(saveFolderPath); //Creates new file using directory path
       if (saveFolder.isDirectory()){ //Checks if file is a directory (folder)
@@ -104,13 +98,14 @@ public class mainMethods{
           SaveGame.loadTroops(terrain, p2Troops, fileNames[1]); //Stores info into p2Troops array
           SaveGame.loadBuildings(terrain, p1Buildings, fileNames[2]); //Stores info into p1Buildings array
           SaveGame.loadBuildings(terrain, p2Buildings, fileNames[3]); //Stores info into p2Buildings array
-          turn = SaveGame.load(terrain, unclaimedBuildings, fileNames[4]); //Stores info into unclaimedBuildings and returns who's turn it is
+          playerTurn = SaveGame.load(terrain, unclaimedBuildings, fileNames[4]); //Stores info into unclaimedBuildings and returns who's turn it is
           //Adds troops and buildings into their respective terrain tiles
           fillTroopTerrain(terrain, p1Troops);
           fillTroopTerrain(terrain, p2Troops);
           fillBuildingTerrain(terrain, p1Buildings);
           fillBuildingTerrain(terrain, p2Buildings);
           fillBuildingTerrain(terrain, unclaimedBuildings);
+          return playerTurn; //Returns the turn of the player when the game was saved
         }
         else{
           p1Troops.clear();
@@ -120,11 +115,15 @@ public class mainMethods{
           unclaimedBuildings.clear();
           //If files are not there, then start a new game
           newGame(terrain, p1Troops, p2Troops, p1Buildings, p2Buildings, unclaimedBuildings);
+          return playerTurn; //Returns player 1 as default
         }
       }
     }
     catch (IOException e){
       System.out.println("An IOException has occured");
+    }
+    finally{
+      return playerTurn;
     }
   }
   //Method that helps recruit the troops and place them in the tile where they are recruited
@@ -159,11 +158,11 @@ public class mainMethods{
   }
     
   //Method that changes the turn and updates everything for the turn of the player
-  public static String turnFlip(String turn, Terrain[][] terrain, ArrayList<Troop> p1Troops, ArrayList<Troop> p2Troops, ArrayList<Building> p1Buildings,
+  public static String turnFlip(String playerTurn, Terrain[][] terrain, ArrayList<Troop> p1Troops, ArrayList<Troop> p2Troops, ArrayList<Building> p1Buildings,
                               ArrayList<Building> p2Buildings, ArrayList<Building> unclaimedBuildings){
     String newTurn;
     //If it's currently P1, 
-    if (turn.equals("P1")){
+    if (playerTurn.equals("P1")){
       newTurn = "P2";
       Castle castle = ((Castle)(terrain[6][6].getBuilding()));
       for (int i = 0; i < p1Troops.size(); i++){
@@ -182,18 +181,18 @@ public class mainMethods{
       castle.setGold(castle.getGold() + p1Buildings.size()*100);
     }
       
-      return turn;
+      return newTurn;
   }
   
   //Method that saves the state of the game
-  public static void saveGame(String turn, ArrayList<Troop> p1Troops, ArrayList<Troop> p2Troops, ArrayList<Building> p1Buildings,
+  public static void saveGame(String playerTurn, ArrayList<Troop> p1Troops, ArrayList<Troop> p2Troops, ArrayList<Building> p1Buildings,
                                 ArrayList<Building> p2Buildings, ArrayList<Building> unclaimedBuildings) throws IOException{
     try{
       SaveGame.saveTroops(p1Troops, "P1");
       SaveGame.saveTroops(p2Troops, "P2");
       SaveGame.saveBuildings(p1Buildings, "P1");
       SaveGame.saveBuildings(p2Buildings, "P2");
-      SaveGame.save(unclaimedBuildings, turn, "None");
+      SaveGame.save(unclaimedBuildings, playerTurn, "None");
     }
     catch (Exception e){
       System.out.println("An exception has occured during saving");
