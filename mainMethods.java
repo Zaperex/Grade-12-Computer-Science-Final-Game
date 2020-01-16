@@ -33,6 +33,7 @@ public class mainMethods{
           //Stores P2 Castle in P2 Building ArrayList
           p2Buildings.add(terrain[i][j].getBuilding()); 
           ((Castle)terrain[i][j].getBuilding()).setGold(150); //Initializes amount of gold player starts with
+          ((Castle)terrain[i][j].getBuilding()).setLevel(1); //Initializes level of Castle
         }
         else if (x == 6 && y == 6){
           //Stores P1 Castle in Terrain
@@ -40,6 +41,7 @@ public class mainMethods{
           //Stores P2 Castle in P2 Building ArrayList
           p1Buildings.add(terrain[i][j].getBuilding()); 
           ((Castle)terrain[i][j].getBuilding()).setGold(150); //Initializes amount of gold player starts with
+          ((Castle)terrain[i][j].getBuilding()).setLevel(1); //Initializes level of Castle
         }
         else if (x == 3 && y == 3){
           //Stores goldmine in terrain
@@ -130,7 +132,7 @@ public class mainMethods{
     int[] coords = castle.getCoords(); //Gets the coordinates of the tile
     Troop troop = castle.recruit(terrain, troopName);
     //If troop recruitment was unsuccessful, return false
-    if (troop.equals(null)){
+    if (troop == null){
       return false;
     }
     //Else, put the troop into the terrain's troop field
@@ -147,12 +149,12 @@ public class mainMethods{
     int[] coords = {x, y}; 
     
     for (int i = 0; i < unclaimedBuildings.size(); i++){
-      Building building = unclaimedBuildings.get(i);
-      if (building.getCoords().equals(coords)){
-        playerBuildings.add(building); //Adds building to player's building arraylist
-        unclaimedBuildings.remove(building); //Removes building from the unclaimed building arraylist
-      }
-      break; //There will only be one building needed to be found so break after finding it
+      //If Building in arraylist is equal to that of the building in the terrain object
+      if (unclaimedBuildings.get(i).equals(terrain[x][y].getBuilding())){
+        playerBuildings.add(unclaimedBuildings.get(i)); //Adds building to player's building arraylist
+        troop.captureBuilding(unclaimedBuildings.get(i)); //Changes team of building to troop's
+        unclaimedBuildings.remove(unclaimedBuildings.get(i)); //Removes building from the unclaimed building arraylist
+      }  
     }
   }
     
