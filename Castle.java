@@ -97,7 +97,7 @@ class Castle extends Building{
   }
   
   //Method that recruits troops, will create a new object and return it. It will then be added into an arraylist
-  public Combatant recruit(Terrain[][] boardState, String troop){
+  public Troop recruit(Terrain[][] boardState, String troop){
     int[] coordinates = super.getCoords(); //Stores coordinates of building
     Terrain terrain = boardState[coordinates[0]][coordinates[1]]; //Stores terrain of castle
     //If there is a troop on the tile, return nothing since there is no space to spawn a troop
