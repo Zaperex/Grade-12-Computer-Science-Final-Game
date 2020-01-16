@@ -14,19 +14,12 @@ class SaveGame{
   ArrayList<Building> player2Buildings; //Stores all player 2 buildings
   //Other info
   ArrayList<Building> unclaimedBuildings; //Stores any unclaimed buildings
-  boolean turn; //Stores whose turn it is
+  public static String turn; //Stores whose turn it is
+  static String currentDirPath = System.getProperty("user.dir"); //Finds the path of the working directory
+  static String saveFolderPath = currentDirPath + "\\save"; //Stores the path of the main folder
   
-  public SaveGame(ArrayList<Troop> player1Troops, ArrayList<Building> player1Buildings, ArrayList<Troop> player2Troops,
-                  ArrayList<Building> player2Buildings, ArrayList<Building> unclaimedBuildings, boolean turn){
-    this.player1Troops = player1Troops;
-    this.player1Buildings = player1Buildings;
-    this.player2Troops = player2Troops;
-    this.player2Buildings = player2Buildings;
-    this.unclaimedBuildings = unclaimedBuildings;
-    this.turn = turn;
-  }
   //Troop Saving
-  public void saveTroops(ArrayList<Troop> troops, boolean team) throws IOException{
+  public static void saveTroops(ArrayList<Troop> troops, boolean team) throws IOException{
     String fileName;
     if (team){
       fileName = "player_1_troop_save.csv";
@@ -34,7 +27,7 @@ class SaveGame{
     else{
       fileName = "player_2_troop_save.csv";
     }
-    PrintWriter troopWriter = new PrintWriter(new File(fileName));
+    PrintWriter troopWriter = new PrintWriter(new File(saveFolderPath + "\\" + fileName));
     
     try{
       for (int i = 0; i < troops.size(); i++){
@@ -68,7 +61,7 @@ class SaveGame{
     else{
       fileName = "player_2_building_save.csv";
     }
-    PrintWriter buildWriter = new PrintWriter(new File(fileName));
+    PrintWriter buildWriter = new PrintWriter(new File(saveFolderPath + "\\" + fileName));
     
     try{
       for (int i = 0; i < buildings.size(); i++){
@@ -113,8 +106,8 @@ class SaveGame{
   }
   
 //Saves everything else
-  public void save(ArrayList<Building> buildings, boolean turn, boolean team) throws IOException{
-    PrintWriter otherInfoWriter = new PrintWriter(new File("board_state_save.csv"));
+  public static void save(ArrayList<Building> buildings, boolean turn, boolean team) throws IOException{
+    PrintWriter otherInfoWriter = new PrintWriter(new File(saveFolderPath + "\\board_state_save.csv"));
     try{
       for (int i = 0; i < buildings.size(); i++){
         //Temporary Object
@@ -146,8 +139,8 @@ class SaveGame{
     }
   }
   
-  public void loadTroops(Terrain[][] boardState, ArrayList<Troop> troops, String fileName) throws IOException{
-    BufferedReader troopReader = new BufferedReader(new FileReader(fileName));
+  public static void loadTroops(Terrain[][] boardState, ArrayList<Troop> troops, String fileName) throws IOException{
+    BufferedReader troopReader = new BufferedReader(new FileReader(saveFolderPath + "\\" + fileName));
     String line;
     String[] tempArr;
     //While file still has unread lines
@@ -190,8 +183,8 @@ class SaveGame{
     troopReader.close(); //Closes Reader
   }
   
-  public void loadBuildings(Terrain[][] boardState, ArrayList<Building> buildings, String fileName) throws IOException{
-    BufferedReader buildReader = new BufferedReader(new FileReader(fileName));
+  public static void loadBuildings(Terrain[][] boardState, ArrayList<Building> buildings, String fileName) throws IOException{
+    BufferedReader buildReader = new BufferedReader(new FileReader(saveFolderPath + "\\" + fileName));
     String line;
     String[] tempArr;
     //While file still has unread lines
@@ -221,23 +214,23 @@ class SaveGame{
     buildReader.close(); //Closes Reader
   }
   
-  public boolean load(Terrain[][] boardState, ArrayList<Building> unclaimedBuildings, String fileName) throws IOException{
-    BufferedReader reader = new BufferedReader(new FileReader(fileName));
+  public static String load(Terrain[][] boardState, ArrayList<Building> unclaimedBuildings, String fileName) throws IOException{
+    BufferedReader reader = new BufferedReader(new FileReader(saveFolderPath + "\\" + fileName));
     String line;
     String[] tempArr;
     //While file still has unread lines
     while((line = reader.readLine()) != null){
       //If player 1 turn found in file
-      if (line.equals("P1 Turn")){
+      if (line.equals("P1")){
         reader.close();
         //Returns true
-        return true;
+        return "P1";
       }
       //If player 2 turn found in file
-      else if (line.equals("P2 Turn")){
+      else if (line.equals("P2")){
         reader.close();
         //Returns false
-        return false;
+        return "P2";
       }
       else{
         tempArr = line.split(","); //Splits line into String array
@@ -251,7 +244,7 @@ class SaveGame{
     }
     reader.close();
     //Returns player 1 if no player turn was returned
-    return true;
+    return "P1";
     
     
   }
