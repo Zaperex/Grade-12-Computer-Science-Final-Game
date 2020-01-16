@@ -1,25 +1,13 @@
 /* Name: Frank Kong
  * Date: January 12, 2020
- * Description: Combat Class to with the new Combat methods
+ * Description: Combat Class to store the new Combat methods
  */
 import java.util.*;
 
-//MAKE SURE TO IMPLEMENT STUN LATER
-//MAYBE SPLIT COMBAT METHOD INTO MULTIPLE SMALLER METHODS
 public class Combat{
-  //Fields
-  private Troop attacker; //Attacker can only be a troop
-  private Combatant defender;
-  
-  //Constructor
-  public Combat(Troop attacker, Combatant defender){
-    this.attacker = attacker;
-    this.defender = defender;
-  }
-  
-  
+ 
   //Combat method that returns a combat log stored inside a String arraylist
-  public ArrayList<String> combatPhase(Troop attacker, Combatant defender, String attackAction, String defendAction, double goldCount){
+  public static ArrayList<String> combatPhase(Troop attacker, Combatant defender, String attackAction, String defendAction, double goldCount){
     //Arraylist that stores the combat log
     ArrayList<String> combatLog = new ArrayList<String>();
     //First attacker will be combatant with the longer range, if ranges are the same, then attacker goes first
@@ -67,12 +55,12 @@ public class Combat{
       //If Defender is a building
       else if (defender instanceof Building){
         //Checks if defender puts up a magic barrier or repairs itself
-        if (((Building)defender).equals("Magic Barrier")){
+        if (defendAction.equals("Magic Barrier")){
           ((Building)defender).setBarrier(true); //Sets barrier to true
           //Stores what happened inside combat log
           combatLog.add(defender.getTeam() + " " + defender.getName() + " put up a Magic Barrier");
         }
-        if (((Building)defender).equals("Repair")){
+        if (defendAction.equals("Repair")){
           //Stores what happened inside combat log
           combatLog.add(defender.getTeam() + " " + defender.getName() + " repaired itself for " + ((Building)defender).repair(goldCount));
         }
@@ -120,7 +108,7 @@ public class Combat{
   }
   
   //Attacker Combat Method ==========================================================================================================
-  public void attackerCombat(Troop attacker, Combatant defender, String attackAction, ArrayList<String> combatLog){
+  public static void attackerCombat(Troop attacker, Combatant defender, String attackAction, ArrayList<String> combatLog){
     if (attacker.getStun() == false){
       double damage;
       //Attacker Basic Attacks =============================================================================================================
@@ -312,7 +300,7 @@ public class Combat{
   }
   
   //Defender Combat Method ====================================================================================================================
-  public void defenderCombat(Combatant defender, Troop attacker, String defendAction, ArrayList<String> combatLog){
+  public static void defenderCombat(Combatant defender, Troop attacker, String defendAction, ArrayList<String> combatLog){
     if (defender.getStun() == false){
       double damage;
       //Defender Basic Attacks =============================================================================================================
@@ -552,7 +540,7 @@ public class Combat{
             //Stores what happened inside combat log
             combatLog.add(defender.getTeam() + " " + defender.getName() + " used " + ((GoldMine)defender).getSpecialAttack() + 
                           " and dealt " + damage + " damage to " + attacker.getTeam() + " " + attacker.getName() + " and increased it's defense by " +
-                          (oldDefense - defender.getDefense()));
+                          (defender.getDefense() - oldDefense));
           }
           //If attack did not connect
           else{
@@ -571,7 +559,7 @@ public class Combat{
   }
   
   //Resets the dodge, block and/or barrier booleans of both sides for the next turn
-  public void resetActions(Troop attacker, Combatant defender){
+  public static void resetActions(Troop attacker, Combatant defender){
     attacker.setDodge(false);
     attacker.setBlock(false);
     
