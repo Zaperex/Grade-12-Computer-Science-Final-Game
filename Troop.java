@@ -94,43 +94,38 @@ public class Troop extends Combatant{
           
           //If tile already has a troop
           if (terrain.getTroop() != null){
-            //If troop on tile is itself
-            if (terrain.getTroop() == this){
-              possibleMoves.add(coordinates); 
-            }
-            else{
-              //Just continues on and doesn't add the coordinates into the arraylist
-              continue;
-            }
+            //Just continues on and doesn't add the coordinates into the arraylist
+            continue;
           }
-          
-          //If tile has a building. 
-          else if (terrain.getBuilding() != null){
-            //Return true if it's a friend building
-            if (terrain.getBuilding().getTeam() == getTeam()){
-              //Stores coordinates of the terrain tile
-              possibleMoves.add(coordinates);
-            }
-            //Returns true if it's an unclaimed building
-            else if (terrain.getBuilding().getTeam().equals("None")){
-              possibleMoves.add(coordinates);
-            }
-            //Returns false if it's an enemy building
-            else{
-              //Just continues on and doesn't add the coordinates into the arraylist
-              continue;
-            }
-          }
-          else{
+        }
+        
+        //If tile has a building. 
+        else if (terrain.getBuilding() != null){
+          //Return true if it's a friend building
+          if (terrain.getBuilding().getTeam() == getTeam()){
             //Stores coordinates of the terrain tile
             possibleMoves.add(coordinates);
           }
+          //Returns true if it's an unclaimed building
+          else if (terrain.getBuilding().getTeam().equals("None")){
+            possibleMoves.add(coordinates);
+          }
+          //Returns false if it's an enemy building
+          else{
+            //Just continues on and doesn't add the coordinates into the arraylist
+            continue;
+          }
         }
-      }    
-    }
+        else{
+          //Stores coordinates of the terrain tile
+          possibleMoves.add(coordinates);
+        }
+      }
+    }    
     return possibleMoves;
   }
-  //Method that checks if tile is available to attack
+  
+//Method that checks if tile is available to attack
   public boolean checkAttacks(int x, int y){
     //Calculates distance of travel 
     int distance = Math.abs(x - coords[0]) + Math.abs(y - coords[1]);
@@ -148,7 +143,7 @@ public class Troop extends Combatant{
       return false;
     }
   }
-  //Method that finds all possible tiles that troop can attack
+//Method that finds all possible tiles that troop can attack
   public ArrayList<int[]> findAttacks(Terrain[][] boardState){
     //Arraylist that stores all possible attacks
     ArrayList<int[]> possibleAttacks = new ArrayList<int[]>();
