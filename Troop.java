@@ -97,31 +97,32 @@ public class Troop extends Combatant{
             //Just continues on and doesn't add the coordinates into the arraylist
             continue;
           }
-        }
-        
-        //If tile has a building. 
-        else if (terrain.getBuilding() != null){
-          //Return true if it's a friend building
-          if (terrain.getBuilding().getTeam() == getTeam()){
+          
+          
+          //If tile has a building. 
+          else if (terrain.getBuilding() != null){
+            //Return true if it's a friend building
+            if (terrain.getBuilding().getTeam() == getTeam()){
+              //Stores coordinates of the terrain tile
+              possibleMoves.add(coordinates);
+            }
+            //Returns true if it's an unclaimed building
+            else if (terrain.getBuilding().getTeam().equals("None")){
+              possibleMoves.add(coordinates);
+            }
+            //Returns false if it's an enemy building
+            else{
+              //Just continues on and doesn't add the coordinates into the arraylist
+              continue;
+            }
+          }
+          else{
             //Stores coordinates of the terrain tile
             possibleMoves.add(coordinates);
           }
-          //Returns true if it's an unclaimed building
-          else if (terrain.getBuilding().getTeam().equals("None")){
-            possibleMoves.add(coordinates);
-          }
-          //Returns false if it's an enemy building
-          else{
-            //Just continues on and doesn't add the coordinates into the arraylist
-            continue;
-          }
         }
-        else{
-          //Stores coordinates of the terrain tile
-          possibleMoves.add(coordinates);
-        }
-      }
-    }    
+      }   
+    }
     return possibleMoves;
   }
   
