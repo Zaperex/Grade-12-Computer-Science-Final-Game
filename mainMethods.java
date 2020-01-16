@@ -90,7 +90,6 @@ public class mainMethods{
         //Can also use directory.listFiles() to create a File[] array
         
         File[] fileNames = saveFolder.listFiles(); //Stores the name of all files inside directory into a 2D string array
-        System.out.println(fileNames.length > 0);
         if (fileNames.length > 0){ //There will only be 5 saved files but will still check if directory is empty
           SaveGame.loadTroops(p1Troops, fileNames[0]); //Stores info into p1Troops array
           SaveGame.loadTroops(p2Troops, fileNames[1]); //Stores info into p2Troops array
@@ -131,7 +130,7 @@ public class mainMethods{
       }
     }
     catch (IOException e){
-      System.out.println("An IOException has occured");
+      System.out.println(e);
     }
     finally{
       return playerTurn;
@@ -175,18 +174,18 @@ public class mainMethods{
     //If it's currently P1, 
     if (playerTurn.equals("P1")){
       newTurn = "P2";
-      Castle castle = ((Castle)(terrain[6][6].getBuilding()));
-      for (int i = 0; i < p1Troops.size(); i++){
-        p1Troops.get(i).setAction(true); //Sets the action of each troop to true
+      Castle castle = ((Castle)(terrain[0][0].getBuilding()));
+      for (int i = 0; i < p2Troops.size(); i++){
+        p2Troops.get(i).setAction(true); //Sets the action of each troop to true
       }
       //Adds gold income equal to the number of buildings times 100
       castle.setGold(castle.getGold() + p2Buildings.size()*100);
     }
     else {
       newTurn = "P1";
-      Castle castle = ((Castle)(terrain[0][0].getBuilding()));
-      for (int i = 0; i < p2Troops.size(); i++){
-        p2Troops.get(i).setAction(true); //Sets the action of each troop to true
+      Castle castle = ((Castle)(terrain[6][6].getBuilding()));
+      for (int i = 0; i < p1Troops.size(); i++){
+        p1Troops.get(i).setAction(true); //Sets the action of each troop to true
       }
       //Adds gold income equal to the number of buildings times 100
       castle.setGold(castle.getGold() + p1Buildings.size()*100);
