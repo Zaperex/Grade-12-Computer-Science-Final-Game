@@ -92,6 +92,7 @@ public class Troop extends Combatant{
           
           //If tile already has a troop
           if (terrain.getTroop() != null){
+            //If troop on tile is itself
             if (terrain.getTroop() == this){
               possibleMoves.add(terrain.getCoords());
             }
@@ -100,8 +101,6 @@ public class Troop extends Combatant{
               continue;
             }
           }
-        }
-          
           
           //If tile has a building. 
           else if (terrain.getBuilding() != null){
@@ -125,10 +124,10 @@ public class Troop extends Combatant{
             possibleMoves.add(terrain.getCoords());
           }
         }
-      }
+      }    
+    }
     return possibleMoves;
   }
-  
   //Method that checks if tile is available to attack
   public boolean checkAttacks(int x, int y){
     //Calculates distance of travel 
@@ -189,15 +188,4 @@ public class Troop extends Combatant{
     }
     return possibleAttacks;
   }
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
 }
