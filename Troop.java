@@ -73,8 +73,8 @@ public class Troop extends Combatant{
   }
   
   //Method is called when capturing an unclaimed building (Null Team)
-  public void captureBuilding(Terrain terrain){
-    terrain.getBuilding().setTeam(team); //Sets the building team to that of the capturing troop
+  public void captureBuilding(Building building){
+    building.setTeam(team); //Sets the building team to that of the capturing troop
   }
   
   //Method that stores coordinates of all possible moves in an arraylist and returns it
