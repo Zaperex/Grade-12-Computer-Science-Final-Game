@@ -7,56 +7,57 @@ import java.io.*;
 
 public class mainMethods{
   
-  public static void newGame(Terrain[][] terrain, ArrayList<Troop> p1Troops, ArrayList<Troop> p2Troops, ArrayList<Building> p1Buildings,
+  public static void newGame(ArrayList<Troop> p1Troops, ArrayList<Troop> p2Troops, ArrayList<Building> p1Buildings,
                              ArrayList<Building> p2Buildings, ArrayList<Building> unclaimedBuildings){
-    for (int i = 0; i < terrain.length; i++){
-      for (int j = 0; j < terrain[i].length; j++){
+    MainMenu.terrain = new Terrain[7][7];
+    for (int i = 0; i < MainMenu.terrain.length; i++){
+      for (int j = 0; j < MainMenu.terrain[i].length; j++){
         //Stores coordinates
         int x = i;
         int y = j;
         int[] coords = {x, y};
-        terrain[i][j] = new Terrain("Plains", coords);
+        MainMenu.terrain[i][j] = new Terrain("Plains", coords);
         
         if (x == 0 && y == 0){
           //Stores P2 Castle in Terrain
-          terrain[i][j].setBuilding(new Castle("P2", coords));
+         MainMenu.terrain[i][j].setBuilding(new Castle("P2", coords));
           //Stores P2 Castle in P2 Building ArrayList
-          p2Buildings.add(terrain[i][j].getBuilding()); 
-          ((Castle)terrain[i][j].getBuilding()).setGold(150); //Initializes amount of gold player starts with
-          ((Castle)terrain[i][j].getBuilding()).setLevel(1); //Initializes level of Castle
+          p2Buildings.add(MainMenu.terrain[i][j].getBuilding()); 
+          ((Castle)MainMenu.terrain[i][j].getBuilding()).setGold(150); //Initializes amount of gold player starts with
+          ((Castle)MainMenu.terrain[i][j].getBuilding()).setLevel(1); //Initializes level of Castle
         }
         else if (x == 6 && y == 6){
           //Stores P1 Castle in Terrain
-          terrain[i][j].setBuilding(new Castle("P1", coords));
+          MainMenu.terrain[i][j].setBuilding(new Castle("P1", coords));
           //Stores P2 Castle in P2 Building ArrayList
-          p1Buildings.add(terrain[i][j].getBuilding()); 
-          ((Castle)terrain[i][j].getBuilding()).setGold(150); //Initializes amount of gold player starts with
-          ((Castle)terrain[i][j].getBuilding()).setLevel(1); //Initializes level of Castle
+          p1Buildings.add(MainMenu.terrain[i][j].getBuilding()); 
+          ((Castle)MainMenu.terrain[i][j].getBuilding()).setGold(150); //Initializes amount of gold player starts with
+          ((Castle)MainMenu.terrain[i][j].getBuilding()).setLevel(1); //Initializes level of Castle
         }
         else if (x == 3 && y == 3){
           //Stores goldmine in terrain
-          terrain[i][j].setBuilding(new GoldMine("None", coords));
+          MainMenu.terrain[i][j].setBuilding(new GoldMine("None", coords));
           //Stores gold mine in unclaimed buildings arraylist
-          unclaimedBuildings.add(terrain[i][j].getBuilding());
+          unclaimedBuildings.add(MainMenu.terrain[i][j].getBuilding());
         }
         else if (x == 2 && y == 6){
           //Stores goldmine in terrain
-          terrain[i][j].setBuilding(new GoldMine("None", coords));
+          MainMenu.terrain[i][j].setBuilding(new GoldMine("None", coords));
           //Stores gold mine in unclaimed buildings arraylist
-          unclaimedBuildings.add(terrain[i][j].getBuilding());
+          unclaimedBuildings.add(MainMenu.terrain[i][j].getBuilding());
         }
         else if (x == 4 && y == 0){
           //Stores goldmine in terrain
-          terrain[i][j].setBuilding(new GoldMine("None", coords));
+          MainMenu.terrain[i][j].setBuilding(new GoldMine("None", coords));
           //Stores gold mine in unclaimed buildings arraylist
-          unclaimedBuildings.add(terrain[i][j].getBuilding());
+          unclaimedBuildings.add(MainMenu.terrain[i][j].getBuilding());
         }
       }
     }
   }
   
   
-  public static void fillTroopTerrain(Terrain[][] terrain, ArrayList<Troop> troops){
+  public static void fillTroopTerrain(ArrayList<Troop> troops){
     //Store troops into terrain arrays
     int x;
     int y;
@@ -65,10 +66,10 @@ public class mainMethods{
       x = troops.get(i).getCoords()[0];
       y = troops.get(i).getCoords()[1];
       
-      terrain[x][y].setTroop(troops.get(i));
+      MainMenu.terrain[x][y].setTroop(troops.get(i));
     }
   }
-  public static void fillBuildingTerrain(Terrain[][] terrain, ArrayList<Building> buildings){
+  public static void fillBuildingTerrain(ArrayList<Building> buildings){
     //Stores buildings into terrain arrays
     int x;
     int y;
@@ -76,11 +77,11 @@ public class mainMethods{
     for (int i = 0; i < buildings.size(); i++){
       x = buildings.get(i).getCoords()[0];
       y = buildings.get(i).getCoords()[1];
-      terrain[x][y].setBuilding(buildings.get(i));
+      MainMenu.terrain[x][y].setBuilding(buildings.get(i));
     }
   }
   
-  public static String loadGame(String saveFolderPath, Terrain[][] terrain, ArrayList<Troop> p1Troops, ArrayList<Troop> p2Troops, ArrayList<Building> p1Buildings,
+  public static String loadGame(String saveFolderPath, ArrayList<Troop> p1Troops, ArrayList<Troop> p2Troops, ArrayList<Building> p1Buildings,
                                 ArrayList<Building> p2Buildings, ArrayList<Building> unclaimedBuildings) throws IOException{
     String playerTurn = "P1"; 
     try{
@@ -98,23 +99,23 @@ public class mainMethods{
           playerTurn = SaveGame.load(unclaimedBuildings, fileNames[4]); //Stores info into unclaimedBuildings and returns who's turn it is
           
           //Initializes Terrain
-          terrain = new Terrain[7][7];
-          for (int i = 0; i < terrain.length; i++){
-            for (int j = 0; j < terrain[i].length; j++){
+          MainMenu.terrain = new Terrain[7][7];
+          for (int i = 0; i < MainMenu.terrain.length; i++){
+            for (int j = 0; j < MainMenu.terrain[i].length; j++){
               int[] coords = {i, j};
-              terrain[i][j] = new Terrain("Plains", coords);
+              MainMenu.terrain[i][j] = new Terrain("Plains", coords);
             }
           }
           //Adds troops and buildings into their respective terrain tiles
-          fillTroopTerrain(terrain, p1Troops);
+          fillTroopTerrain(p1Troops);
           
-          fillTroopTerrain(terrain, p2Troops);
+          fillTroopTerrain(p2Troops);
           
-          fillBuildingTerrain(terrain, p1Buildings);
+          fillBuildingTerrain(p1Buildings);
           
-          fillBuildingTerrain(terrain, p2Buildings);
+          fillBuildingTerrain(p2Buildings);
           
-          fillBuildingTerrain(terrain, unclaimedBuildings);
+          fillBuildingTerrain(unclaimedBuildings);
           return playerTurn; //Returns the turn of the player when the game was saved
         }
         else{
@@ -124,7 +125,7 @@ public class mainMethods{
           p2Buildings.clear();
           unclaimedBuildings.clear();
           //If files are not there, then start a new game
-          newGame(terrain, p1Troops, p2Troops, p1Buildings, p2Buildings, unclaimedBuildings);
+          newGame(p1Troops, p2Troops, p1Buildings, p2Buildings, unclaimedBuildings);
           return playerTurn; //Returns player 1 as default
         }
       }
@@ -137,16 +138,16 @@ public class mainMethods{
     }
   }
   //Method that helps recruit the troops and place them in the tile where they are recruited
-  public static boolean recruitTroops(Terrain[][] terrain, String troopName, Castle castle){
+  public static boolean recruitTroops(String troopName, Castle castle){
     int[] coords = castle.getCoords(); //Gets the coordinates of the tile
-    Troop troop = castle.recruit(terrain, troopName);
+    Troop troop = castle.recruit(MainMenu.terrain, troopName);
     //If troop recruitment was unsuccessful, return false
     if (troop == null){
       return false;
     }
     //Else, put the troop into the terrain's troop field
     else{
-      terrain[coords[0]][coords[1]].setTroop(troop);
+      MainMenu.terrain[coords[0]][coords[1]].setTroop(troop);
       return true;
     }
   }
