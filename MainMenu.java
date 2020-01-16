@@ -397,6 +397,15 @@ public class MainMenu extends Application {
               //Delete the previous troop by setting it to null
               terrain[previousMoveCoords[0]][previousMoveCoords[1]].setTroop(null);
               
+              if (terrain[x][y].getBuilding() != null && terrain[x][y].getBuilding().getTeam().equals("None")) {
+                if (turn.equals("P1")) {
+                  mainMethods.claimBuilding(terrain, unclaimedBuildings, p1Buildings, terrain[x][y].getTroop());
+                }
+                else {
+                 mainMethods.claimBuilding(terrain, unclaimedBuildings, p2Buildings, terrain[x][y].getTroop());
+                }
+              }
+              
               //possibleAttacks an ArrayList that will store coordinates that the troop is allowed to attack
               possibleAttacks = terrain[x][y].getTroop().findAttacks(terrain);
               //Checks if there are any possible choices (size is > 0)
@@ -535,7 +544,8 @@ public class MainMenu extends Application {
                          "Name: " + terrain[x][y].getBuilding().getName() + "\n" +
                          "Health: " + terrain[x][y].getBuilding().getHealth() + "\n" + 
                          "Attack: " + terrain[x][y].getBuilding().getAttack() + "\n" + 
-                         "Range: " + terrain[x][y].getBuilding().getRange());
+                         "Range: " + terrain[x][y].getBuilding().getRange() + "\n" + 
+                         "Gold: " + ((Castle)terrain[x][y].getBuilding()).getGold());
     //Set the position of the building's information
     buildingInfo.relocate(800, 100);
     
