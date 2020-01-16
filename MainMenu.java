@@ -3,10 +3,10 @@
  * Description: Main Menu for the game
  * */
 
-//First make the troops only be able to do 1 move per turn
+//First make the troops only be able to do 1 move per MainMenu.turn
 // -flip the boolean after they move and cannot attack
 // -flip the boolean after combat (when continue is pressed) flip attacker's troop to false
-//At the start of each turn, go through the respective player's tropp arraylist (p1Troops, p2Troops) and set all action booleans to true;
+//At the start of each MainMenu.turn, go through the respective player's tropp arraylist (p1Troops, p2Troops) and set all action booleans to true;
 
 
 //Claiming buildings:
@@ -55,12 +55,13 @@ public class MainMenu extends Application {
   //Create a 2D array of buttons (represents the map)
   Button[][] button = new Button[7][7];
   
-  public static Terrain[][] terrain = new Terrain[7][7];
+  
   public static ArrayList<Troop> p1Troops = new ArrayList<Troop>();
   public static ArrayList<Troop> p2Troops = new ArrayList<Troop>();
   public static ArrayList<Building> p1Buildings = new ArrayList<Building>();
   public static ArrayList<Building> p2Buildings = new ArrayList<Building>();
   public static ArrayList<Building> unclaimedBuildings = new ArrayList<Building>();
+  public static Terrain[][] terrain = new Terrain[7][7];
   
   
   public void start (Stage primaryStage) throws Exception {
@@ -147,7 +148,7 @@ public class MainMenu extends Application {
   public void newGameButtonClicked (Stage primaryStage){
     
     //Call the method that will initialize where the troops are on the board 
-    mainMethods.newGame(terrain, p1Troops, p2Troops, p1Buildings, p2Buildings, unclaimedBuildings);
+    mainMethods.newGame(p1Troops, p2Troops, p1Buildings, p2Buildings, unclaimedBuildings);
     
     //Create a new pane
     Pane root = new Pane();
@@ -180,7 +181,7 @@ public class MainMenu extends Application {
     //Give the save button a function
     saveButton.setOnAction(e -> saveGameButtonClicked());
     
-    //Create an end turn button
+    //Create an end MainMenu.turn button
     Button endTurnButton = new Button("End Turn");
     //Set the location of the button
     endTurnButton.relocate(850, 600);
@@ -210,19 +211,19 @@ public class MainMenu extends Application {
         
         
         if (y == 0 && x == 3){
-          terrain[i][j] = new Terrain("Plain", coords);
-          terrain[i][j].setTroop(new CrossbowMen("P2", coords));
-          p2Troops.add(terrain[i][j].getTroop());
+          MainMenu.terrain[i][j] = new Terrain("Plain", coords);
+          MainMenu.terrain[i][j].setTroop(new CrossbowMen("P2", coords));
+          p2Troops.add(MainMenu.terrain[i][j].getTroop());
         }
         else if (y == 3 && x == 4){
-          terrain[i][j] = new Terrain("Plain", coords);
-          terrain[i][j].setTroop(new Cavalry("P1", coords));
-          p1Troops.add(terrain[i][j].getTroop());
+          MainMenu.terrain[i][j] = new Terrain("Plain", coords);
+          MainMenu.terrain[i][j].setTroop(new Cavalry("P1", coords));
+          p1Troops.add(MainMenu.terrain[i][j].getTroop());
         }
         else if (y == 3 && x == 5){
-          terrain[i][j] = new Terrain("Plain", coords);
-          terrain[i][j].setTroop(new Knight("P1", coords));
-          p1Troops.add(terrain[i][j].getTroop());
+          MainMenu.terrain[i][j] = new Terrain("Plain", coords);
+          MainMenu.terrain[i][j].setTroop(new Knight("P1", coords));
+          p1Troops.add(MainMenu.terrain[i][j].getTroop());
         }
         
         
@@ -244,13 +245,13 @@ public class MainMenu extends Application {
             
             
             //Checks if a building exists on the selected button/tile
-            if (terrain[x][y].getBuilding() != null) {
+            if (MainMenu.terrain[x][y].getBuilding() != null) {
               //Call the checkBuilding method
-              checkBuilding(terrain, buildingBox, buildingInfo, x, y, root);
+              checkBuilding(MainMenu.terrain, buildingBox, buildingInfo, x, y, root);
               //If a the home base (castle) of the player's team is clicked
-              if (terrain[x][y].getBuilding().getTeam().equals(turn)){
+              if (MainMenu.terrain[x][y].getBuilding().getTeam().equals(MainMenu.turn)){
                 //If the building is a castle and is on the same team as the player
-                if (terrain[x][y].getBuilding() instanceof Castle && terrain[x][y].getBuilding().getTeam().equals(turn)) {
+                if (MainMenu.terrain[x][y].getBuilding() instanceof Castle && MainMenu.terrain[x][y].getBuilding().getTeam().equals(MainMenu.turn)) {
                   
                   Label recruitmentLabel = new Label("Recruitment:"); //Create a label for recruitment
                   
@@ -275,7 +276,7 @@ public class MainMenu extends Application {
                   
                   //Checks if there is a castle
                   //Checks level of the castle (3 is the max level)
-                  if (((Castle)terrain[x][y].getBuilding()).getLevel() < 3){
+                  if (((Castle)MainMenu.terrain[x][y].getBuilding()).getLevel() < 3){
                     //Create an upgrade button
                     Button upgradeButton = new Button("Upgrade: Costs " +  Castle.getUpgradeCost() + " gold");
                     //Add the upgradeButton to the recruitment layout
@@ -287,26 +288,26 @@ public class MainMenu extends Application {
               }
             }
             //If there is a troop on the selected button
-            if (terrain[x][y].getTroop() != null) {
+            if (MainMenu.terrain[x][y].getTroop() != null ) {
               //Call the checkTroop method that will display the troop type
-              checkTroop(terrain, troopBox, troopInfo, x, y, root);
+              checkTroop(MainMenu.terrain, troopBox, troopInfo, x, y, root);
             }
             //Call the check terrain method that will display the terrain type 
-            checkTerrain(terrain, terrainBox, terrainInfo, x, y, root);
+            checkTerrain(MainMenu.terrain, terrainBox, terrainInfo, x, y, root);
             
             //If the user clicks on a red tile, it means that they are choosing another troop/building to fight
             if (firstClick == true && button[x][y].getStyle().equals("-fx-background-color: red;" + "-fx-text-fill: white")) {
               //If the selected button is a building
-              if (terrain[x][y].getBuilding() != null) {
-                defender = terrain[x][y].getBuilding(); //Store the building as the defender
+              if (MainMenu.terrain[x][y].getBuilding() != null) {
+                defender = MainMenu.terrain[x][y].getBuilding(); //Store the building as the defender
               }
               //If the selected button is a troop
               else {
-                defender = terrain[x][y].getTroop(); //Store the troop as the defender
+                defender = MainMenu.terrain[x][y].getTroop(); //Store the troop as the defender
               }
               //Checks if the previous selected combatant is a troop
-              if (terrain[previousMoveCoords[0]][previousMoveCoords[1]].getTroop() != null) {
-                attacker = terrain[previousMoveCoords[0]][previousMoveCoords[1]].getTroop(); //Set the troop as the attacker
+              if (MainMenu.terrain[previousMoveCoords[0]][previousMoveCoords[1]].getTroop() != null) {
+                attacker = MainMenu.terrain[previousMoveCoords[0]][previousMoveCoords[1]].getTroop(); //Set the troop as the attacker
               }
               
               //Calls the combatScreen method, which will show a pop up window where the attacker and defender will fight
@@ -328,26 +329,26 @@ public class MainMenu extends Application {
               //If defender is a troop
               if (defender instanceof Troop){
                 button[loserCoords[0]][loserCoords[1]].setGraphic(null); //Deletes the loser's picture 
-                terrain[loserCoords[0]][loserCoords[1]].setTroop(null); //Deletes the object of the loser
+                MainMenu.terrain[loserCoords[0]][loserCoords[1]].setTroop(null); //Deletes the object of the loser
               }
               //If defender is a gold mine
               else if (defender instanceof GoldMine){
                 //Sets the health of the gold mine back to full
-                terrain[loserCoords[0]][loserCoords[1]].getBuilding().setHealth(terrain[loserCoords[0]][loserCoords[1]].getBuilding().getMaxHP());
+                MainMenu.terrain[loserCoords[0]][loserCoords[1]].getBuilding().setHealth(MainMenu.terrain[loserCoords[0]][loserCoords[1]].getBuilding().getMaxHP());
                 
                 //If defender is player 1
                 if (defender.getTeam().equals("P1")){
                   //Removes building from defender's building arraylist
-                  p1Buildings.remove(terrain[loserCoords[0]][loserCoords[1]].getBuilding());
+                  p1Buildings.remove(MainMenu.terrain[loserCoords[0]][loserCoords[1]].getBuilding());
                   //Adds building to winner's building arraylist
-                  p2Buildings.add(terrain[loserCoords[0]][loserCoords[1]].getBuilding());
+                  p2Buildings.add(MainMenu.terrain[loserCoords[0]][loserCoords[1]].getBuilding());
                 }
                 //If defender is player 2
                 else if (defender.getTeam().equals("P2")){
                   //Removes building from defender's building arraylist
-                  p2Buildings.remove(terrain[loserCoords[0]][loserCoords[1]].getBuilding());
+                  p2Buildings.remove(MainMenu.terrain[loserCoords[0]][loserCoords[1]].getBuilding());
                   //Adds building to winner's building arraylist
-                  p1Buildings.add(terrain[loserCoords[0]][loserCoords[1]].getBuilding());
+                  p1Buildings.add(MainMenu.terrain[loserCoords[0]][loserCoords[1]].getBuilding());
                 }
               }
               
@@ -359,10 +360,10 @@ public class MainMenu extends Application {
                 }
               }
             }
-            //If the player selects/clicks on a troop on the board
-            else if (firstClick == true && terrain[x][y].getTroop() != null) {
+            //If the player selects/clicks on a troop on the board and if troop hasn't performed a move yet
+            else if (firstClick == true && MainMenu.terrain[x][y].getTroop() != null && MainMenu.terrain[x][y].getTroop().getAction() == true) {
               
-              if (terrain[x][y].getTroop().getTeam().equals(turn)){
+              if (MainMenu.terrain[x][y].getTroop().getTeam().equals(MainMenu.turn)){
                 //Keeps track of the initial position of the troop
                 previousMoveCoords[0] = x; //Save their x-coordinate
                 previousMoveCoords[1] = y; //Save their y-coordinate
@@ -375,7 +376,7 @@ public class MainMenu extends Application {
                   }
                 }
                 //possibleMoves is used to store an ArrayList of integer arrays of possible coordinates that the selected troop can move to
-                possibleMoves = terrain[x][y].getTroop().findMoves(terrain); //Calls findMoves, which returns the ArrayList
+                possibleMoves = MainMenu.terrain[x][y].getTroop().findMoves(MainMenu.terrain); //Calls findMoves, which reMainMenu.turns the ArrayList
                 int[] move = new int[2];//Stores the int array stored inside of the ArrayList
                 for (int k = 0; k < possibleMoves.size(); k++) {
                   move = possibleMoves.get(k); //Save the coordinates of where the troop is allowed to travel to
@@ -404,37 +405,37 @@ public class MainMenu extends Application {
               }
               
               //Move the troop from the previous move, to the recently selected button
-              terrain[x][y].setTroop(terrain[previousMoveCoords[0]][previousMoveCoords[1]].getTroop()); 
+              MainMenu.terrain[x][y].setTroop(MainMenu.terrain[previousMoveCoords[0]][previousMoveCoords[1]].getTroop()); 
               //Deletes the image from the previous button
               button[previousMoveCoords[0]][previousMoveCoords[1]].setGraphic(null);
               //If terrain that troop moves from has a building on it
-              if (terrain[previousMoveCoords[0]][previousMoveCoords[1]].getBuilding() != null) {
+              if (MainMenu.terrain[previousMoveCoords[0]][previousMoveCoords[1]].getBuilding() != null) {
                 //Make sure to reinitialize the image
-                Image castleImage = new Image(terrain[previousMoveCoords[0]][previousMoveCoords[1]].getBuilding().getImageName(), 
+                Image castleImage = new Image(MainMenu.terrain[previousMoveCoords[0]][previousMoveCoords[1]].getBuilding().getImageName(), 
                                               60, 60, false, false);
                 //Sets an image to the button
                 button[previousMoveCoords[0]][previousMoveCoords[1]].setGraphic(new ImageView(castleImage));
               }
               //Create a new image for the troop that was moved
-              Image image = new Image(terrain[x][y].getTroop().getImageName(), 60, 60, false, false);
+              Image image = new Image(MainMenu.terrain[x][y].getTroop().getImageName(), 60, 60, false, false);
               //Set an image for the recently selected button
               button[x][y].setGraphic(new ImageView(image));
               //Update the troop's coordinates by calling the actualMove method from the Troop class
-              terrain[previousMoveCoords[0]][previousMoveCoords[1]].getTroop().actualMove(x, y, terrain);
+              MainMenu.terrain[previousMoveCoords[0]][previousMoveCoords[1]].getTroop().actualMove(x, y, terrain);
               //Delete the previous troop by setting it to null
-              terrain[previousMoveCoords[0]][previousMoveCoords[1]].setTroop(null);
+              MainMenu.terrain[previousMoveCoords[0]][previousMoveCoords[1]].setTroop(null);
               
-              if (terrain[x][y].getBuilding() != null && terrain[x][y].getBuilding().getTeam().equals("None")) {
-                if (turn.equals("P1")) {
-                  mainMethods.claimBuilding(terrain, unclaimedBuildings, p1Buildings, terrain[x][y].getTroop());
+              if (MainMenu.terrain[x][y].getBuilding() != null && MainMenu.terrain[x][y].getBuilding().getTeam().equals("None")) {
+                if (MainMenu.turn.equals("P1")) {
+                  mainMethods.claimBuilding(MainMenu.terrain, unclaimedBuildings, p1Buildings, MainMenu.terrain[x][y].getTroop());
                 }
                 else {
-                  mainMethods.claimBuilding(terrain, unclaimedBuildings, p2Buildings, terrain[x][y].getTroop());
+                  mainMethods.claimBuilding(MainMenu.terrain, unclaimedBuildings, p2Buildings, MainMenu.terrain[x][y].getTroop());
                 }
               }
               
               //possibleAttacks an ArrayList that will store coordinates that the troop is allowed to attack
-              possibleAttacks = terrain[x][y].getTroop().findAttacks(terrain);
+              possibleAttacks = MainMenu.terrain[x][y].getTroop().findAttacks(MainMenu.terrain);
               //Checks if there are any possible choices (size is > 0)
               if (possibleAttacks.size() > 0) {
                 //Loops through the board of buttons
@@ -453,6 +454,7 @@ public class MainMenu extends Application {
                   button[attack[0]][attack[1]].setDisable(false); //Enable the button
                 }
               }
+              MainMenu.terrain[x][y].getTroop().setAction(false);
               firstClick = true; //Update the firstClick boolean
               //Store the troop's position
               previousMoveCoords[0] = x; //Save the x-coordinate
@@ -464,16 +466,16 @@ public class MainMenu extends Application {
         //Creates the board/map by adding the button
         root.getChildren().add(button[i][j]);
         //Checks if there is a troop on that tile
-        if (terrain[i][j].getTroop() != null) {
+        if (MainMenu.terrain[i][j].getTroop() != null) {
           //Adds the image of the troop onto the tile
-          Image image = new Image(terrain[i][j].getTroop().getImageName(), 60, 60, false, false);
+          Image image = new Image(MainMenu.terrain[i][j].getTroop().getImageName(), 60, 60, false, false);
           button[i][j].setGraphic(new ImageView(image));    
           
         }
         //Checks if there is a building 
-        if (terrain[i][j].getBuilding() != null) {
+        if (MainMenu.terrain[i][j].getBuilding() != null) {
           //Adds the image of the building onto the tile
-          Image image = new Image(terrain[i][j].getBuilding().getImageName(), 60, 60, false, false);
+          Image image = new Image(MainMenu.terrain[i][j].getBuilding().getImageName(), 60, 60, false, false);
           button[i][j].setGraphic(new ImageView(image));          
         }
       }
@@ -486,7 +488,12 @@ public class MainMenu extends Application {
   
   //Method that will load the previous game
   public void loadGameButtonClicked (Stage primaryStage) {
-    Terrain[][] terrain = new Terrain[7][7];
+    for (int i = 0; i < MainMenu.terrain.length; i++){
+      for (int j = 0; j < MainMenu.terrain[i].length; j++){
+        int[] coords = {i, j};
+        MainMenu.terrain[i][j] = new Terrain("Plains", coords);
+      }
+    }
     //Create a new pane
     Pane root = new Pane();
     
@@ -518,7 +525,7 @@ public class MainMenu extends Application {
     //Give the save button a function
     saveButton.setOnAction(e -> saveGameButtonClicked());
     
-    //Create an end turn button
+    //Create an end MainMenu.turn button
     Button endTurnButton = new Button("End Turn");
     //Set the location of the button
     endTurnButton.relocate(850, 600);
@@ -531,7 +538,7 @@ public class MainMenu extends Application {
     int[] defenderCoords = new int[2];
     String turn = "P1";
     try{
-      turn = mainMethods.loadGame(SaveGame.saveFolderPath, terrain, p1Troops, p2Troops, p1Buildings, p2Buildings, unclaimedBuildings);
+      MainMenu.turn = mainMethods.loadGame(SaveGame.saveFolderPath,p1Troops, p2Troops, p1Buildings, p2Buildings, unclaimedBuildings);
       //Populate the 2d array of buttons
       for (int i = 0; i < 7; i++) {
         for (int j = 0; j < 7; j++) {
@@ -563,13 +570,13 @@ public class MainMenu extends Application {
               
               
               //Checks if a building exists on the selected button/tile
-              if (terrain[x][y].getBuilding() != null) {
+              if (MainMenu.terrain[x][y].getBuilding() != null) {
                 //Call the checkBuilding method
-                checkBuilding(terrain, buildingBox, buildingInfo, x, y, root);
+                checkBuilding(MainMenu.terrain, buildingBox, buildingInfo, x, y, root);
                 //If a the home base (castle) of the player's team is clicked
-                if (terrain[x][y].getBuilding().getTeam().equals(turn)){
+                if (MainMenu.terrain[x][y].getBuilding().getTeam().equals(MainMenu.turn)){
                   //If the building is a castle and is on the same team as the player
-                  if (terrain[x][y].getBuilding() instanceof Castle && terrain[x][y].getBuilding().getTeam().equals(turn)) {
+                  if (MainMenu.terrain[x][y].getBuilding() instanceof Castle && MainMenu.terrain[x][y].getBuilding().getTeam().equals(MainMenu.turn)) {
                     
                     Label recruitmentLabel = new Label("Recruitment:"); //Create a label for recruitment
                     
@@ -594,7 +601,7 @@ public class MainMenu extends Application {
                     
                     //Checks if there is a castle
                     //Checks level of the castle (3 is the max level)
-                    if (((Castle)terrain[x][y].getBuilding()).getLevel() < 3){
+                    if (((Castle)MainMenu.terrain[x][y].getBuilding()).getLevel() < 3){
                       //Create an upgrade button
                       Button upgradeButton = new Button("Upgrade: Costs " +  Castle.getUpgradeCost() + " gold");
                       //Add the upgradeButton to the recruitment layout
@@ -606,26 +613,26 @@ public class MainMenu extends Application {
                 }
               }
               //If there is a troop on the selected button
-              if (terrain[x][y].getTroop() != null) {
+              if (MainMenu.terrain[x][y].getTroop() != null) {
                 //Call the checkTroop method that will display the troop type
-                checkTroop(terrain, troopBox, troopInfo, x, y, root);
+                checkTroop(MainMenu.terrain, troopBox, troopInfo, x, y, root);
               }
               //Call the check terrain method that will display the terrain type 
-              checkTerrain(terrain, terrainBox, terrainInfo, x, y, root);
+              checkTerrain(MainMenu.terrain, terrainBox, terrainInfo, x, y, root);
               
               //If the user clicks on a red tile, it means that they are choosing another troop/building to fight
               if (firstClick == true && button[x][y].getStyle().equals("-fx-background-color: red;" + "-fx-text-fill: white")) {
                 //If the selected button is a building
-                if (terrain[x][y].getBuilding() != null) {
-                  defender = terrain[x][y].getBuilding(); //Store the building as the defender
+                if (MainMenu.terrain[x][y].getBuilding() != null) {
+                  defender = MainMenu.terrain[x][y].getBuilding(); //Store the building as the defender
                 }
                 //If the selected button is a troop
                 else {
-                  defender = terrain[x][y].getTroop(); //Store the troop as the defender
+                  defender = MainMenu.terrain[x][y].getTroop(); //Store the troop as the defender
                 }
                 //Checks if the previous selected combatant is a troop
-                if (terrain[previousMoveCoords[0]][previousMoveCoords[1]].getTroop() != null) {
-                  attacker = terrain[previousMoveCoords[0]][previousMoveCoords[1]].getTroop(); //Set the troop as the attacker
+                if (MainMenu.terrain[previousMoveCoords[0]][previousMoveCoords[1]].getTroop() != null) {
+                  attacker = MainMenu.terrain[previousMoveCoords[0]][previousMoveCoords[1]].getTroop(); //Set the troop as the attacker
                 }
                 
                 //Calls the combatScreen method, which will show a pop up window where the attacker and defender will fight
@@ -647,26 +654,26 @@ public class MainMenu extends Application {
                 //If defender is a troop
                 if (defender instanceof Troop){
                   button[loserCoords[0]][loserCoords[1]].setGraphic(null); //Deletes the loser's picture 
-                  terrain[loserCoords[0]][loserCoords[1]].setTroop(null); //Deletes the object of the loser
+                  MainMenu.terrain[loserCoords[0]][loserCoords[1]].setTroop(null); //Deletes the object of the loser
                 }
                 //If defender is a gold mine
                 else if (defender instanceof GoldMine){
                   //Sets the health of the gold mine back to full
-                  terrain[loserCoords[0]][loserCoords[1]].getBuilding().setHealth(terrain[loserCoords[0]][loserCoords[1]].getBuilding().getMaxHP());
+                  MainMenu.terrain[loserCoords[0]][loserCoords[1]].getBuilding().setHealth(MainMenu.terrain[loserCoords[0]][loserCoords[1]].getBuilding().getMaxHP());
                   
                   //If defender is player 1
                   if (defender.getTeam().equals("P1")){
                     //Removes building from defender's building arraylist
-                    p1Buildings.remove(terrain[loserCoords[0]][loserCoords[1]].getBuilding());
+                    p1Buildings.remove(MainMenu.terrain[loserCoords[0]][loserCoords[1]].getBuilding());
                     //Adds building to winner's building arraylist
-                    p2Buildings.add(terrain[loserCoords[0]][loserCoords[1]].getBuilding());
+                    p2Buildings.add(MainMenu.terrain[loserCoords[0]][loserCoords[1]].getBuilding());
                   }
                   //If defender is player 2
                   else if (defender.getTeam().equals("P2")){
                     //Removes building from defender's building arraylist
-                    p2Buildings.remove(terrain[loserCoords[0]][loserCoords[1]].getBuilding());
+                    p2Buildings.remove(MainMenu.terrain[loserCoords[0]][loserCoords[1]].getBuilding());
                     //Adds building to winner's building arraylist
-                    p1Buildings.add(terrain[loserCoords[0]][loserCoords[1]].getBuilding());
+                    p1Buildings.add(MainMenu.terrain[loserCoords[0]][loserCoords[1]].getBuilding());
                   }
                 }
                 
@@ -678,10 +685,10 @@ public class MainMenu extends Application {
                   }
                 }
               }
-              //If the player selects/clicks on a troop on the board
-              else if (firstClick == true && terrain[x][y].getTroop() != null) {
+              //If the player selects/clicks on a troop on the board and checks if troop has moved already
+              else if (firstClick == true && MainMenu.terrain[x][y].getTroop() != null && MainMenu.terrain[x][y].getTroop().getAction() == true) {
                 
-                if (terrain[x][y].getTroop().getTeam().equals(turn)){
+                if (MainMenu.terrain[x][y].getTroop().getTeam().equals(MainMenu.turn)){
                   //Keeps track of the initial position of the troop
                   previousMoveCoords[0] = x; //Save their x-coordinate
                   previousMoveCoords[1] = y; //Save their y-coordinate
@@ -694,7 +701,7 @@ public class MainMenu extends Application {
                     }
                   }
                   //possibleMoves is used to store an ArrayList of integer arrays of possible coordinates that the selected troop can move to
-                  possibleMoves = terrain[x][y].getTroop().findMoves(terrain); //Calls findMoves, which returns the ArrayList
+                  possibleMoves = MainMenu.terrain[x][y].getTroop().findMoves(MainMenu.terrain); //Calls findMoves, which reMainMenu.turns the ArrayList
                   int[] move = new int[2];//Stores the int array stored inside of the ArrayList
                   for (int k = 0; k < possibleMoves.size(); k++) {
                     move = possibleMoves.get(k); //Save the coordinates of where the troop is allowed to travel to
@@ -723,37 +730,37 @@ public class MainMenu extends Application {
                 }
                 
                 //Move the troop from the previous move, to the recently selected button
-                terrain[x][y].setTroop(terrain[previousMoveCoords[0]][previousMoveCoords[1]].getTroop()); 
+                MainMenu.terrain[x][y].setTroop(MainMenu.terrain[previousMoveCoords[0]][previousMoveCoords[1]].getTroop()); 
                 //Deletes the image from the previous button
                 button[previousMoveCoords[0]][previousMoveCoords[1]].setGraphic(null);
                 //If terrain that troop moves from has a building on it
-                if (terrain[previousMoveCoords[0]][previousMoveCoords[1]].getBuilding() != null) {
+                if (MainMenu.terrain[previousMoveCoords[0]][previousMoveCoords[1]].getBuilding() != null) {
                   //Make sure to reinitialize the image
-                  Image castleImage = new Image(terrain[previousMoveCoords[0]][previousMoveCoords[1]].getBuilding().getImageName(), 
+                  Image castleImage = new Image(MainMenu.terrain[previousMoveCoords[0]][previousMoveCoords[1]].getBuilding().getImageName(), 
                                                 60, 60, false, false);
                   //Sets an image to the button
                   button[previousMoveCoords[0]][previousMoveCoords[1]].setGraphic(new ImageView(castleImage));
                 }
                 //Create a new image for the troop that was moved
-                Image image = new Image(terrain[x][y].getTroop().getImageName(), 60, 60, false, false);
+                Image image = new Image(MainMenu.terrain[x][y].getTroop().getImageName(), 60, 60, false, false);
                 //Set an image for the recently selected button
                 button[x][y].setGraphic(new ImageView(image));
                 //Update the troop's coordinates by calling the actualMove method from the Troop class
-                terrain[previousMoveCoords[0]][previousMoveCoords[1]].getTroop().actualMove(x, y, terrain);
+                MainMenu.terrain[previousMoveCoords[0]][previousMoveCoords[1]].getTroop().actualMove(x, y, MainMenu.terrain);
                 //Delete the previous troop by setting it to null
-                terrain[previousMoveCoords[0]][previousMoveCoords[1]].setTroop(null);
+                MainMenu.terrain[previousMoveCoords[0]][previousMoveCoords[1]].setTroop(null);
                 
-                if (terrain[x][y].getBuilding() != null && terrain[x][y].getBuilding().getTeam().equals("None")) {
-                  if (turn.equals("P1")) {
-                    mainMethods.claimBuilding(terrain, unclaimedBuildings, p1Buildings, terrain[x][y].getTroop());
+                if (MainMenu.terrain[x][y].getBuilding() != null && MainMenu.terrain[x][y].getBuilding().getTeam().equals("None")) {
+                  if (MainMenu.turn.equals("P1")) {
+                    mainMethods.claimBuilding(MainMenu.terrain, unclaimedBuildings, p1Buildings, MainMenu.terrain[x][y].getTroop());
                   }
                   else {
-                    mainMethods.claimBuilding(terrain, unclaimedBuildings, p2Buildings, terrain[x][y].getTroop());
+                    mainMethods.claimBuilding(MainMenu.terrain, unclaimedBuildings, p2Buildings, MainMenu.terrain[x][y].getTroop());
                   }
                 }
                 
                 //possibleAttacks an ArrayList that will store coordinates that the troop is allowed to attack
-                possibleAttacks = terrain[x][y].getTroop().findAttacks(terrain);
+                possibleAttacks = MainMenu.terrain[x][y].getTroop().findAttacks(MainMenu.terrain);
                 //Checks if there are any possible choices (size is > 0)
                 if (possibleAttacks.size() > 0) {
                   //Loops through the board of buttons
@@ -783,15 +790,15 @@ public class MainMenu extends Application {
           //Creates the board/map by adding the button
           root.getChildren().add(button[i][j]);
           //Checks if there is a troop on that tile
-          if (terrain[i][j].getTroop() != null) {
+          if (MainMenu.terrain[i][j].getTroop() != null) {
             //Adds the image of the troop onto the tile
-            Image image = new Image(terrain[i][j].getTroop().getImageName(), 60, 60, false, false);
+            Image image = new Image(MainMenu.terrain[i][j].getTroop().getImageName(), 60, 60, false, false);
             button[i][j].setGraphic(new ImageView(image));            
           }
           //Checks if there is a building 
-          if (terrain[i][j].getBuilding() != null) {
+          if (MainMenu.terrain[i][j].getBuilding() != null) {
             //Adds the image of the building onto the tile
-            Image image = new Image(terrain[i][j].getBuilding().getImageName(), 60, 60, false, false);
+            Image image = new Image(MainMenu.terrain[i][j].getBuilding().getImageName(), 60, 60, false, false);
             button[i][j].setGraphic(new ImageView(image));          
           }
         }
@@ -814,7 +821,7 @@ public class MainMenu extends Application {
   
   public void saveGameButtonClicked () {
     try{
-      mainMethods.saveGame(turn, p1Troops, p2Troops, p1Buildings, p2Buildings, unclaimedBuildings);
+      mainMethods.saveGame(MainMenu.turn, p1Troops, p2Troops, p1Buildings, p2Buildings, unclaimedBuildings);
     }
     catch (Exception e){
       System.out.println(e);
@@ -825,10 +832,10 @@ public class MainMenu extends Application {
   }
   public void endTurnButtonClicked () {
     System.out.println("Hi");
-    System.out.println(turn + " Turn");
-    turn = mainMethods.turnFlip(turn, terrain, p1Troops, p2Troops, p1Buildings, p2Buildings, unclaimedBuildings);
+    System.out.println(MainMenu.turn + " Turn");
+    MainMenu.turn = mainMethods.turnFlip(MainMenu.turn, MainMenu.terrain, p1Troops, p2Troops, p1Buildings, p2Buildings, unclaimedBuildings);
   }
-  //Create the load button and will return the button
+  //Create the load button and will reMainMenu.turn the button
   public Button createLoadButton (Stage primaryStage) throws Exception{
     //Create a button that will load the previous game
     Button loadGameButton = new Button("Load Game");
@@ -843,7 +850,7 @@ public class MainMenu extends Application {
     catch(Exception e){
       System.out.println(e);
     }
-    //Returns the button
+    //ReMainMenu.turns the button
     return loadGameButton;
   }
   //Method that will bring the user to an instructions page/window
@@ -853,7 +860,7 @@ public class MainMenu extends Application {
     Label instructions = new Label("1. first instruction\n" + "2. second instruction\n" + "3. third instruction\n");
     
     //Create a menu button
-    Button menuButton = new Button("Return To Menu");
+    Button menuButton = new Button("ReMainMenu.turn To Menu");
     //Set the menu button
     menuButton.relocate(50, 500);
     //Give the button a function by calling the menuButtonClicked method
@@ -983,7 +990,7 @@ public class MainMenu extends Application {
     //Set the location of the label
     defenderStun.relocate(400, 150);
     
-    //Set the location of the turn label (will display who's turn it is)
+    //Set the location of the MainMenu.turn label (will display who's MainMenu.turn it is)
     turnLabel.relocate(225, 50);
     //Set the label's text
     turnLabel.setText("Attacker's Turn");
@@ -1029,7 +1036,7 @@ public class MainMenu extends Application {
     Button defenderButton3 = new Button(); //Create a button for the defender
     Button defenderButton4 = new Button(); //Create a button for the defender
     
-    //These buttons will be disabled until it is the defender's turn
+    //These buttons will be disabled until it is the defender's MainMenu.turn
     defenderButton1.setDisable(true); //Disable the defender's button
     defenderButton2.setDisable(true); //Disable the defender's button
     defenderButton3.setDisable(true); //Disable the defender's button
@@ -1146,7 +1153,7 @@ public class MainMenu extends Application {
                                                             combatLogLabel, attackerStun, defenderStun, attackerIV, defenderIV, 
                                                             attackerButtonLayout, defenderButtonLayout));
     
-    //Adds the attacker and defender's layout, image, labels and turn indicators to the pane
+    //Adds the attacker and defender's layout, image, labels and MainMenu.turn indicators to the pane
     combatRoot.getChildren().addAll(attackerButtonLayout, defenderButtonLayout, 
                                     attackerIV, defenderIV, turnLabel, attackerInfo, defenderInfo, combatLogLabel, attackerStun, defenderStun);
     
@@ -1159,14 +1166,14 @@ public class MainMenu extends Application {
     //While the combatStage is running, other stages will pause until the combatStage is closed
     combatStage.showAndWait();
   }
-  //Method that will do necessary checks after every turn
+  //Method that will do necessary checks after every MainMenu.turn
   public void combatCheck (Label attackerInfo, Label defenderInfo, 
                            Button attackerButton1, Button attackerButton2, Button attackerButton3, Button attackerButton4, 
                            Button defenderButton1, Button defenderButton2, Button defenderButton3, Button defenderButton4, 
                            Label combatLogLabel, Label attackerStun, Label defenderStun, ImageView attackerIV, ImageView defenderIV, 
                            HBox attackerButtonLayout, HBox defenderButtonLayout) {
     
-    //If attacker's turn
+    //If attacker's MainMenu.turn
     if (playerTurn == true) {
       //Enable the attacker's buttons
       attackerButton1.setDisable(false);
@@ -1180,7 +1187,7 @@ public class MainMenu extends Application {
       defenderButton3.setDisable(true);
       defenderButton4.setDisable(true);
     }
-    //If defender's turn
+    //If defender's MainMenu.turn
     else {
       //Disable the attacker's buttons
       attackerButton1.setDisable(true);
@@ -1204,14 +1211,14 @@ public class MainMenu extends Application {
       
       if (defender.getTeam().equals("P1")){ //If defender is player 1's team
         //Stores gold of player 1
-        gold = ((Castle)terrain[0][0].getBuilding()).getGold();
+        gold = ((Castle)MainMenu.terrain[0][0].getBuilding()).getGold();
       }
       else if (defender.getTeam().equals("P2")){ //If defender is on player 2's team
         //Stores gold of player 2
-        gold = ((Castle)terrain[6][6].getBuilding()).getGold();
+        gold = ((Castle)MainMenu.terrain[6][6].getBuilding()).getGold();
       }
       
-      //Calls the combatPhase method that will return an arrayList for the combatLog each round
+      //Calls the combatPhase method that will reMainMenu.turn an arrayList for the combatLog each round
       combatLog = Combat.combatPhase(attacker, defender, attackAction, defendAction, gold);
       
       //Call the method that will display the combatLog 
@@ -1592,14 +1599,14 @@ public class MainMenu extends Application {
   
   public void recruitmentButtonClicked (String troopName, int x, int y, Pane root) {
     
-    if (mainMethods.recruitTroops(terrain, troopName, (Castle)terrain[x][y].getBuilding()) == true) {
+    if (mainMethods.recruitTroops(troopName, (Castle)MainMenu.terrain[x][y].getBuilding()) == true) {
       System.out.println("Hello");
-      Image image = new Image(terrain[x][y].getTroop().getImageName(), 60, 60, false, false);
+      Image image = new Image(MainMenu.terrain[x][y].getTroop().getImageName(), 60, 60, false, false);
       button[x][y].setGraphic(new ImageView(image));
     }
     else {
       Label errorMessage = new Label("You currently do not meet the requirements to recruit" +
-                                     "that troop or there is a troop on the terrain already");
+                                     " that troop or there is a troop on the terrain already");
       root.getChildren().add(errorMessage);
     }
   }
