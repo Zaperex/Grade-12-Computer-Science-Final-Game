@@ -372,7 +372,6 @@ public class MainMenu extends Application {
               //Loops through the ArrayList of possible moves
               for (int k = 0; k < possibleMoves.size(); k++) {
                 move = possibleMoves.get(k); //Store the int array of possibleMoves to move
-                System.out.println(move[0] + "," + move[1]);
                 button[move[0]][move[1]].setStyle(null); //Unhighlight the previously highlighted buttons
               }
               
@@ -519,7 +518,7 @@ public class MainMenu extends Application {
   }
   //Method that will display the building's information onto the window
   public void checkBuilding (Terrain[][] terrain, Rectangle buildingBox, Label buildingInfo, int x, int y, Pane root) {
-    
+    System.out.println(terrain[x][y].getBuilding().getTeam());
     //Sets the position of the buildingBox
     buildingBox.relocate(675, 75);
     //Set the opacity
@@ -539,13 +538,24 @@ public class MainMenu extends Application {
       buildingBox.setFill(Color.YELLOW);
     }
     System.out.println("buildingInfo.setText\n");
-    //Gather information about the building
-    buildingInfo.setText("Building\n" + 
-                         "Name: " + terrain[x][y].getBuilding().getName() + "\n" +
-                         "Health: " + terrain[x][y].getBuilding().getHealth() + "\n" + 
-                         "Attack: " + terrain[x][y].getBuilding().getAttack() + "\n" + 
-                         "Range: " + terrain[x][y].getBuilding().getRange() + "\n" + 
-                         "Gold: " + ((Castle)terrain[x][y].getBuilding()).getGold());
+    if (terrain[x][y].getBuilding() instanceof Castle){
+      //Gather information about the building
+      buildingInfo.setText("Building\n" + 
+                           "Name: " + terrain[x][y].getBuilding().getName() + "\n" +
+                           "Health: " + terrain[x][y].getBuilding().getHealth() + "\n" + 
+                           "Attack: " + terrain[x][y].getBuilding().getAttack() + "\n" + 
+                           "Range: " + terrain[x][y].getBuilding().getRange() + "\n" + 
+                           "Gold: " + ((Castle)terrain[x][y].getBuilding()).getGold() + "\n" +
+                           "Level: " + ((Castle)terrain[x][y].getBuilding()).getLevel());
+    }
+    else{
+      //Gather information about the building
+      buildingInfo.setText("Building\n" + 
+                           "Name: " + terrain[x][y].getBuilding().getName() + "\n" +
+                           "Health: " + terrain[x][y].getBuilding().getHealth() + "\n" + 
+                           "Attack: " + terrain[x][y].getBuilding().getAttack() + "\n" + 
+                           "Range: " + terrain[x][y].getBuilding().getRange());
+    }
     //Set the position of the building's information
     buildingInfo.relocate(800, 100);
     
