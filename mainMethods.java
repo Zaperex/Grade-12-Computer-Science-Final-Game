@@ -184,6 +184,21 @@ public class mainMethods{
       
       return turn;
   }
+  
+  //Method that saves the state of the game
+  public static void saveGame(String turn, ArrayList<Troop> p1Troops, ArrayList<Troop> p2Troops, ArrayList<Building> p1Buildings,
+                                ArrayList<Building> p2Buildings, ArrayList<Building> unclaimedBuildings) throws IOException{
+    try{
+      SaveGame.saveTroops(p1Troops, "P1");
+      SaveGame.saveTroops(p2Troops, "P2");
+      SaveGame.saveBuildings(p1Buildings, "P1");
+      SaveGame.saveBuildings(p2Buildings, "P2");
+      SaveGame.save(unclaimedBuildings, turn, "None");
+    }
+    catch (Exception e){
+      System.out.println("An exception has occured during saving");
+    }
+  }
     
 }
 
