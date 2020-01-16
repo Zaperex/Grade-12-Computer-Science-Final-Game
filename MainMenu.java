@@ -185,19 +185,9 @@ public class MainMenu extends Application {
         int[] coords = {i, j}; //Based on arraylist orientation with y controlling which row and x controlling which column
         int x = i;
         int y = j;
-        
-        if (terrain[i][j].getTroop() != null) {
-          System.out.println(terrain[i][j].getTroop() + "Hello");
-          //Image troopImage = new Image(terrain[i][j].getTroop().getImageName(), 60, 60, false, false);
-          //button[i][j].setGraphic(new ImageView(troopImage));
-        }
-        else if (terrain[i][j].getBuilding() != null) {
-          System.out.println(terrain[i][j].getBuilding());
-          Image buildingImage = new Image(terrain[i][j].getBuilding().getImageName(), 60, 60, false, false);
-          button[i][j].setGraphic(new ImageView(buildingImage));
-        }
        
-        else if (y == 0 && x == 3){
+       
+        if (y == 0 && x == 3){
           terrain[i][j] = new Terrain("Plain", coords);
           terrain[i][j].setTroop(new Archer("P2", coords));
         }
@@ -209,9 +199,6 @@ public class MainMenu extends Application {
           terrain[i][j] = new Terrain("Plain", coords);
           terrain[i][j].setTroop(new Knight("P1", coords));
         }
-//        else{
-//          terrain[i][j] = new Terrain("Plain", coords); 
-//        }
         
         
         //Give the button a function
@@ -230,12 +217,9 @@ public class MainMenu extends Application {
             System.out.println(x + ", " + y);
             //Remove the previous boxes and labels to prevent any overlapping
             root.getChildren().removeAll(buildingBox, buildingInfo, troopBox, troopInfo, terrainBox, terrainInfo);
-            System.out.println(terrain[x][y].getBuilding());
-            System.out.println(terrain[x][y].getTroop());
             //Checks if a building exists on the selected button/tile
             if (terrain[x][y].getBuilding() != null) {
               //Call the checkBuilding method
-              System.out.println("Building");
               checkBuilding(terrain, buildingBox, buildingInfo, x, y, root);
               //If a the home base (castle) of the player's team is clicked
               if (terrain[x][y].getBuilding().getTeam().equals(turn)){
@@ -391,7 +375,7 @@ public class MainMenu extends Application {
             }
             //If the user is clicking a second time and is clicking on a button without a troop
             //Means that they are choosing a location to move to
-            else if (firstClick == false && terrain[x][y].getTroop() == null) {
+            else if (firstClick == false) {
               //Loops through the board 
               for (int l = 0; l < 7; l++) {
                 for (int m = 0; m < 7; m++) {
@@ -403,6 +387,7 @@ public class MainMenu extends Application {
               //Loops through the ArrayList of possible moves
               for (int k = 0; k < possibleMoves.size(); k++) {
                 move = possibleMoves.get(k); //Store the int array of possibleMoves to move
+                System.out.println(move[0] + "," + move[1]);
                 button[move[0]][move[1]].setStyle(null); //Unhighlight the previously highlighted buttons
               }
               
@@ -410,7 +395,9 @@ public class MainMenu extends Application {
               terrain[x][y].setTroop(terrain[previousMoveCoords[0]][previousMoveCoords[1]].getTroop()); 
               //Deletes the image from the previous button
               button[previousMoveCoords[0]][previousMoveCoords[1]].setGraphic(null);
+              //If terrain that troop moves from has a building on it
               if (terrain[previousMoveCoords[0]][previousMoveCoords[1]].getBuilding() != null) {
+                //Make sure to reinitialize the image
                 Image castleImage = new Image(terrain[previousMoveCoords[0]][previousMoveCoords[1]].getBuilding().getImageName(), 60, 60, false, false);
                 button[previousMoveCoords[0]][previousMoveCoords[1]].setGraphic(new ImageView(castleImage));
               }
