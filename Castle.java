@@ -92,14 +92,14 @@ class Castle extends Building{
   
   //Method that recruits troops, will create a new object and return it. It will then be added into an arraylist
   public Troop recruit(Terrain[][] boardState, String troop){
-    int[] coordinates = super.getCoords(); //Stores coordinates of building
-    Terrain terrain = boardState[coordinates[0]][coordinates[1]]; //Stores terrain of castle
+    int[] coordinates = getCoords(); //Stores coordinates of building
+    Terrain tile = boardState[coordinates[0]][coordinates[1]]; //Stores terrain of castle
     //If there is a troop on the tile, return nothing since there is no space to spawn a troop
-    if (terrain.getTroop() != (null)){
+    if (tile.getTroop() != null){
       return null;
     }
     //If you want to recruit footmen and you have enough gold
-    else if (troop.equals("Footmen") && gold >= Footman.getFootmenPrice()){
+    else if (troop.equals("Footman") && gold >= Footman.getFootmenPrice()){
       gold -= Footman.getFootmenPrice(); //Reduces gold count
       return new Footman(super.getTeam(), coordinates); //Spawns troop
     }
@@ -125,6 +125,7 @@ class Castle extends Building{
     }
     //If you do not have enough gold or castle is not high level enough
     else{
+      System.out.println("You don't got enough gold or levels");
       return null;
     }
   }
