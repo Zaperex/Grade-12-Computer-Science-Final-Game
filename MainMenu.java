@@ -538,7 +538,7 @@ public class MainMenu extends Application {
     int[] defenderCoords = new int[2];
     String turn = "P1";
     try{
-      MainMenu.turn = mainMethods.loadGame(SaveGame.saveFolderPath,p1Troops, p2Troops, p1Buildings, p2Buildings, unclaimedBuildings);
+      MainMenu.turn = mainMethods.loadGame(SaveGame.saveFolderPath, p1Troops, p2Troops, p1Buildings, p2Buildings, unclaimedBuildings);
       //Populate the 2d array of buttons
       for (int i = 0; i < 7; i++) {
         for (int j = 0; j < 7; j++) {
@@ -1587,7 +1587,13 @@ public class MainMenu extends Application {
         defender.setSpecialMeter(0); //Resets the special meter of the defender
         attacker.resetDefense(); //Resets attacker's defense
         defender.resetDefense(); //Resets defender's defense
-        //Put variable or do something to indicate that player loses or wins since castle was destroyed
+        
+        if (defender.getTeam().equals("P1")) { //If player 1's castle is destroyed
+          gameOverScreen("Player 2"); //Call the gameOverScreen
+        }
+        else { //If player 2's castle is destroyed
+          gameOverScreen("Player 1"); //Call the gameOverScreen
+        }
       }
     }
   }
@@ -1603,6 +1609,24 @@ public class MainMenu extends Application {
                                      " that troop or there is a troop on the terrain already");
       root.getChildren().add(errorMessage);
     }
+  }
+  //Method that will make a window that will show who won the game
+  public void gameOverScreen (String winner) {
+    
+    Label message = new Label("Yay " + winner + " wins the game"); //Create a label to show the winner
+    message.relocate(100, 25); //Set the location of the label
+    
+    Button exitButton = new Button("Exit"); //Create a new exit button
+    exitButton.relocate(100, 75); //Set the location of the button
+    exitButton.setOnAction(e -> System.exit(0)); //When exitButton is pressed, exit the game
+    
+    Pane root = new Pane(); //Create a new pane
+    root.getChildren().addAll(message, exitButton); //Add the label and button to the pane
+    Scene endScene = new Scene(root, 400, 200); //Create a scene 
+    Stage endStage = new Stage(); //Create a stage
+    endStage.setScene(endScene); //Set the scene
+    endStage.show(); //Show the stage
+    
   }
   //Method that will display the combat log
   public void displayCombatLog (ArrayList<String> combatLog, Label combatLogLabel) {
