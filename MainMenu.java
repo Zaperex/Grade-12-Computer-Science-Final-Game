@@ -1,18 +1,8 @@
-/* Name: Sean Hua
- * Date: 2019/12/30
- * Description: Main Menu for the game
+/* Name: Sean Hua and Frank Kong
+ * Date: 2020/01/06
+ * Description: Main code for the game. 
  * */
 
-//First make the troops only be able to do 1 move per MainMenu.turn
-// -flip the boolean after they move and cannot attack
-// -flip the boolean after combat (when continue is pressed) flip attacker's troop to false
-//At the start of each MainMenu.turn, go through the respective player's tropp arraylist (p1Troops, p2Troops) and set all action booleans to true;
-
-
-//Claiming buildings:
-// - player will move to a stop
-// add additional check to check if there is a building with a team of "None"
-//if so, automatically call the claim  building method
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
@@ -35,37 +25,33 @@ import java.util.*;
 import java.io.*;
 
 public class MainMenu extends Application {
-  private Pane primaryRoot = new Pane();
-  private Scene primaryScene = new Scene(primaryRoot, 600, 600);
+  
+  private Pane primaryRoot = new Pane(); //Create a pane
+  private Scene primaryScene = new Scene(primaryRoot, 600, 600); //Create a scene
   public static String turn = "P1"; //String value for whose turn it is
-  private int[] previousMoveCoords = new int[2];
-  private boolean firstClick = true;
-  private ArrayList<int[]> possibleMoves;  
-  private ArrayList<int[]> possibleAttacks; 
+  private int[] previousMoveCoords = new int[2]; //
+  private boolean firstClick = true; //Keeps track of what function to give a click
+  private ArrayList<int[]> possibleMoves; //Stores the possible moves of the troop
+  private ArrayList<int[]> possibleAttacks; //Stores the possible attacks of the troop
   private boolean playerTurn = true; //True = attacker, false = defender
-  private Label turnLabel = new Label();
-  private Troop attacker;  
-  private Combatant defender;  
+  private Label turnLabel = new Label(); //Store the label that displays who's turn it is
+  private Troop attacker; //Stores the attacker
+  private Combatant defender; //Stores the defender 
   private Pane combatRoot = new Pane(); 
   private String attackAction; //The choice of attack for the attack
   private String defendAction; //The choice of attack for the defender
   private Combatant combatWinner; //stores who wins the fight in the pop up window
   VBox recruitmentLayout = new VBox(15); //Create a layout for the overall recruitment layout
-
   Label displayTurn = new Label("Player 1's turn"); //Create a label to display who's turn it is
+  Button[][] button = new Button[7][7];   //Create a 2D array of buttons (represents the map)
+  public static ArrayList<Troop> p1Troops = new ArrayList<Troop>(); //Stores player 1's troops
+  public static ArrayList<Troop> p2Troops = new ArrayList<Troop>(); //Stores player 2's troops
+  public static ArrayList<Building> p1Buildings = new ArrayList<Building>(); //Stores player 1 buildings
+  public static ArrayList<Building> p2Buildings = new ArrayList<Building>(); //Stores player 2 buildings
+  public static ArrayList<Building> unclaimedBuildings = new ArrayList<Building>(); //Stores the unclaimed buildings
+  public static Terrain[][] terrain = new Terrain[7][7]; //Create a 2D array of Terrain objects used as the board
   
-  //Create a 2D array of buttons (represents the map)
-  Button[][] button = new Button[7][7];
-  
-  
-  public static ArrayList<Troop> p1Troops = new ArrayList<Troop>();
-  public static ArrayList<Troop> p2Troops = new ArrayList<Troop>();
-  public static ArrayList<Building> p1Buildings = new ArrayList<Building>();
-  public static ArrayList<Building> p2Buildings = new ArrayList<Building>();
-  public static ArrayList<Building> unclaimedBuildings = new ArrayList<Building>();
-  public static Terrain[][] terrain = new Terrain[7][7];
-  
-  
+  //--------------------------------------------------------------------------------------------------
   public void start (Stage primaryStage) throws Exception {
     
     //Create a rectangle
@@ -95,7 +81,7 @@ public class MainMenu extends Application {
     //Starts the transition
     rect2T.play();
     
-    Label title = new Label("SEAN FRANK GAME");
+    Label title = new Label("Age of Conquest");
     title.setMinWidth(200);
     title.setMinHeight(100);
     title.relocate(225, 100);
@@ -146,6 +132,7 @@ public class MainMenu extends Application {
     primaryStage.show();
   }
   
+  //--------------------------------------------------------------------------------------------------
   //Method that will start a new game
   public void newGameButtonClicked (Stage primaryStage){
     
@@ -321,12 +308,10 @@ public class MainMenu extends Application {
               
               //If the defender loses
               if (combatWinner == defender) {
-                System.out.println("WINNER IS DEFENDER");
                 loserCoords = attacker.getCoords(); //Sets the attacker's coords as the loserCoords
               }
               //If the attacker loses
               else {
-                System.out.println("WINNER IS ATTACKER");
                 loserCoords = defender.getCoords(); //Sets the defender's coords as the loserCoords
               }
               //If defender is a troop
@@ -489,6 +474,7 @@ public class MainMenu extends Application {
     
   }
   
+  //--------------------------------------------------------------------------------------------------
   //Method that will load the previous game
   public void loadGameButtonClicked (Stage primaryStage) {
     for (int i = 0; i < MainMenu.terrain.length; i++){
@@ -596,6 +582,7 @@ public class MainMenu extends Application {
                     recruitmentLayout.relocate(640, 500); //Set the location of the layout
                     recruitmentLayout.getChildren().addAll(recruitmentLabel, troopButtonLayout); //Add the label and the buttons to the layout
                     
+                    //Give each button a function by calling the recruitmentButtonClicked method
                     archerButton.setOnAction(event -> recruitmentButtonClicked(archerButton.getText(), x, y, root));
                     knightButton.setOnAction(event -> recruitmentButtonClicked(knightButton.getText(), x, y, root));
                     cbmButton.setOnAction(event -> recruitmentButtonClicked(cbmButton.getText(), x, y, root));
@@ -646,12 +633,10 @@ public class MainMenu extends Application {
                 
                 //If the defender loses
                 if (combatWinner == defender) {
-                  System.out.println("WINNER IS DEFENDER");
                   loserCoords = attacker.getCoords(); //Sets the attacker's coords as the loserCoords
                 }
                 //If the attacker loses
                 else {
-                  System.out.println("WINNER IS ATTACKER");
                   loserCoords = defender.getCoords(); //Sets the defender's coords as the loserCoords
                 }
                 //If defender is a troop
@@ -816,8 +801,7 @@ public class MainMenu extends Application {
     }
   }
 
-  
-  
+  //--------------------------------------------------------------------------------------------------
   //Saves the boardstate into files and closes the game
   public void saveGameButtonClicked () {
     try{
@@ -830,16 +814,24 @@ public class MainMenu extends Application {
       System.exit(0);
     }
   }
+  
+  //--------------------------------------------------------------------------------------------------
   //Method that ends player's turn and starts the other player's turn
   public void endTurnButtonClicked () {
+    //Calls the method that will flip the turn boolean
     MainMenu.turn = mainMethods.turnFlip(MainMenu.turn, MainMenu.terrain, p1Troops, p2Troops, p1Buildings, p2Buildings, unclaimedBuildings);
+    
+    //if it is player 1's turn
     if (turn.equals("P1")) {
-      displayTurn.setText("Player 1's Turn");
+      displayTurn.setText("Player 1's Turn"); //Update the turn label
     }
+    //If it is player 2's turn
     else {
-      displayTurn.setText("Player 2's Turn");
+      displayTurn.setText("Player 2's Turn"); //Update the turn label
     }
   }
+  
+  //--------------------------------------------------------------------------------------------------
   //Create the load button and will reMainMenu.turn the button
   public Button createLoadButton (Stage primaryStage) throws Exception{
     //Create a button that will load the previous game
@@ -858,11 +850,23 @@ public class MainMenu extends Application {
     //ReMainMenu.turns the button
     return loadGameButton;
   }
+  
+  //--------------------------------------------------------------------------------------------------
   //Method that will bring the user to an instructions page/window
   public void instructionsButtonClicked (Stage primaryStage) {
     
     //Create a label for the instructions
-    Label instructions = new Label("1. first instruction\n" + "2. second instruction\n" + "3. third instruction\n");
+    Label instructions = new Label("1. This game is turn based\n" + 
+                                   "2. 5 different troops: Archer (Tier 1), Knight (Tier 1)," +
+                                     "Foot Man (Tier 2), CrossBow Man, Cavalry (Tier 3)\n" + 
+                                   "3. During combat, troops will have the option to perform a normal attack, block, dodge, or special attack" + 
+                                   "block will block attack and dodge will dodge special attacks\n" + 
+                                   "4. During combat, buildings will have the option to perform a normal attack, erect a magic barrier, " +
+                                   "repair or perform a special attack\n" + 
+                                   "5. Each team/side will have their own base that should be protected\n" + 
+                                   "6. Goal of the game is to destroy the enemy base\n" + 
+                                   "7. You generate 100 gold per turn, but there are 3 gold mines on the map, each will increase production" + 
+                                   " by 100 gold.\n" + "8. Combat will pit the 2 combatants against each other\n");
     
     //Create a menu button
     Button menuButton = new Button("ReMainMenu.turn To Menu");
@@ -883,6 +887,8 @@ public class MainMenu extends Application {
     primaryStage.show();
     
   }
+  
+  //--------------------------------------------------------------------------------------------------
   //Method that is called when the menu button is clicked 
   public void menuButtonClicked (Stage primaryStage) {
     
@@ -890,6 +896,8 @@ public class MainMenu extends Application {
     primaryStage.setScene(primaryScene);
     
   }
+  
+  //--------------------------------------------------------------------------------------------------
   //Method that will display the building's information onto the window
   public void checkBuilding (Terrain[][] terrain, Rectangle buildingBox, Label buildingInfo, int x, int y, Pane root) {
     
@@ -937,6 +945,8 @@ public class MainMenu extends Application {
     //Add the label and rectangle to the pane
     root.getChildren().addAll(buildingBox, buildingInfo);
   }
+  
+  //--------------------------------------------------------------------------------------------------
   //Method that will display the troops information onto the window
   public void checkTroop (Terrain[][] terrain, Rectangle troopBox, Label troopInfo, int x, int y, Pane root) {
     
@@ -965,6 +975,8 @@ public class MainMenu extends Application {
     //Add the label and rectangle to the pane
     root.getChildren().addAll(troopBox, troopInfo);
   }
+  
+  //--------------------------------------------------------------------------------------------------
   //Method that will display the terrain's information onto the window
   public void checkTerrain (Terrain[][] terrain, Rectangle terrainBox, Label terrainInfo, int x, int y, Pane root) {
     
@@ -979,6 +991,8 @@ public class MainMenu extends Application {
     //Add the label and rectangle to the pane
     root.getChildren().addAll(terrainBox, terrainInfo);
   }
+  
+  //--------------------------------------------------------------------------------------------------
   //Method that will create a window pop up when troops are in combat
   public void combatScreen () {
     
@@ -1170,6 +1184,8 @@ public class MainMenu extends Application {
     //While the combatStage is running, other stages will pause until the combatStage is closed
     combatStage.showAndWait();
   }
+  
+  //--------------------------------------------------------------------------------------------------
   //Method that will do necessary checks after every MainMenu.turn
   public void combatCheck (Label attackerInfo, Label defenderInfo, 
                            Button attackerButton1, Button attackerButton2, Button attackerButton3, Button attackerButton4, 
@@ -1258,6 +1274,8 @@ public class MainMenu extends Application {
       defendAction = null;
     } 
   }
+  
+  //--------------------------------------------------------------------------------------------------
   //Method that will be called when the first attackerButton is clicked
   public void attackerButton1Clicked (Label attackerInfo, Label defenderInfo, 
                                       Button attackerButton1, Button attackerButton2, Button attackerButton3, Button attackerButton4, 
@@ -1271,17 +1289,21 @@ public class MainMenu extends Application {
     
     playerTurn = false;
     
+    //Calls the combatCheck method
     combatCheck(attackerInfo, defenderInfo, 
                 attackerButton1, attackerButton2, attackerButton3, attackerButton4, 
                 defenderButton1, defenderButton2, defenderButton3, defenderButton4, 
                 combatLogLabel, attackerStun, defenderStun, attackerIV, defenderIV, attackerButtonLayout, defenderButtonLayout);
     
+    //Calls the defender combat method
     defenderCombatCheck(attackerInfo, defenderInfo, 
                         attackerButton1, attackerButton2, attackerButton3, attackerButton4, 
                         defenderButton1, defenderButton2, defenderButton3, defenderButton4, 
                         combatLogLabel, attackerStun, defenderStun, attackerIV, defenderIV, attackerButtonLayout, defenderButtonLayout);
     
   }
+  
+  //--------------------------------------------------------------------------------------------------
   //Method that will be called after the second attackerButton is clicked
   public void attackerButton2Clicked (Label attackerInfo, Label defenderInfo, 
                                       Button attackerButton1, Button attackerButton2, Button attackerButton3, Button attackerButton4, 
@@ -1295,15 +1317,20 @@ public class MainMenu extends Application {
     
     playerTurn = false;
     
+    //Calls the combatCheck method
     combatCheck(attackerInfo, defenderInfo, 
                 attackerButton1, attackerButton2, attackerButton3, attackerButton4, 
                 defenderButton1, defenderButton2, defenderButton3, defenderButton4, 
                 combatLogLabel, attackerStun, defenderStun, attackerIV, defenderIV, attackerButtonLayout, defenderButtonLayout);
+    
+    //Calls the defender combat method
     defenderCombatCheck(attackerInfo, defenderInfo, 
                         attackerButton1, attackerButton2, attackerButton3, attackerButton4, 
                         defenderButton1, defenderButton2, defenderButton3, defenderButton4, 
                         combatLogLabel, attackerStun, defenderStun, attackerIV, defenderIV, attackerButtonLayout, defenderButtonLayout);
   }
+  
+  //--------------------------------------------------------------------------------------------------
   //Method that will be called when the third attackerButton is clicked
   public void attackerButton3Clicked (Label attackerInfo, Label defenderInfo, 
                                       Button attackerButton1, Button attackerButton2, Button attackerButton3, Button attackerButton4, 
@@ -1317,15 +1344,20 @@ public class MainMenu extends Application {
     
     playerTurn = false;
     
+    //Calls the combatCheck method
     combatCheck(attackerInfo, defenderInfo, 
                 attackerButton1, attackerButton2, attackerButton3, attackerButton4, 
                 defenderButton1, defenderButton2, defenderButton3, defenderButton4, 
                 combatLogLabel, attackerStun, defenderStun, attackerIV, defenderIV, attackerButtonLayout, defenderButtonLayout);
+    
+    ////Calls the defender combat method
     defenderCombatCheck(attackerInfo, defenderInfo, 
                         attackerButton1, attackerButton2, attackerButton3, attackerButton4, 
                         defenderButton1, defenderButton2, defenderButton3, defenderButton4, 
                         combatLogLabel, attackerStun, defenderStun, attackerIV, defenderIV, attackerButtonLayout, defenderButtonLayout);
   }
+  
+  //--------------------------------------------------------------------------------------------------
   //Method that will be called when the forth attackerButton is clicked
   public void attackerButton4Clicked (Label attackerInfo, Label defenderInfo, 
                                       Button attackerButton1, Button attackerButton2, Button attackerButton3, Button attackerButton4, 
@@ -1341,15 +1373,20 @@ public class MainMenu extends Application {
     
     playerTurn = false;
     
+    //Calls the combatCheck method
     combatCheck(attackerInfo, defenderInfo, 
                 attackerButton1, attackerButton2, attackerButton3, attackerButton4, 
                 defenderButton1, defenderButton2, defenderButton3, defenderButton4, 
                 combatLogLabel, attackerStun, defenderStun, attackerIV, defenderIV, attackerButtonLayout, defenderButtonLayout);
+    
+    //Calls the defender combat method
     defenderCombatCheck(attackerInfo, defenderInfo, 
                         attackerButton1, attackerButton2, attackerButton3, attackerButton4, 
                         defenderButton1, defenderButton2, defenderButton3, defenderButton4, 
                         combatLogLabel, attackerStun, defenderStun, attackerIV, defenderIV, attackerButtonLayout, defenderButtonLayout);
   }
+  
+  //--------------------------------------------------------------------------------------------------
   //Method that will be called when the first defenderButton is clicked
   public void defenderButton1Clicked (Label attackerInfo, Label defenderInfo, 
                                       Button attackerButton1, Button attackerButton2, Button attackerButton3, Button attackerButton4, 
@@ -1363,15 +1400,20 @@ public class MainMenu extends Application {
     
     playerTurn = true;
     
+    //Calls the combatCheck method
     combatCheck(attackerInfo, defenderInfo, 
                 attackerButton1, attackerButton2, attackerButton3, attackerButton4, 
                 defenderButton1, defenderButton2, defenderButton3, defenderButton4, 
                 combatLogLabel, attackerStun, defenderStun, attackerIV, defenderIV, attackerButtonLayout, defenderButtonLayout);
+    
+    //Calls the attacker combat method
     attackerCombatCheck(attackerInfo, defenderInfo, 
                         attackerButton1, attackerButton2, attackerButton3, attackerButton4, 
                         defenderButton1, defenderButton2, defenderButton3, defenderButton4, 
                         combatLogLabel, attackerStun, defenderStun, attackerIV, defenderIV, attackerButtonLayout, defenderButtonLayout);
   }
+  
+  //--------------------------------------------------------------------------------------------------
   //Method that will be called when the second defenderButton is clicked
   public void defenderButton2Clicked (Label attackerInfo, Label defenderInfo, 
                                       Button attackerButton1, Button attackerButton2, Button attackerButton3, Button attackerButton4, 
@@ -1385,15 +1427,20 @@ public class MainMenu extends Application {
     
     playerTurn = true;
     
+    //Calls the combatCheck method
     combatCheck(attackerInfo, defenderInfo, 
                 attackerButton1, attackerButton2, attackerButton3, attackerButton4, 
                 defenderButton1, defenderButton2, defenderButton3, defenderButton4, 
                 combatLogLabel, attackerStun, defenderStun, attackerIV, defenderIV, attackerButtonLayout, defenderButtonLayout);
+    
+    //Calls the attacker combat method
     attackerCombatCheck(attackerInfo, defenderInfo, 
                         attackerButton1, attackerButton2, attackerButton3, attackerButton4, 
                         defenderButton1, defenderButton2, defenderButton3, defenderButton4, 
                         combatLogLabel, attackerStun, defenderStun, attackerIV, defenderIV, attackerButtonLayout, defenderButtonLayout);
   }
+  
+  //--------------------------------------------------------------------------------------------------
   //Method that will be called when the third defenderButton is clicked
   public void defenderButton3Clicked (Label attackerInfo, Label defenderInfo, 
                                       Button attackerButton1, Button attackerButton2, Button attackerButton3, Button attackerButton4, 
@@ -1407,15 +1454,20 @@ public class MainMenu extends Application {
     
     playerTurn = true;
     
+    //Calls the combatCheck method
     combatCheck(attackerInfo, defenderInfo, 
                 attackerButton1, attackerButton2, attackerButton3, attackerButton4, 
                 defenderButton1, defenderButton2, defenderButton3, defenderButton4, 
                 combatLogLabel, attackerStun, defenderStun, attackerIV, defenderIV, attackerButtonLayout, defenderButtonLayout);
+    
+    //Calls the attacker combat method
     attackerCombatCheck(attackerInfo, defenderInfo, 
                         attackerButton1, attackerButton2, attackerButton3, attackerButton4, 
                         defenderButton1, defenderButton2, defenderButton3, defenderButton4, 
                         combatLogLabel, attackerStun, defenderStun, attackerIV, defenderIV, attackerButtonLayout, defenderButtonLayout);
   }
+  
+  //--------------------------------------------------------------------------------------------------
   //Method that will be called when the forth defenderButton is clicked
   public void defenderButton4Clicked (Label attackerInfo, Label defenderInfo, 
                                       Button attackerButton1, Button attackerButton2, Button attackerButton3, Button attackerButton4, 
@@ -1431,15 +1483,20 @@ public class MainMenu extends Application {
     
     playerTurn = true;
     
+    //Calls the combatCheck method
     combatCheck(attackerInfo, defenderInfo, 
                 attackerButton1, attackerButton2, attackerButton3, attackerButton4, 
                 defenderButton1, defenderButton2, defenderButton3, defenderButton4, 
                 combatLogLabel, attackerStun, defenderStun, attackerIV, defenderIV, attackerButtonLayout, defenderButtonLayout);
+    
+    //Calls the attacker combat method
     attackerCombatCheck(attackerInfo, defenderInfo, 
                         attackerButton1, attackerButton2, attackerButton3, attackerButton4, 
                         defenderButton1, defenderButton2, defenderButton3, defenderButton4, 
                         combatLogLabel, attackerStun, defenderStun, attackerIV, defenderIV, attackerButtonLayout, defenderButtonLayout);
   }
+  
+  //--------------------------------------------------------------------------------------------------
   //Method that checks and updates features that the attacker is allowed to have
   public void attackerCombatCheck (Label attackerInfo, Label defenderInfo, 
                                    Button attackerButton1, Button attackerButton2, Button attackerButton3, Button attackerButton4, 
@@ -1499,6 +1556,8 @@ public class MainMenu extends Application {
       combatRoot.getChildren().add(continueButton);
     }
   }
+  
+  //--------------------------------------------------------------------------------------------------
   //Method that checks and updates features that the defender is allowed to have
   public void defenderCombatCheck (Label attackerInfo, Label defenderInfo, 
                                    Button attackerButton1, Button attackerButton2, Button attackerButton3, Button attackerButton4, 
@@ -1607,18 +1666,23 @@ public class MainMenu extends Application {
     }
   }
   
+  //Method that is called when a button for recruitment is clicked (recruiting troops like archer, knight, cbm, footman or cavalry)
   public void recruitmentButtonClicked (String troopName, int x, int y, Pane root) {
-    System.out.println(MainMenu.terrain[x][y].getBuilding().getCoords()[0] + ":" + MainMenu.terrain[x][y].getBuilding().getCoords()[1] );
+    
+    //If true is returned, it means that the player is eliegible and meet the requirements to recruit the selected troop
     if (mainMethods.recruitTroops(troopName, (Castle)MainMenu.terrain[x][y].getBuilding()) == true) {
       Image image = new Image(MainMenu.terrain[x][y].getTroop().getImageName(), 60, 60, false, false);
       button[x][y].setGraphic(new ImageView(image));
     }
+    //if false is returned, it means that the player does not meet the requirements to recruit the selected troop
     else {
       Label errorMessage = new Label("You currently do not meet the requirements to recruit" +
                                      " that troop or there is a troop on the terrain already");
       root.getChildren().add(errorMessage);
     }
   }
+  
+  //--------------------------------------------------------------------------------------------------
   //Method that will make a window that will show who won the game
   public void gameOverScreen (String winner) {
     
@@ -1637,19 +1701,27 @@ public class MainMenu extends Application {
     endStage.show(); //Show the stage
     
   }
+  
+  //--------------------------------------------------------------------------------------------------
   //Method that will display the combat log
   public void displayCombatLog (ArrayList<String> combatLog, Label combatLogLabel) {
+    
     String temp = "";
     for (int i = 0; i < combatLog.size(); i++) {
       temp = temp + combatLog.get(i) + "\n";
     }
+    
     combatLogLabel.setText("Combat Log:" + "\n" + temp);
     combatLogLabel.relocate(500, 100);
   }
+  
+  //--------------------------------------------------------------------------------------------------
   //Method that will upgrade building if upgrade button is pressed and there is enough gold
   public void upgradeButtonClicked(int x, int y){
     ((Castle)MainMenu.terrain[x][y].getBuilding()).upgrade();
   }
+  
+  //--------------------------------------------------------------------------------------------------
   public static void main(String[] args) {
     launch(args);
   }
