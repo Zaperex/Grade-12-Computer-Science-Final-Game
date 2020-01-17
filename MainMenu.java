@@ -157,7 +157,7 @@ public class MainMenu extends Application {
     Scene gameScene = new Scene(root, 1050, 675);
     
     //Creates a box for information about the building
-    Rectangle buildingBox = new Rectangle(300, 150);
+    Rectangle buildingBox = new Rectangle(300, 172);
     
     //Create a label for the building's information
     Label buildingInfo = new Label();
@@ -256,9 +256,9 @@ public class MainMenu extends Application {
                   Label recruitmentLabel = new Label("Recruitment:"); //Create a label for recruitment
                   
                   Button archerButton = new Button("Archer"); //Create a button to recruit an archer
+                  Button footManButton = new Button("Footman"); //Create a button to recruit a footman
                   Button knightButton = new Button("Knight"); //Create a button to recruit a knight
                   Button cbmButton = new Button("Crossbow Men"); //Create a button to recruit a crossbow men
-                  Button footManButton = new Button("Foot Man"); //Create a button to recruit a footman
                   Button cavalryButton = new Button("Cavalry"); //Create a button to recruit cavalry
                   
                   HBox troopButtonLayout = new HBox(15); //Create a layout for the buttons
@@ -269,9 +269,9 @@ public class MainMenu extends Application {
                   recruitmentLayout.getChildren().addAll(recruitmentLabel, troopButtonLayout); //Add the label and the buttons to the layout
                   
                   archerButton.setOnAction(event -> recruitmentButtonClicked(archerButton.getText(), x, y, root));
+                  footManButton.setOnAction(event -> recruitmentButtonClicked(footManButton.getText(), x, y, root));
                   knightButton.setOnAction(event -> recruitmentButtonClicked(knightButton.getText(), x, y, root));
                   cbmButton.setOnAction(event -> recruitmentButtonClicked(cbmButton.getText(), x, y, root));
-                  footManButton.setOnAction(event -> recruitmentButtonClicked(footManButton.getText(), x, y, root));
                   cavalryButton.setOnAction(event -> recruitmentButtonClicked(cavalryButton.getText(), x, y, root));                   
                   
                   //Checks if there is a castle
@@ -582,8 +582,8 @@ public class MainMenu extends Application {
                     
                     Button archerButton = new Button("Archer"); //Create a button to recruit an archer
                     Button knightButton = new Button("Knight"); //Create a button to recruit a knight
-                    Button cbmButton = new Button("Crossbow Men"); //Create a button to recruit a crossbow men
-                    Button footManButton = new Button("Foot Man"); //Create a button to recruit a footman
+                    Button cbmButton = new Button("CrossbowMen"); //Create a button to recruit a crossbow men
+                    Button footManButton = new Button("Footman"); //Create a button to recruit a footman
                     Button cavalryButton = new Button("Cavalry"); //Create a button to recruit cavalry
                     
                     HBox troopButtonLayout = new HBox(15); //Create a layout for the buttons
@@ -812,13 +812,10 @@ public class MainMenu extends Application {
       System.out.println(e);
     }
   }
+
   
   
-  
-  
-  
-  
-  
+  //Saves the boardstate into files and closes the game
   public void saveGameButtonClicked () {
     try{
       mainMethods.saveGame(MainMenu.turn, p1Troops, p2Troops, p1Buildings, p2Buildings, unclaimedBuildings);
@@ -830,9 +827,8 @@ public class MainMenu extends Application {
       System.exit(0);
     }
   }
+  //Method that ends player's turn and starts the other player's turn
   public void endTurnButtonClicked () {
-    System.out.println("Hi");
-    System.out.println(MainMenu.turn + " Turn");
     MainMenu.turn = mainMethods.turnFlip(MainMenu.turn, MainMenu.terrain, p1Troops, p2Troops, p1Buildings, p2Buildings, unclaimedBuildings);
   }
   //Create the load button and will reMainMenu.turn the button
@@ -906,7 +902,6 @@ public class MainMenu extends Application {
       //Set the color of the buildingBox to yellow
       buildingBox.setFill(Color.YELLOW);
     }
-    System.out.println("buildingInfo.setText\n");
     //If Building is a Castle
     if (terrain[x][y].getBuilding() instanceof Castle){
       //Gather information about the Castle
@@ -1598,9 +1593,8 @@ public class MainMenu extends Application {
   }
   
   public void recruitmentButtonClicked (String troopName, int x, int y, Pane root) {
-    
+    System.out.println(MainMenu.terrain[x][y].getBuilding().getCoords()[0] + ":" + MainMenu.terrain[x][y].getBuilding().getCoords()[1] );
     if (mainMethods.recruitTroops(troopName, (Castle)MainMenu.terrain[x][y].getBuilding()) == true) {
-      System.out.println("Hello");
       Image image = new Image(MainMenu.terrain[x][y].getTroop().getImageName(), 60, 60, false, false);
       button[x][y].setGraphic(new ImageView(image));
     }
