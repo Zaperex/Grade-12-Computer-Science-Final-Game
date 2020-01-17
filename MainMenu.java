@@ -46,11 +46,13 @@ public class MainMenu extends Application {
   private Label turnLabel = new Label();
   private Troop attacker;  
   private Combatant defender;  
-  private Pane combatRoot = new Pane();
-  private String attackAction;
-  private String defendAction;
-  private Combatant combatWinner;
+  private Pane combatRoot = new Pane(); 
+  private String attackAction; //The choice of attack for the attack
+  private String defendAction; //The choice of attack for the defender
+  private Combatant combatWinner; //stores who wins the fight in the pop up window
   VBox recruitmentLayout = new VBox(15); //Create a layout for the overall recruitment layout
+
+  Label displayTurn = new Label("Player 1's turn"); //Create a label to display who's turn it is
   
   //Create a 2D array of buttons (represents the map)
   Button[][] button = new Button[7][7];
@@ -118,7 +120,7 @@ public class MainMenu extends Application {
       System.out.println(e);
     }
     
-//    Create a button that will show the instructions
+    //Create a button that will show the instructions
     Button instructionsButton = new Button("Instructions");
     //Sets the position of the button
     instructionsButton.relocate(225, 500);
@@ -480,7 +482,7 @@ public class MainMenu extends Application {
         }
       }
     }
-    root.getChildren().addAll(saveButton, endTurnButton); //Add the saveButton and endTurnButton to the pane
+    root.getChildren().addAll(saveButton, endTurnButton, displayTurn); //Add the saveButton, endTurnButton and turn label to the pane
     primaryStage.setScene(gameScene); //Set the scene
     primaryStage.show(); //Show the stage
     
@@ -803,7 +805,7 @@ public class MainMenu extends Application {
           }
         }
       }
-      root.getChildren().addAll(saveButton, endTurnButton); //Add the saveButton and endTurnButton to the pane
+      root.getChildren().addAll(saveButton, endTurnButton, displayTurn); //Add the saveButton, endTurnButton and displayTurn to the pane
       primaryStage.setScene(gameScene); //Set the scene
       primaryStage.show(); //Show the stage
     }
@@ -830,6 +832,12 @@ public class MainMenu extends Application {
   //Method that ends player's turn and starts the other player's turn
   public void endTurnButtonClicked () {
     MainMenu.turn = mainMethods.turnFlip(MainMenu.turn, MainMenu.terrain, p1Troops, p2Troops, p1Buildings, p2Buildings, unclaimedBuildings);
+    if (turn.equals("P1")) {
+      displayTurn.setText("Player 1's Turn");
+    }
+    else {
+      displayTurn.setText("Payer 2's Turn");
+    }
   }
   //Create the load button and will reMainMenu.turn the button
   public Button createLoadButton (Stage primaryStage) throws Exception{
