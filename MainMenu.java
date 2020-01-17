@@ -281,6 +281,7 @@ public class MainMenu extends Application {
                   if (((Castle)MainMenu.terrain[x][y].getBuilding()).getLevel() < 3){
                     //Create an upgrade button
                     Button upgradeButton = new Button("Upgrade: Costs " +  Castle.getUpgradeCost() + " gold");
+                    upgradeButton.setOnAction(event -> upgradeButtonClicked(x, y));
                     //Add the upgradeButton to the recruitment layout
                     recruitmentLayout.getChildren().add(upgradeButton);
                   }
@@ -836,7 +837,7 @@ public class MainMenu extends Application {
       displayTurn.setText("Player 1's Turn");
     }
     else {
-      displayTurn.setText("Payer 2's Turn");
+      displayTurn.setText("Player 2's Turn");
     }
   }
   //Create the load button and will reMainMenu.turn the button
@@ -1644,6 +1645,10 @@ public class MainMenu extends Application {
     }
     combatLogLabel.setText("Combat Log:" + "\n" + temp);
     combatLogLabel.relocate(500, 100);
+  }
+  //Method that will upgrade building if upgrade button is pressed and there is enough gold
+  public void upgradeButtonClicked(int x, int y){
+    ((Castle)MainMenu.terrain[x][y].getBuilding()).upgrade();
   }
   public static void main(String[] args) {
     launch(args);
