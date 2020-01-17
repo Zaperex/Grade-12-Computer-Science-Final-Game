@@ -856,20 +856,41 @@ public class MainMenu extends Application {
   public void instructionsButtonClicked (Stage primaryStage) {
     
     //Create a label for the instructions
-    Label instructions = new Label("1. This game is turn based\n" + 
-                                   "2. 5 different troops: Archer (Tier 1), Knight (Tier 1)," +
-                                     "Foot Man (Tier 2), CrossBow Man, Cavalry (Tier 3)\n" + 
-                                   "3. During combat, troops will have the option to perform a normal attack, block, dodge, or special attack" + 
-                                   "block will block attack and dodge will dodge special attacks\n" + 
-                                   "4. During combat, buildings will have the option to perform a normal attack, erect a magic barrier, " +
-                                   "repair or perform a special attack\n" + 
-                                   "5. Each team/side will have their own base that should be protected\n" + 
-                                   "6. Goal of the game is to destroy the enemy base\n" + 
-                                   "7. You generate 100 gold per turn, but there are 3 gold mines on the map, each will increase production" + 
-                                   " by 100 gold.\n" + "8. Combat will pit the 2 combatants against each other\n");
+    Label instructions = new Label("1. This game is a strategy game that involves players to move troops around the" + 
+                                   " board to capture buildings and engage in combat against enemies with the goal of " +
+                                   "destroying\n the enemy Castle.\n" + 
+                                   "2. Destroying the Castle of the other player is the object of this game and the Castle" + 
+                                   " will allow the player to \n recruit more troops to assist them in combat and board control. " +
+                                   "Recruiting troops will require gold and certain troops will \n require a higher Castle level to" + 
+                                   " recruit and will also cost more gold. \n These upgraded troops have higher stats and have special " +
+                                   "effects from their special attacks.\n" + 
+                                   "3. The Castle starts at lvl 1 for both players and will allow the recruitment of the Footman and " +
+                                   "Archer for 50 gold each. Castle can be upgraded to lvl 2 and \n will cost 1000 gold to upgrade and will" +
+                                   " allow the recruitment of the Archer and the Knight for 200 gold each. Lvl 3 Castle is the max level " +
+                                   "and will cost 2000 gold to upgrade and \n allows the recruitment of the Cavalry for 500 gold each.\n" + 
+                                   "4. Troops will be able to move only once per turn and will allow user to attack enemies within 1 tile of them" +
+                                   " after they finish moving. \n Troops can only move to tiles without any troops or enemy buildings on them. Combat " +
+                                   "will be initiated after user selects an enemy to attack \n and will bring both players into a battle screen in which " +
+                                   "the combatants will fight to the death. If there are no enemies around the troop, then they will just end their " +
+                                   "move.\n" + 
+                                   "5. Troops have the option to attack, block, dodge or special attack. Buildings have the option to attack, " +
+                                   "magic barrier, repair or special attack. Attack will damage the \n enemy if they are not blocking or using magic" +
+                                   " barrier and will be affected by enemy defense. Special attack will damage the enemy \n if they are not dodging " +
+                                   "(Troop only), ignore their defense, deal 3 \n times the attacker’s attack stat and will sometimes have a special " +
+                                   "effect such as stun. (Prevents Combatant from performing \n an action for 1 turn). The \n repair action for Buildings " +
+                                   "will consume 40 gold from the player using it and will heal the building for 10% of it’s max health. " + 
+                                   "(Use it wisely)\n" + 
+                                   "6. After the battle is over, if the loser is a troop, they get \n deleted, if the loser is a Gold mine, then their" +
+                                   " team gets changed to the team of the winner, and if the loser is a Castle, then output who wins the entire game " +
+                                   "and exits the game.\n" + 
+                                   "7.  At the start of each turn, the player will receive a gold income of 100 times the number of buildings they control" + 
+                                   " and all troops will have their movement \n booleans reset. Players will each start with 150 gold. \n The map will contain 3 " +
+                                   "gold mines that each player can capture to gain additional gold production. \n These gold mines start off as neutral " +
+                                   "buildings and can be captured by anyone. Once captured, \n gold mines can be captured by the enemy if gold mine loses in " + 
+                                   "combat against the enemy.\n");
     
     //Create a menu button
-    Button menuButton = new Button("ReMainMenu.turn To Menu");
+    Button menuButton = new Button("Return To Menu");
     //Set the menu button
     menuButton.relocate(50, 500);
     //Give the button a function by calling the menuButtonClicked method
@@ -880,7 +901,7 @@ public class MainMenu extends Application {
     //Add the instructions label and menu button tot he pane
     root.getChildren().addAll(instructions, menuButton);
     //Create a new scene 
-    Scene instructionsScene = new Scene(root, 600, 600);
+    Scene instructionsScene = new Scene(root, 1000, 650);
     //Set the scene
     primaryStage.setScene(instructionsScene);
     //Show the stage
