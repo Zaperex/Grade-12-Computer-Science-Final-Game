@@ -1691,7 +1691,7 @@ public class MainMenu extends Application {
   public void recruitmentButtonClicked (String troopName, int x, int y, Pane root) {
     
     //If true is returned, it means that the player is eliegible and meet the requirements to recruit the selected troop
-    if (mainMethods.recruitTroops(troopName, (Castle)MainMenu.terrain[x][y].getBuilding()) == true) {
+    if (mainMethods.recruitTroops(troopName, (Castle)MainMenu.terrain[x][y].getBuilding(), MainMenu.terrain[x][y].getBuilding().getTeam()) == true) {
       Image image = new Image(MainMenu.terrain[x][y].getTroop().getImageName(), 60, 60, false, false);
       button[x][y].setGraphic(new ImageView(image));
     }
