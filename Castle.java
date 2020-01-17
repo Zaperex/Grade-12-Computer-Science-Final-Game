@@ -41,12 +41,13 @@ class Castle extends Building{
   public String getAttackName(){
     return attackName;
   }
-  
+  //Upgrades Castle if requirements are met
   public void upgrade(){
+    //If Upgrade is valid
     if (checkUpgrade()){
       gold -= upgradeCost;
       level++;
-      upgradeCost += 1000;
+      setUpgradeCost(getUpgradeCost() + 1000);
     }
   }
   
