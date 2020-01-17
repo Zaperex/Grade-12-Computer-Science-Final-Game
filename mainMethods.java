@@ -20,7 +20,7 @@ public class mainMethods{
         
         if (x == 0 && y == 0){
           //Stores P2 Castle in Terrain
-         MainMenu.terrain[i][j].setBuilding(new Castle("P2", coords));
+          MainMenu.terrain[i][j].setBuilding(new Castle("P2", coords));
           //Stores P2 Castle in P2 Building ArrayList
           p2Buildings.add(MainMenu.terrain[i][j].getBuilding()); 
           ((Castle)MainMenu.terrain[i][j].getBuilding()).setGold(150); //Initializes amount of gold player starts with
@@ -138,19 +138,28 @@ public class mainMethods{
     }
   }
   //Method that helps recruit the troops and place them in the tile where they are recruited
-  public static boolean recruitTroops(String troopName, Castle castle){
+  public static boolean recruitTroops(String troopName, Castle castle, String team){
     int[] coords = castle.getCoords(); //Gets the coordinates of the tile
     Troop troop = castle.recruit(MainMenu.terrain, troopName);
     //If troop recruitment was unsuccessful, return false
     if (troop == null){
       return false;
     }
-    //Else, put the troop into the terrain's troop field
+    //Else, put the troop into the terrain's troop field and adds to the troop arraylist of the player
     else{
+      //If player 1
+      if (team.equals("P1")){
+        MainMenu.p1Troops.add(troop);
+      }
+      //If player 2
+      else{
+        MainMenu.p2Troops.add(troop);
+      }
       MainMenu.terrain[coords[0]][coords[1]].setTroop(troop);
       return true;
     }
   }
+  
   //Method that makes troop claim an unclaimed gold mine or building
   public static void claimBuilding(Terrain[][] terrain, ArrayList<Building> unclaimedBuildings, ArrayList<Building> playerBuildings, Troop troop){
     //Stores coords
